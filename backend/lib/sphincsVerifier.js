@@ -93,8 +93,11 @@ export async function verifySphincsProof(payload) {
       throw new Error('sphincsMessage must match the canonical mint message');
     }
     const command = replacePlaceholders(CONFIG.sphincsVerifyCommand, payload);
-    const [bin, ...args] = splitCommand(command);
+    let [bin, ...args] = splitCommand(command);
     if (!bin) throw new Error('SPHINCS_VERIFY_COMMAND is empty');
+    if (bin === 'python' && process.platform !== 'win32') {
+      bin = process.env.PYTHON || 'python3';
+    }
     try {
       const { stdout, stderr } = await execFileAsync(bin, args, { timeout: 60_000, maxBuffer: 4 * 1024 * 1024 });
       const out = `${stdout}\n${stderr}`.toLowerCase();

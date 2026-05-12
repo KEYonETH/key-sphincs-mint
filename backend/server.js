@@ -50,6 +50,11 @@ const store = new ProofStore(CONFIG.proofDataDir);
 const challenges = new ChallengeStore(CONFIG.challengeTtlMs);
 const assistedSphincsKeys = new Map();
 const ASSISTED_KEY_TTL_MS = 30 * 60 * 1000;
+const rpcUrl = process.env.MAINNET_RPC_URL || process.env.RPC_URL || process.env.ETH_RPC_URL || '';
+const chainProvider = rpcUrl ? new ethers.JsonRpcProvider(rpcUrl, CONFIG.chainId) : null;
+const mintGateStatsAbi = [
+  'function publicMinted() view returns (uint256)'
+];
 
 const hex32 = z.string().regex(/^0x[0-9a-fA-F]{64}$/);
 const hexAny = z.string().regex(/^0x[0-9a-fA-F]+$/);
@@ -80,8 +85,12 @@ function saveCanonicalMessage(message) {
   fs.writeFileSync(path.join(CONFIG.proofDataDir, 'message.txt'), message, 'utf8');
 }
 
+function pythonCommand() {
+  return process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+}
+
 async function runPython(scriptName, args = []) {
-  const python = process.env.PYTHON || 'python';
+  const python = pythonCommand();
   const script = path.join(PROJECT_ROOT, 'backend', 'verifier', scriptName);
   return execFileAsync(python, [script, ...args], { cwd: PROJECT_ROOT, timeout: 120_000 });
 }
@@ -94,7 +103,7 @@ function cleanupAssistedKeys() {
 }
 
 async function deriveSphincsPublicKey(privateKey) {
-  const python = process.env.PYTHON || 'python';
+  const python = pythonCommand();
   const script = path.join(PROJECT_ROOT, 'backend', 'vendor', 'sphincsminus', 'sphincs_minus.py');
   const result = await execFileAsync(python, [script, 'privtopub', privateKey], {
     cwd: path.dirname(script),
@@ -118,7 +127,31 @@ async function signAssistedSphincs(privateKey, message) {
   }
 }
 
-function publicStatus() {
+async function liveStats() {
+  const proofStats = store.stats();
+  if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
+    return { ...proofStats, source: 'proofs' };
+  }
+
+  try {
+    const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
+    const publicMinted = await mintGate.publicMinted();
+    return {
+      ...proofStats,
+      mintedTokens: Number(ethers.formatEther(publicMinted)),
+      source: 'chain',
+      lastUpdated: new Date().toISOString()
+    };
+  } catch {
+    return {
+      ...proofStats,
+      source: 'proofs',
+      chainError: 'live chain stats unavailable'
+    };
+  }
+}
+
+async function publicStatus() {
   const chainId = CONFIG.chainId;
   const currentEpoch = Math.floor(Date.now() / (1000 * 60 * 10));
   return {
@@ -131,7 +164,7 @@ function publicStatus() {
     currentEpoch,
     tokenomics: TOKENOMICS,
     tiers: TIERS,
-    stats: store.stats(),
+    stats: await liveStats(),
     formulas: {
       signatureHash: 'keccak256(signature)',
       rewardHash: 'keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId)',
@@ -141,8 +174,8 @@ function publicStatus() {
 }
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
-app.get('/api/status', (_req, res) => res.json(publicStatus()));
-app.get('/api/stats', (_req, res) => res.json({ ok: true, stats: store.stats(), tokenomics: TOKENOMICS }));
+app.get('/api/status', async (_req, res) => res.json(await publicStatus()));
+app.get('/api/stats', async (_req, res) => res.json({ ok: true, stats: await liveStats(), tokenomics: TOKENOMICS }));
 
 app.get('/api/message', (req, res) => {
   try {
@@ -242,10 +275,10 @@ app.post('/api/attest', async (req, res) => {
   }
 });
 
-app.get('/api/proofs', (req, res) => {
+app.get('/api/proofs', async (req, res) => {
   const limit = Math.min(Number(req.query.limit || 50), 200);
   const offset = Math.max(Number(req.query.offset || 0), 0);
-  res.json({ ok: true, proofs: store.list(limit, offset), stats: store.stats() });
+  res.json({ ok: true, proofs: store.list(limit, offset), stats: await liveStats() });
 });
 
 app.get('/api/proofs/:id', (req, res) => {
@@ -254,8 +287,8 @@ app.get('/api/proofs/:id', (req, res) => {
   res.json({ ok: true, proof: record });
 });
 
-app.post('/api/export', (_req, res) => {
-  const snapshot = store.exportSnapshot({ exportedAt: new Date().toISOString(), status: publicStatus() });
+app.post('/api/export', async (_req, res) => {
+  const snapshot = store.exportSnapshot({ exportedAt: new Date().toISOString(), status: await publicStatus() });
   res.json({ ok: true, snapshot });
 });
 
