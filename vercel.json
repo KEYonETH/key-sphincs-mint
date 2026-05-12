@@ -1,6 +1,6 @@
 {
-  "installCommand": "npm ci --omit=dev --no-audit --no-fund",
-  "buildCommand": "npm run build",
+  "installCommand": "echo Skipping install because dist is prebuilt",
+  "buildCommand": "echo Using prebuilt dist",
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
