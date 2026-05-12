@@ -8,10 +8,12 @@ dist/
 
 backend/data/*.jsonl
 backend/data/*.bin
+backend/data/*.txt
 backend/data/*private*
 backend/data/*signature*
 backend/data/snapshot.json
 backend/data/proofs-backup-*.jsonl
+backend/vendor/
 logs/
 *.log
 
