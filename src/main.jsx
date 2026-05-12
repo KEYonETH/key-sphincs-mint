@@ -12,7 +12,7 @@ const FALLBACK = {
     token: 'KEY', maxSupply: 21_000_000, publicMintPool: 10_000_000, lpReserve: 10_000_000,
     treasuryReserve: 1_000_000, mintPriceEth: '0.001', walletCap: 3, estimatedMints: 15600, network: 'Ethereum'
   },
-  stats: { mintedTokens: 5_322_502, ethRaised: 10.645, totalProofs: 0, byTier: {} },
+  stats: { mintedTokens: 0, ethRaised: 0, totalProofs: 0, byTier: {} },
   tiers: [
     { name: 'Normal Key', reward: 500, odds: '80%' },
     { name: 'Clean Key', reward: 750, odds: '15%' },

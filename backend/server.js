@@ -25,7 +25,19 @@ const PROJECT_ROOT = path.resolve(__dirname, '..');
 const app = express();
 app.set('trust proxy', 1);
 app.use(helmet({ crossOriginResourcePolicy: false }));
-app.use(cors({ origin: CONFIG.corsOrigin === '*' ? true : CONFIG.corsOrigin }));
+const allowedOrigins = CONFIG.corsOrigin
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+    callback(new Error(`CORS origin not allowed: ${origin}`));
+  }
+}));
 app.use(express.json({ limit: '2mb' }));
 app.use(rateLimit({ windowMs: 60_000, max: 120 }));
 
