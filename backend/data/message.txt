@@ -1,0 +1,6 @@
+KEY Signature Mint
+wallet=0xCaa17366D3B71876280474e1E240327e63AdaB72
+publicKeyHash=0xc5c07f64f2380a115f9e9724464aff7d55acf39ff91e5aa599b485d59384874a
+epoch=2964333
+chainId=11155111
+purpose=Proof-of-Signature Hash

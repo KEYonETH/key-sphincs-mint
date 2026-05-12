@@ -1,0 +1,8 @@
+{
+  "KEYTreasuryVault": "0xf8ef6D861996b75D6F286f5Fb1E1a81335F9038D",
+  "KEYToken": "0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2",
+  "KEYMintGate": "0x0Aea11184B840554F648c7061a7E1D7594E17767",
+  "tokenMintGateSet": true,
+  "tokenOwnershipTransferred": true,
+  "gateOwnershipTransferred": true
+}

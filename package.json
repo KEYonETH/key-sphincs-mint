@@ -1,0 +1,51 @@
+{
+  "name": "key-signature-backend-complete-compact",
+  "version": "6.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "backend": "node backend/server.js",
+    "backend:dev": "NODE_ENV=development node backend/server.js",
+    "backend:production": "node scripts/start-production.js",
+    "backend:health": "node scripts/production-health-check.js",
+    "pm2:start": "pm2 start ecosystem.config.cjs",
+    "pm2:restart": "pm2 restart key-backend",
+    "pm2:logs": "pm2 logs key-backend",
+    "pm2:stop": "pm2 stop key-backend",
+    "check:backend": "node --check backend/server.js",
+    "check:vercel": "node scripts/check-vercel-env.js",
+    "check:production": "node scripts/check-production-config.js",
+    "contracts:compile": "hardhat compile",
+    "contracts:test": "hardhat test",
+    "contracts:deploy:local": "hardhat run scripts/deploy-local.js",
+    "contracts:deploy:sepolia": "hardhat run --network sepolia scripts/deploy-sepolia.js",
+    "contracts:deploy:mainnet": "node scripts/deploy-mainnet-ethers.js",
+    "contracts:verify:sepolia": "node scripts/verify-contracts.js sepolia",
+    "contracts:verify:mainnet": "node scripts/verify-contracts.js mainnet",
+    "check:sepolia": "node scripts/sepolia-final-check.js",
+    "check:mainnet": "node scripts/mainnet-readiness-check.js",
+    "export:proofs": "node scripts/export-proofs.js",
+    "backup:proofs": "node scripts/backup-proofs.js"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.6.1",
+    "@vitejs/plugin-react": "latest",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.4",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "vite": "latest",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.5",
+    "hardhat": "^3.4.5"
+  }
+}
