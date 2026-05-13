@@ -98,10 +98,10 @@ function useRoute() {
 }
 
 function Header({ route, go, wallet, connect }) {
-  const nav = ['home', 'mint', 'proof', 'tokenomics', 'vault', 'whitepaper'];
+  const nav = ['home', 'mint', 'proof', 'vault', 'whitepaper'];
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
-      <div className="brandIcon"><img src="/key-logo.svg" alt="KEY" /></div>
+      <div className="brandIcon"><img src="/key-logo.png" alt="KEY" /></div>
       <div><div className="brandName">KEY</div><div className="brandSub">SPHINCS Signature Mint</div></div>
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{n}</button>)}</nav>
@@ -605,7 +605,6 @@ function App() {
   const page = useMemo(() => {
     if (route === 'mint') return <Mint wallet={wallet} connect={connect} data={data} refresh={refresh} />;
     if (route === 'proof') return <Proof data={data} />;
-    if (route === 'tokenomics') return <Tokenomics data={data} />;
     if (route === 'vault') return <Vault data={data} />;
     if (route === 'whitepaper') return <Whitepaper data={data} />;
     return <Home go={go} data={data} />;
