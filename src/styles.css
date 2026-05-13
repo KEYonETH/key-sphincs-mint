@@ -2445,3 +2445,624 @@ nav button {
     width: 100%;
   }
 }
+
+/* One-window silver interface pass */
+:root {
+  --bg: #030303;
+  --panel: rgba(4, 4, 4, 0.74);
+  --panel-2: rgba(11, 11, 11, 0.66);
+  --ink: #f8f8f4;
+  --muted: #c7c7bf;
+  --faint: #8d8d86;
+  --line: rgba(225, 225, 216, 0.34);
+  --line-soft: rgba(225, 225, 216, 0.16);
+  --silver: #f0f0e8;
+  --silver-dim: #bdbdb4;
+  --shadow: 0 28px 80px rgba(0, 0, 0, 0.58);
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 50% -8%, rgba(255,255,255,0.28), rgba(180,180,174,0.12) 12%, transparent 34%),
+    radial-gradient(ellipse at -6% 38%, rgba(235,235,229,0.22), transparent 34%),
+    radial-gradient(ellipse at 108% 36%, rgba(235,235,229,0.20), transparent 34%),
+    radial-gradient(ellipse at 52% 112%, rgba(210,210,205,0.16), transparent 36%),
+    linear-gradient(180deg, #111 0%, #040404 44%, #020202 100%);
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, transparent 0 18%, rgba(255,255,255,0.06) 24%, transparent 34% 58%, rgba(255,255,255,0.045) 65%, transparent 76%),
+    repeating-linear-gradient(104deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 9px);
+  filter: blur(0.35px);
+  opacity: 0.72;
+  transform: rotate(-2deg);
+  mask-image: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 0 48%, rgba(0,0,0,0.48) 100%);
+}
+
+.shell {
+  width: min(1320px, calc(100vw - 260px));
+  min-height: calc(100vh - 46px);
+  margin: 23px auto;
+  padding: 18px;
+  border: 1px solid rgba(235, 235, 226, 0.30);
+  border-radius: 11px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012) 18%, rgba(0,0,0,0.34)),
+    rgba(0, 0, 0, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(255,255,255,0.05),
+    0 0 0 1px rgba(255,255,255,0.035),
+    0 36px 110px rgba(0,0,0,0.72);
+}
+
+.shell::before {
+  content: "";
+  position: fixed;
+  inset: 4px;
+  z-index: -1;
+  border-top: 1px solid rgba(255,255,255,0.18);
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.11), transparent 26%),
+    radial-gradient(ellipse at 15% 46%, rgba(255,255,255,0.10), transparent 28%),
+    radial-gradient(ellipse at 88% 42%, rgba(255,255,255,0.09), transparent 30%);
+}
+
+.topbar {
+  grid-template-columns: 245px minmax(430px, 1fr) 160px;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+  padding: 0;
+  border-bottom: 0;
+}
+
+.brand {
+  min-width: 0;
+}
+
+.brandIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 7px;
+}
+
+.brandIcon img {
+  width: 31px;
+  height: 31px;
+}
+
+.brandName {
+  font-size: 12px;
+  letter-spacing: 0.38em;
+}
+
+.brandSub {
+  margin-top: 2px;
+  font-size: 9px;
+  letter-spacing: 0.10em;
+}
+
+nav {
+  justify-self: center;
+  width: min(100%, 650px);
+  max-width: none;
+  height: 42px;
+  border-radius: 7px;
+}
+
+nav button {
+  font-size: 11px;
+}
+
+nav button.on::after {
+  width: 38px;
+  height: 2px;
+}
+
+.connect {
+  min-width: 0;
+  width: 100%;
+  height: 38px;
+  border-radius: 7px;
+}
+
+.status,
+.statStrip,
+.heroMini,
+.card,
+.contentPage,
+footer {
+  border-color: rgba(225,225,216,0.22);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.006)),
+    rgba(0,0,0,0.34);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 -1px 0 rgba(255,255,255,0.025);
+}
+
+.status {
+  min-height: 30px;
+  margin-bottom: 12px;
+  padding: 7px 14px;
+  border-radius: 6px;
+  font-size: 9px;
+}
+
+.status span {
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 12px rgba(255,255,255,0.55);
+}
+
+.statStrip {
+  grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.stat {
+  min-height: 58px;
+  padding: 13px 18px;
+}
+
+.stat small,
+.cardTitle,
+.metric small,
+.proofLine small,
+.miniFact span,
+.resultStrip span,
+.amountBlock label,
+.proofMini small,
+.hashGrid small {
+  color: var(--silver-dim);
+  font-size: 8px;
+  letter-spacing: 0.34em;
+}
+
+.stat b {
+  margin-top: 7px;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.page {
+  gap: 12px;
+}
+
+.homeGrid {
+  grid-template-columns: 1.08fr 0.92fr;
+  align-items: stretch;
+}
+
+.heroMini,
+.card,
+.contentPage {
+  border-radius: 8px;
+}
+
+.heroMini {
+  min-height: 238px;
+  padding: 28px 34px 24px;
+}
+
+.heroMini h1,
+.contentPage h1 {
+  font-size: clamp(26px, 2.6vw, 42px);
+  line-height: 1.08;
+}
+
+.heroMini > p {
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.eyebrow {
+  font-size: 9px;
+  letter-spacing: 0.28em;
+}
+
+.homeExplain {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.homeExplain span {
+  min-height: 54px;
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+
+.homeExplain b {
+  font-size: 9px;
+}
+
+.homeExplain em {
+  margin-top: 5px;
+  font-size: 9px;
+}
+
+.heroActions {
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.heroActions button {
+  min-width: 160px;
+  min-height: 36px;
+}
+
+.primary,
+.buttonStack .primary {
+  border-color: rgba(255,255,255,0.70);
+  color: #030303;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #d9d9d3 46%, #8c8c86 100%);
+  text-shadow: none;
+}
+
+.primary:hover,
+.buttonStack .primary:hover {
+  filter: brightness(1.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.94), 0 0 26px rgba(255,255,255,0.18);
+}
+
+.ghost,
+.outline,
+.miniBtn,
+.refreshBtn {
+  color: var(--ink);
+  background: rgba(0,0,0,0.22);
+  border-color: rgba(225,225,216,0.24);
+}
+
+.card {
+  padding: 18px 20px;
+}
+
+.progressCard {
+  min-height: 238px;
+  padding: 28px 34px;
+}
+
+.progressHead {
+  align-items: center;
+}
+
+.progressHead h2 {
+  font-size: clamp(20px, 1.8vw, 28px);
+}
+
+.pill {
+  min-width: 58px;
+  padding: 8px 12px;
+  border-color: rgba(225,225,216,0.22);
+  font-size: 9px;
+}
+
+.bar {
+  height: 9px;
+  margin: 22px 0 24px;
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(225,225,216,0.38);
+}
+
+.bar i {
+  background: linear-gradient(90deg, #fbfbf2, #9c9c96);
+}
+
+.miniGrid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.metric {
+  min-height: auto;
+  padding: 12px 16px 0 0;
+}
+
+.metric strong {
+  font-size: 14px;
+}
+
+.mintGrid {
+  grid-template-columns: minmax(0, 1fr) 430px;
+  align-items: stretch;
+}
+
+.leftStack {
+  gap: 12px;
+}
+
+.compactRow.mintSupport {
+  grid-template-columns: 0.82fr 1.18fr;
+}
+
+.signatureInfo {
+  min-height: 182px;
+}
+
+.signatureInfo h3 {
+  font-size: 13px;
+}
+
+.signatureInfo p {
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.signatureInfo code {
+  margin-top: 10px;
+  font-size: 9px;
+  border-radius: 6px;
+}
+
+.tiersCard {
+  min-height: 182px;
+}
+
+.tierRows {
+  gap: 9px;
+}
+
+.tier {
+  grid-template-columns: 10px minmax(92px, 1fr) 82px 38px;
+  gap: 10px;
+  font-size: 10px;
+}
+
+.tier b,
+.tier span,
+.tier small {
+  font-size: 10px;
+}
+
+.keyDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+}
+
+.k0 { background: #9b9b91; }
+.k1 { background: #6f9f62; }
+.k2 { background: #d5a12c; }
+.k3 { background: #8a65d8; }
+.k4 { background: #d76d9d; }
+
+.mintPanel {
+  position: sticky;
+  top: 14px;
+  padding: 18px;
+}
+
+.mintTop {
+  grid-template-columns: 1.05fr 0.8fr 0.8fr;
+  gap: 8px;
+}
+
+.amount,
+.miniFact,
+.resultStrip,
+.proofConsole,
+.proofMini div,
+.hashGrid div {
+  border-radius: 7px;
+  background: rgba(255,255,255,0.018);
+}
+
+.amount,
+.miniFact {
+  min-height: 38px;
+}
+
+.amount {
+  grid-template-columns: 34px 1fr 34px;
+}
+
+.amount b,
+.miniFact b,
+.resultStrip b {
+  font-size: 13px;
+}
+
+.resultStrip {
+  margin-top: 8px;
+}
+
+.resultStrip div {
+  min-height: 52px;
+  padding: 10px 12px;
+}
+
+.buttonStack {
+  grid-template-columns: 1fr 1fr 1.15fr;
+  gap: 7px;
+  margin-top: 8px;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.buttonStack button {
+  min-height: 38px;
+  border-radius: 7px;
+  font-size: 10px;
+  line-height: 1.05;
+}
+
+.notice {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+}
+
+.proofConsole {
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.consoleHead {
+  padding: 10px 12px;
+}
+
+.consoleHead span,
+.consoleHead b {
+  font-size: 8px;
+  letter-spacing: 0.32em;
+}
+
+.proofLine {
+  grid-template-columns: 86px minmax(0, 1fr);
+  padding: 8px 12px;
+}
+
+.proofLine code {
+  font-size: 9px;
+}
+
+.proofMini {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.proofMini div {
+  padding: 9px 10px;
+}
+
+.proofMini code,
+.hashGrid code {
+  font-size: 9px;
+}
+
+.contentPage,
+.article,
+.proofIntro {
+  padding: 22px 26px;
+}
+
+.proofExplorer {
+  grid-template-columns: 0.58fr 1fr;
+  align-items: start;
+}
+
+.proofIntro {
+  min-height: 232px;
+}
+
+.proofIntro h1 {
+  font-size: 36px;
+}
+
+.proofStats {
+  min-height: 232px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.proofGrid {
+  grid-column: 1 / -1;
+  grid-template-columns: 0.72fr 1.28fr;
+}
+
+.proofListCard,
+.proofDetailCard {
+  min-height: 340px;
+}
+
+.proofList {
+  max-height: 356px;
+}
+
+.proofItem {
+  min-height: 64px;
+}
+
+.selectedHead {
+  min-height: 82px;
+}
+
+.selectedHead h2 {
+  font-size: 24px;
+}
+
+.proofDetailTable div,
+.proofRow {
+  grid-template-columns: 140px minmax(0, 1fr) 56px;
+  min-height: 44px;
+  padding: 8px 10px;
+}
+
+.proofFormula {
+  max-height: 72px;
+  overflow: auto;
+  font-size: 9px;
+}
+
+.allocGrid,
+.vaultStatusGrid {
+  gap: 8px;
+}
+
+.allocGrid .metric,
+.vaultStatusGrid .metric {
+  min-height: 66px;
+}
+
+.tableLite div {
+  min-height: 42px;
+}
+
+footer {
+  margin-top: 12px;
+  min-height: 44px;
+  border-radius: 8px;
+}
+
+@media (max-width: 1500px) {
+  .shell {
+    width: min(1380px, calc(100vw - 120px));
+  }
+
+  .mintGrid {
+    grid-template-columns: minmax(0, 1fr) 410px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .shell {
+    width: min(100% - 32px, 1040px);
+    padding: 14px;
+  }
+
+  .topbar,
+  .homeGrid,
+  .mintGrid,
+  .proofExplorer,
+  .proofGrid,
+  .compactRow.mintSupport {
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    justify-self: stretch;
+  }
+
+  .mintPanel {
+    position: static;
+  }
+}

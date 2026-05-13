@@ -338,8 +338,7 @@ function Mint({ wallet, connect, data, refresh }) {
   return <main className="page mintGrid">
     <div className="leftStack">
       <ProgressModule data={data} />
-      <SignatureInfo />
-      <div className="compactRow"><MintFlow /><RewardTiers tiers={data.tiers} /></div>
+      <div className="compactRow mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /></div>
     </div>
     <aside className="mintPanel card">
       <div className="cardTitle">mint KEY</div>
