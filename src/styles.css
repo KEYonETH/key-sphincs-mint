@@ -3946,3 +3946,508 @@ footer {
     margin: 0 14px 14px;
   }
 }
+
+/* Compact ivory/gold production pass. Keep this last so older theme blocks cannot leak through. */
+:root {
+  color-scheme: light;
+  --bg: #f8f3e7;
+  --panel: #fffdf7;
+  --panel-soft: #fffbf1;
+  --ink: #17130f;
+  --muted: #6d665a;
+  --line: #ddcfab;
+  --line-strong: #c79a2c;
+  --gold: #c79a2c;
+  --gold-dark: #8a6514;
+  --success: #668a4a;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.9), transparent 34%),
+    linear-gradient(90deg, rgba(199, 154, 44, 0.08), transparent 15%, transparent 85%, rgba(199, 154, 44, 0.08)),
+    var(--bg) !important;
+  color: var(--ink);
+}
+
+body {
+  font-size: 13px;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after,
+.shell::before {
+  display: none !important;
+}
+
+@keyframes keyPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(102, 138, 74, 0.18); }
+  50% { box-shadow: 0 0 0 7px rgba(102, 138, 74, 0); }
+}
+
+@keyframes barSheen {
+  0% { transform: translateX(-110%); }
+  100% { transform: translateX(110%); }
+}
+
+.shell {
+  width: min(980px, calc(100vw - 92px));
+  margin: 18px auto;
+  padding: 0;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: rgba(255, 253, 247, 0.98);
+  box-shadow:
+    0 24px 60px rgba(138, 101, 20, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  overflow: hidden;
+}
+
+.topbar {
+  min-height: 62px;
+  grid-template-columns: 230px minmax(360px, 1fr) 150px;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(180deg, #fffdf7, #fffbf1);
+}
+
+.brand {
+  gap: 12px;
+}
+
+.brandIcon {
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--gold);
+  border-radius: 5px;
+  background: #fffdf7;
+  box-shadow: inset 0 0 0 1px #f0e5c6;
+}
+
+.brandIcon img {
+  width: 27px;
+  height: 27px;
+}
+
+.brandName {
+  font-size: 14px;
+  letter-spacing: 0.32em;
+}
+
+.brandSub {
+  margin-top: 3px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+nav {
+  min-height: 38px;
+  border: 2px solid var(--line);
+  border-radius: 5px;
+  background: #fffdf7;
+}
+
+nav button,
+.connect {
+  min-height: 38px;
+  border-radius: 4px;
+  color: var(--ink);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+nav button:hover,
+.connect:hover,
+button:hover {
+  border-color: var(--gold);
+  background: #fff7e4;
+  transform: translateY(-1px);
+}
+
+nav button.active {
+  color: var(--ink);
+  background: linear-gradient(180deg, #fff7e4, #fffdf7);
+  box-shadow: inset 0 -2px 0 var(--gold);
+}
+
+nav button.active::after {
+  bottom: 7px;
+  width: 30px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.connect {
+  min-height: 38px;
+  border: 2px solid var(--line);
+  background: #fffdf7;
+}
+
+.status {
+  min-height: 38px;
+  padding: 0 20px;
+  border-top: 0;
+  border-bottom: 1px solid var(--line);
+  background: #fffbf1;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.status span {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  animation: keyPulse 2.2s ease-in-out infinite;
+}
+
+.page {
+  padding: 14px 20px;
+  gap: 12px;
+}
+
+.homePage,
+.mintPage,
+.proofExplorer,
+.contentPage {
+  gap: 12px;
+}
+
+.card,
+.progressCard,
+.mintPanel,
+.signatureInfo,
+.tiersCard,
+.proofIntro,
+.proofStats,
+.proofListCard,
+.proofDetailCard,
+.article,
+.hero,
+.statStrip {
+  border: 2px solid var(--line-strong);
+  border-radius: 6px;
+  background: rgba(255, 253, 247, 0.9);
+  box-shadow: 0 10px 26px rgba(138, 101, 20, 0.08);
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.card:hover,
+.progressCard:hover,
+.mintPanel:hover,
+.signatureInfo:hover,
+.tiersCard:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(138, 101, 20, 0.12);
+}
+
+.cardTitle,
+.metric small,
+.mintFacts small,
+.resultStrip span,
+.proofLine span,
+.keyReveal small {
+  color: var(--gold-dark);
+  font-size: 9px;
+  letter-spacing: 0.36em;
+}
+
+.cardTitle::after {
+  width: 28px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.progressCard {
+  min-height: auto;
+  padding: 16px 20px;
+}
+
+.progressHead {
+  margin: 12px 0 14px;
+  align-items: center;
+}
+
+.progressHead h2 {
+  font-size: clamp(25px, 2.25vw, 34px);
+  line-height: 1;
+}
+
+.pill {
+  min-width: 56px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff7e4;
+  color: var(--gold-dark);
+  font-size: 11px;
+}
+
+.bar {
+  height: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f2ead7;
+  overflow: hidden;
+}
+
+.bar i {
+  display: block;
+  position: relative;
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #b98615, #ddb64a, #b98615);
+  overflow: hidden;
+  transition: width 480ms ease;
+}
+
+.bar i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: barSheen 2.6s linear infinite;
+}
+
+.miniGrid.three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 16px;
+  padding-top: 14px;
+}
+
+.miniGrid.three .metric,
+.metric {
+  min-height: 46px;
+  padding: 0 14px;
+}
+
+.metric strong {
+  margin-top: 6px;
+  font-size: 15px;
+}
+
+.mintStack {
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.65fr);
+  gap: 12px;
+}
+
+.mintPanel {
+  padding: 16px 20px;
+}
+
+.mintFacts {
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.mintFacts div {
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fffdf7;
+}
+
+.mintFacts b {
+  font-size: 14px;
+}
+
+.resultStrip {
+  margin-top: 8px;
+}
+
+.resultStrip div {
+  min-height: 48px;
+  padding: 10px 12px;
+}
+
+.resultStrip b {
+  font-size: 14px;
+}
+
+.buttonStack {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.buttonStack button,
+.mintPanel button,
+.proofIntro button,
+.heroActions button {
+  min-height: 38px;
+  border: 1px solid var(--line-strong);
+  border-radius: 5px;
+  font-size: 12px;
+  box-shadow: none;
+}
+
+.buttonStack button:last-child,
+.heroActions .primary {
+  color: #17130f;
+  background: linear-gradient(180deg, #fffdf7, #d7bd72 52%, #c79a2c);
+  border-color: var(--gold-dark);
+}
+
+.buttonStack button:active,
+.heroActions button:active {
+  transform: translateY(1px);
+}
+
+.notice {
+  margin-top: 8px;
+  padding: 9px 12px;
+  font-size: 12px;
+}
+
+.proofConsole {
+  margin-top: 10px;
+}
+
+.consoleHead {
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+.proofLine {
+  min-height: 33px;
+  grid-template-columns: 90px minmax(0, 1fr);
+  padding: 0 12px;
+}
+
+.proofLine code,
+.keyReveal code {
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.keyReveal {
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.keyReveal div {
+  padding: 9px 11px;
+  background: #fffdf7;
+  border: 1px solid var(--line);
+}
+
+.mintSupport {
+  grid-template-columns: 0.78fr 1fr;
+  gap: 12px;
+}
+
+.signatureInfo,
+.tiersCard {
+  padding: 16px 20px;
+}
+
+.signatureInfo h3 {
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.signatureInfo p,
+.signatureInfo code {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.tier {
+  grid-template-columns: 10px minmax(100px, 1fr) 82px 42px;
+  min-height: 24px;
+  gap: 10px;
+}
+
+.tier b,
+.tier span,
+.tier small {
+  font-size: 12px;
+}
+
+.proofIntro {
+  min-height: auto;
+  grid-template-columns: minmax(0, 1fr) 116px;
+  padding: 18px 20px;
+}
+
+.proofIntro h1 {
+  font-size: 28px;
+}
+
+.proofIntro p {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.proofStats {
+  min-height: 62px;
+}
+
+.proofStats .metric {
+  min-height: 62px;
+  padding: 12px 14px;
+}
+
+.proofGrid {
+  grid-template-columns: 0.78fr 1.22fr;
+  gap: 12px;
+}
+
+.proofListCard,
+.proofDetailCard {
+  min-height: 220px;
+  padding: 16px;
+}
+
+.proofList {
+  max-height: 238px;
+}
+
+.proofItem {
+  min-height: 50px;
+  padding: 10px;
+}
+
+.selectedHead h2 {
+  font-size: 24px;
+}
+
+footer {
+  margin: 0 20px 18px;
+  min-height: 38px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 1080px) {
+  .shell {
+    width: min(100% - 28px, 840px);
+  }
+
+  .topbar,
+  .mintStack,
+  .mintSupport,
+  .proofIntro,
+  .proofGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statStrip,
+  .miniGrid.three,
+  .mintFacts,
+  .buttonStack {
+    grid-template-columns: 1fr;
+  }
+
+  .page {
+    padding: 12px;
+  }
+}
