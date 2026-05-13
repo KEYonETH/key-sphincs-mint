@@ -159,13 +159,18 @@ async function liveStats() {
     }
     const mintPriceWei = ethers.parseEther(TOKENOMICS.mintPriceEth);
     const successfulMints = mintPriceWei > 0n ? Number(totalMintFeesReceived / mintPriceWei) : 0;
+    const confirmedProofs = await listMintedProofs(1_000_000, 0);
+    const confirmedByTier = {};
+    for (const proof of confirmedProofs) {
+      confirmedByTier[proof.tier.name] = (confirmedByTier[proof.tier.name] || 0) + 1;
+    }
 
     return {
       totalProofs: successfulMints,
       attestationRecords: proofStats.totalProofs,
       mintedTokens: Number(ethers.formatEther(publicMinted)),
       ethRaised: Number(ethers.formatEther(totalMintFeesReceived)),
-      byTier: {},
+      byTier: confirmedByTier,
       attestationByTier: proofStats.byTier,
       source: 'chain',
       lastUpdated: new Date().toISOString()
