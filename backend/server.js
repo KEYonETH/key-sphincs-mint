@@ -165,7 +165,8 @@ async function liveStats() {
       attestationRecords: proofStats.totalProofs,
       mintedTokens: Number(ethers.formatEther(publicMinted)),
       ethRaised: Number(ethers.formatEther(totalMintFeesReceived)),
-      byTier: proofStats.byTier,
+      byTier: {},
+      attestationByTier: proofStats.byTier,
       source: 'chain',
       lastUpdated: new Date().toISOString()
     };
