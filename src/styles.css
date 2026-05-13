@@ -3329,3 +3329,620 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* Ivory mint terminal: compact, simple, gold-framed */
+:root {
+  --paper: #f8f3e7;
+  --panel: #fffbf1;
+  --panel-soft: #fffdf7;
+  --gold: #c79a2c;
+  --gold-dark: #8a6514;
+  --ink: #17130f;
+  --muted: #6d665a;
+  --line: #ddcfab;
+  --line-strong: #c79a2c;
+  --white: #ffffff;
+  --shadow: 0 18px 60px rgba(94, 70, 16, 0.12);
+}
+
+body {
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(255,255,255,0.95), transparent 28%),
+    radial-gradient(ellipse at 18% 48%, rgba(199,154,44,0.08), transparent 30%),
+    radial-gradient(ellipse at 88% 52%, rgba(199,154,44,0.07), transparent 30%),
+    linear-gradient(180deg, #fffdf7 0%, #f8f3e7 100%);
+}
+
+body::before,
+body::after {
+  display: none;
+}
+
+.shell {
+  width: min(1040px, calc(100vw - 80px));
+  min-height: auto;
+  margin: 34px auto;
+  padding: 0;
+  border: 2px solid var(--line-strong);
+  border-radius: 6px;
+  background: var(--panel);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.shell::before {
+  display: none;
+}
+
+.topbar {
+  grid-template-columns: 270px minmax(440px, 1fr) 180px;
+  align-items: center;
+  gap: 20px;
+  min-height: 82px;
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  gap: 12px;
+}
+
+.brandIcon {
+  width: 44px;
+  height: 44px;
+  border: 2px solid var(--line-strong);
+  border-radius: 5px;
+  background: #fffaf0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.82);
+}
+
+.brandIcon img {
+  width: 30px;
+  height: 30px;
+  filter: none;
+}
+
+.brandName {
+  color: var(--ink);
+  font-size: 16px;
+  letter-spacing: 0.5em;
+}
+
+.brandSub {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+nav {
+  height: 40px;
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.34);
+  grid-template-columns: repeat(5, 1fr);
+}
+
+nav button {
+  min-height: 40px;
+  color: var(--muted);
+  border-left: 1px solid var(--line);
+  font-size: 13px;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: lowercase;
+}
+
+nav button:first-child {
+  border-left: 0;
+}
+
+nav button.on {
+  color: var(--ink);
+  background: linear-gradient(180deg, rgba(199,154,44,0.16), rgba(255,255,255,0));
+}
+
+nav button.on::after {
+  width: 34px;
+  height: 2px;
+  background: var(--gold);
+}
+
+.connect,
+.primary,
+.ghost,
+.outline,
+.refreshBtn {
+  border: 2px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel-soft);
+  color: var(--ink);
+  box-shadow: none;
+  font-family: 'IBM Plex Mono', monospace;
+  text-transform: lowercase;
+}
+
+.connect {
+  min-height: 40px;
+  font-size: 13px;
+}
+
+.primary {
+  color: #fffdf7;
+  background: linear-gradient(180deg, #d5aa3c, #ad7d17);
+  border-color: var(--gold-dark);
+}
+
+.primary:hover,
+.outline:hover,
+.ghost:hover,
+.connect:hover {
+  transform: translateY(-1px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 22px rgba(138,101,20,0.13);
+}
+
+.status {
+  margin: 0;
+  min-height: 44px;
+  padding: 0 24px;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.status span {
+  background: #6b8f4e;
+  box-shadow: 0 0 0 5px rgba(107,143,78,0.14);
+}
+
+.page {
+  padding: 18px 24px;
+  gap: 14px;
+}
+
+.statStrip {
+  margin: 18px 24px 0;
+  grid-template-columns: repeat(5, 1fr);
+  border: 2px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--panel-soft);
+  overflow: hidden;
+}
+
+.stat {
+  min-height: 78px;
+  padding: 15px 18px;
+  border-color: var(--line);
+}
+
+.stat small,
+.metric small,
+.cardTitle,
+.consoleHead span,
+.consoleHead b,
+.proofLine small,
+.proofMini small,
+.keyReveal small {
+  color: var(--gold-dark);
+  letter-spacing: 0.32em;
+}
+
+.stat b {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.card,
+.heroMini,
+.contentPage,
+footer {
+  border: 2px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--panel-soft);
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.cardTitle::after {
+  background: var(--gold);
+}
+
+.homeGrid {
+  grid-template-columns: 1fr;
+}
+
+.heroMini {
+  min-height: auto;
+  padding: 34px 36px;
+}
+
+.heroMini h1 {
+  max-width: 680px;
+  color: var(--ink);
+  font-size: clamp(34px, 4.2vw, 54px);
+  line-height: 0.98;
+}
+
+.heroMini p {
+  max-width: 760px;
+  color: var(--muted);
+}
+
+.homeExplain {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.homeExplain span,
+.signatureInfo code,
+.proofConsole,
+.resultStrip,
+.proofMini div,
+.keyReveal div,
+.miniFact,
+.amount {
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.42);
+  color: var(--ink);
+}
+
+.homeExplain b,
+.homeExplain em,
+.signatureInfo p,
+.steps p {
+  color: var(--muted);
+}
+
+.mintPage {
+  grid-template-columns: 1fr;
+}
+
+.mintStack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.progressCard {
+  min-height: auto;
+  padding: 24px 28px;
+}
+
+.progressHead {
+  margin-top: 22px;
+}
+
+.progressHead h2 {
+  color: var(--ink);
+  font-size: clamp(28px, 3vw, 42px);
+}
+
+.pill {
+  color: var(--gold-dark);
+  border: 1px solid var(--line);
+  background: #fffaf0;
+}
+
+.bar {
+  height: 14px;
+  padding: 2px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: #f2ead8;
+}
+
+.bar i {
+  border-radius: 1px;
+  background: linear-gradient(90deg, #6e8f4e, #2d743b);
+  box-shadow: none;
+}
+
+.miniGrid.three {
+  gap: 0;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-color: var(--line);
+}
+
+.miniGrid.three .metric {
+  min-height: 58px;
+  padding: 0 22px;
+  border-color: var(--line);
+}
+
+.miniGrid.three .metric:first-child {
+  padding-left: 0;
+}
+
+.metric strong {
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.mintPanel {
+  position: static;
+  padding: 24px 28px;
+}
+
+.mintFacts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.mintFacts div {
+  min-height: 58px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.42);
+}
+
+.mintFacts small {
+  display: block;
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  text-transform: lowercase;
+}
+
+.mintFacts b {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.resultStrip {
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+.resultStrip div {
+  min-height: 58px;
+  padding: 12px 14px;
+  border-color: var(--line);
+}
+
+.resultStrip span {
+  color: var(--muted);
+}
+
+.resultStrip b {
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.buttonStack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.buttonStack button {
+  min-height: 44px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.buttonStack button.done {
+  background: #eff6e9;
+  border-color: #9ab27a;
+  color: #3e672f;
+}
+
+.notice {
+  border: 1px solid var(--line);
+  background: #fff7e4;
+  color: var(--gold-dark);
+  border-radius: 4px;
+}
+
+.proofConsole {
+  margin-top: 12px;
+  border-radius: 4px;
+}
+
+.consoleHead {
+  border-color: var(--line);
+}
+
+.proofLine {
+  grid-template-columns: 110px minmax(0, 1fr);
+  border-color: var(--line);
+}
+
+.proofLine code,
+.proofMini code,
+.keyReveal code {
+  color: var(--gold-dark);
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.keyReveal {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.keyReveal div {
+  min-height: auto;
+  padding: 10px 12px;
+  border-radius: 4px;
+}
+
+.keyReveal code {
+  display: block;
+  margin-top: 6px;
+  max-height: none;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.proofMini {
+  display: none;
+}
+
+.mintSupport {
+  display: grid;
+  grid-template-columns: 0.74fr 1fr;
+  gap: 14px;
+}
+
+.signatureInfo,
+.tiersCard {
+  min-height: auto;
+}
+
+.signatureInfo h3 {
+  color: var(--ink);
+}
+
+.signatureInfo p {
+  font-size: 14px;
+}
+
+.signatureInfo code {
+  color: var(--gold-dark);
+  border-radius: 4px;
+}
+
+.tier {
+  grid-template-columns: 11px minmax(120px, 1fr) 100px 52px;
+  color: var(--ink);
+}
+
+.tier b,
+.tier span,
+.tier small {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.proofExplorer {
+  grid-template-columns: 1fr;
+}
+
+.proofIntro {
+  min-height: auto;
+  grid-template-columns: minmax(0, 1fr) 130px;
+  align-items: end;
+  padding: 20px 24px;
+}
+
+.proofIntro h1 {
+  color: var(--ink);
+  font-size: 32px;
+}
+
+.proofIntro p {
+  max-width: 780px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.proofStats {
+  min-height: 74px;
+  border: 2px solid var(--line-strong);
+  border-radius: 5px;
+  background: var(--panel-soft);
+}
+
+.proofStats .metric {
+  min-height: 74px;
+  padding: 14px 16px;
+  border-color: var(--line);
+}
+
+.proofGrid {
+  grid-template-columns: 0.86fr 1.14fr;
+}
+
+.proofListCard,
+.proofDetailCard {
+  min-height: 260px;
+}
+
+.proofList {
+  max-height: 270px;
+}
+
+.proofItem {
+  min-height: 54px;
+  border-color: var(--line);
+  background: rgba(255,255,255,0.32);
+}
+
+.proofItem.selected {
+  border-color: var(--gold);
+  background: #fff7e4;
+}
+
+.selectedHead h2 {
+  color: var(--ink);
+}
+
+.proofDetailTable {
+  border-color: var(--line);
+}
+
+.proofDetailTable div,
+.proofRow {
+  border-color: var(--line);
+}
+
+.proofFormula {
+  display: none;
+}
+
+.contentPage h1,
+.article h1,
+.whitepaper h1 {
+  color: var(--ink);
+}
+
+footer {
+  margin: 0 24px 24px;
+  min-height: 42px;
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+@media (max-width: 1180px) {
+  .shell {
+    width: min(100% - 24px, 1040px);
+  }
+
+  .topbar,
+  .mintSupport,
+  .proofIntro,
+  .proofGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .statStrip,
+  .mintFacts,
+  .buttonStack {
+    grid-template-columns: 1fr;
+  }
+
+  .page {
+    padding: 14px;
+  }
+
+  footer {
+    margin: 0 14px 14px;
+  }
+}

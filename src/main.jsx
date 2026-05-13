@@ -193,7 +193,6 @@ function Home({ go, data }) {
 }
 
 function Mint({ wallet, connect, data, refresh }) {
-  const [amount, setAmount] = useState(1);
   const [publicKeyHash, setPublicKeyHash] = useState('');
   const [sphincsPublicKey, setSphincsPublicKey] = useState('');
   const [sphincsSignature, setSphincsSignature] = useState('');
@@ -335,20 +334,15 @@ function Mint({ wallet, connect, data, refresh }) {
     } catch (e) { setNotice(e.shortMessage || e.message); } finally { setBusy(''); }
   }
 
-  return <main className="page mintGrid">
-    <div className="leftStack">
-      <ProgressModule data={data} />
-      <div className="compactRow mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /></div>
-    </div>
-    <aside className="mintPanel card">
+  return <main className="page mintPage">
+    <ProgressModule data={data} />
+    <section className="mintStack">
+    <div className="mintPanel card">
       <div className="cardTitle">mint KEY</div>
-      <div className="mintTop">
-        <div className="amountBlock">
-          <label>amount</label>
-          <div className="amount"><button onClick={() => setAmount(Math.max(1, amount - 1))}>−</button><b>{amount}</b><button onClick={() => setAmount(Math.min(3, amount + 1))}>+</button></div>
-        </div>
-        <div className="miniFact"><span>price</span><b>{t.mintPriceEth} ETH</b></div>
-        <div className="miniFact"><span>cap</span><b>{t.walletCap} mints</b></div>
+      <div className="mintFacts">
+        <div><small>price</small><b>{t.mintPriceEth} ETH</b></div>
+        <div><small>limit</small><b>{t.walletCap} mints per wallet</b></div>
+        <div><small>mode</small><b>{data.mode === 'preview' ? 'demo' : 'real SPHINCS'}</b></div>
       </div>
       <div className="resultStrip">
         <div><span>tier</span><b>{proof?.tier?.name || 'pending'}</b></div>
@@ -366,8 +360,23 @@ function Mint({ wallet, connect, data, refresh }) {
         <ProofLine label="wallet" value={hasSigned ? 'Address signed and bound to the key hash.' : 'Sign address to bind wallet, epoch, and chain.'} />
         <ProofLine label="verifier" value={sphincsSignature ? 'Signature verified and attestation prepared.' : 'Mint prepares and verifies the SPHINCS signature.'} />
       </div>
-      <div className="proofMini"><div><small>public key hash</small><code>{publicKeyHash || 'generate first'}</code></div><div><small>proof id</small><code>{proof?.proofId || 'mint first'}</code></div></div>
-    </aside>
+      <div className="keyReveal">
+        <div>
+          <small>public key</small>
+          <code>{sphincsPublicKey || (data.mode === 'preview' ? 'preview mode uses generated key hash only' : 'generate key first')}</code>
+        </div>
+        <div>
+          <small>public key hash</small>
+          <code>{publicKeyHash || 'generate first'}</code>
+        </div>
+        <div>
+          <small>proof id</small>
+          <code>{proof?.proofId || 'mint first'}</code>
+        </div>
+      </div>
+    </div>
+    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /></div>
+    </section>
   </main>;
 }
 
