@@ -310,9 +310,15 @@ async function liveLiquidityStateUncached() {
   const hookAddress = CONFIG.uniswapV4HookAddress || ethers.ZeroAddress;
   const state = {
     status: poolId && poolId !== 'TBA' && poolId !== 'not created' ? 'pool configured' : 'not launched',
-    trading: 'not enabled by official KEY liquidity',
+    trading: 'pool initialized; trading starts after official liquidity is added',
     poolId,
     hookAddress,
+    poolManager: CONFIG.uniswapV4PoolManager,
+    initializeTx: CONFIG.uniswapV4InitializeTx,
+    pair: 'KEY/WETH',
+    initialPrice: CONFIG.uniswapV4InitialPrice || '1 ETH = 500,000 KEY',
+    fee: CONFIG.uniswapV4Fee || '10000',
+    tickSpacing: CONFIG.uniswapV4TickSpacing || '200',
     hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
     custody: 'LP reserve and treasury reserve are held by configured reserve wallets. User-minted KEY stays in user wallets.',
     addresses: {

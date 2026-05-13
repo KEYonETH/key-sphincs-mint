@@ -28,6 +28,7 @@
     "contracts:deploy:mainnet": "node scripts/deploy-mainnet-ethers.js",
     "contracts:verify:sepolia": "node scripts/verify-contracts.js sepolia",
     "contracts:verify:mainnet": "node scripts/verify-contracts.js mainnet",
+    "pool:init:mainnet": "node scripts/init-uniswap-v4-pool.js",
     "check:sepolia": "node scripts/sepolia-final-check.js",
     "check:mainnet": "node scripts/mainnet-readiness-check.js",
     "export:proofs": "node scripts/export-proofs.js",

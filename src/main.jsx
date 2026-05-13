@@ -506,10 +506,12 @@ function Vault({ data }) {
   const controls = liquidity.controls || {};
   const noPool = !liquidity.poolId || liquidity.poolId === 'TBA' || liquidity.poolId === 'not created';
   const noHook = !liquidity.hookAddress || isZeroAddress(liquidity.hookAddress);
+  const txLink = liquidity.initializeTx ? `https://etherscan.io/tx/${liquidity.initializeTx}` : '';
   const addressRows = [
     ['KEY token', addresses.token || import.meta.env.VITE_KEY_TOKEN_ADDRESS || 'TBA'],
     ['Mint gate', addresses.mintGate || MINT_GATE || 'TBA'],
     ['Treasury vault', addresses.treasuryVault || import.meta.env.VITE_TREASURY_VAULT_ADDRESS || 'TBA'],
+    ['Uniswap v4 PoolManager', liquidity.poolManager || '0x000000000004444c5dc75cB358380D2e3dE08A90'],
     ['LP reserve wallet', addresses.lpReserve || import.meta.env.VITE_LP_RESERVE_ADDRESS || 'TBA'],
     ['Treasury reserve wallet', addresses.treasuryReserve || import.meta.env.VITE_TREASURY_RESERVE_ADDRESS || 'TBA'],
     ['Contract owner', addresses.contractOwner || import.meta.env.VITE_CONTRACT_OWNER_ADDRESS || 'TBA']
@@ -527,11 +529,19 @@ function Vault({ data }) {
     <h1>Vault</h1>
     <p>KEY liquidity is intentionally transparent. Mint fees go to the treasury vault, the LP reserve is held separately, and the official Uniswap v4 pool will be published here before trading is announced.</p>
     <div className="vaultStatusGrid">
-      <Metric label="official trading" value={noPool ? 'not launched' : 'pool configured'} note={noPool ? 'no official KEY liquidity has been added' : 'check pool details before trading'} />
+      <Metric label="official trading" value={noPool ? 'not launched' : 'liquidity pending'} note={noPool ? 'no official KEY pool yet' : 'pool exists, LP has not been added'} />
       <Metric label="uniswap v4 pool" value={noPool ? 'not created' : 'created'} note={liquidity.poolId || 'pending'} />
       <Metric label="hook" value={noHook ? 'none' : 'configured'} note={noHook ? 'normal v4 pool planned first' : short(liquidity.hookAddress)} />
       <Metric label="vault ETH" value={value(balances.vaultETH, 'ETH')} note="mint fees currently held by vault" />
     </div>
+    {!noPool && <div className="tableLite addresses poolDetails">
+      <div><b>Pool ID</b><span>{liquidity.poolId}</span></div>
+      <div><b>Pair</b><span>{liquidity.pair || 'KEY/WETH'}</span></div>
+      <div><b>Initial price</b><span>{liquidity.initialPrice || '1 ETH = 500,000 KEY'}</span></div>
+      <div><b>Fee</b><span>{liquidity.fee === '10000' ? '1%' : liquidity.fee || 'TBA'}</span></div>
+      <div><b>Tick spacing</b><span>{liquidity.tickSpacing || '200'}</span></div>
+      {txLink && <div><b>Initialize tx</b><span>{liquidity.initializeTx}</span><a href={txLink} target="_blank" rel="noreferrer">etherscan</a></div>}
+    </div>}
     <div className="flowLine"><span>User mint fee</span><i>→</i><span>MintGate</span><i>→</i><span>TreasuryVault</span><i>→</i><span>published liquidity route</span><i>→</i><span>Uniswap v4 pool</span></div>
     <h2>Reserve balances</h2>
     <div className="allocGrid compactAlloc">
@@ -546,7 +556,7 @@ function Vault({ data }) {
     <p>KEY that users already minted is inside user wallets and cannot be taken by the dev. The project team controls reserve wallets, vault routing, and backend attestation policy, so those addresses are shown publicly here.</p>
     <div className="tableLite addresses">{controlRows.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span>{etherscan(v) && <a href={etherscan(v)} target="_blank" rel="noreferrer">etherscan</a>}</div>)}</div>
     <h2>Liquidity policy</h2>
-    <ul><li>No official Uniswap v4 trading pool is announced until a pool ID and initial LP transaction are published here.</li><li>The first official pool should use no hook unless a production hook has been audited.</li><li>If liquidity is removable by the team, KEY must describe it as managed liquidity, not locked liquidity.</li><li>If liquidity is later locked, the lock contract and transaction proof should be published here.</li></ul>
+    <ul><li>The official Uniswap v4 pool is initialized, but trading is not active until liquidity is added.</li><li>The first official pool uses no hook. A custom hook should only be added after production review.</li><li>If liquidity is removable by the team, KEY must describe it as managed liquidity, not locked liquidity.</li><li>If liquidity is later locked, the lock contract and transaction proof should be published here.</li></ul>
   </Card></main>;
 }
 
