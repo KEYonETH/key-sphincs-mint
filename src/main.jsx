@@ -120,7 +120,6 @@ function TopStats({ data }) {
     <Stat label="public mint pool" value={`${fmt.format(t.publicMintPool)} KEY`} />
     <Stat label="lp reserve" value={`${fmt.format(t.lpReserve)} KEY`} />
     <Stat label="treasury reserve" value={`${fmt.format(t.treasuryReserve)} KEY`} />
-    <Stat label="est. mints" value={`±${fmt.format(t.estimatedMints)}`} />
     <Stat label="network" value={t.network} />
   </section>;
 }
@@ -613,7 +612,7 @@ function App() {
     return <Home go={go} data={data} />;
   }, [route, wallet, data]);
 
-  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} /><StatusLine mode={data.mode} /><TopStats data={data} />{page}<Footer /></div></>;
+  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);

@@ -2006,6 +2006,383 @@ footer {
   font-size: 10px;
 }
 
+/* Silver terminal refinement */
+:root {
+  --bg: #050505;
+  --panel: rgba(7, 7, 7, 0.92);
+  --panel-2: rgba(14, 14, 14, 0.9);
+  --ink: #f7f7f2;
+  --muted: #b9b9b2;
+  --faint: #85857f;
+  --line: #62625d;
+  --line-soft: #33332f;
+  --silver: #e7e7df;
+  --silver-dim: #b7b7af;
+  --shadow: 0 18px 54px rgba(0, 0, 0, 0.42);
+  font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(230,230,224,0.09), transparent 25%),
+    radial-gradient(circle at 74% 10%, rgba(230,230,224,0.07), transparent 30%),
+    radial-gradient(circle at 50% 108%, rgba(210,210,205,0.12), transparent 34%),
+    linear-gradient(180deg, #080808 0%, #020202 58%, #060606 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 50% 34%, black, transparent 78%);
+}
+
+.shell {
+  width: min(1580px, calc(100vw - 150px));
+  padding: 16px 0 12px;
+}
+
+.topbar {
+  grid-template-columns: 300px minmax(420px, 1fr) 180px;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+
+.brandIcon {
+  width: 50px;
+  height: 50px;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.09), 0 0 34px rgba(220,220,215,0.09);
+}
+
+.brandIcon img {
+  width: 37px;
+  height: 37px;
+}
+
+.brandName {
+  font-size: 13px;
+  letter-spacing: 0.34em;
+}
+
+.brandSub {
+  font-size: 10px;
+}
+
+nav {
+  max-width: 590px;
+  height: 44px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(0,0,0,0.08));
+}
+
+nav button {
+  font-size: 12px;
+}
+
+.connect,
+.buttonStack button,
+.outline,
+.primary,
+.ghost {
+  min-height: 36px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.connect {
+  min-width: 160px;
+}
+
+.status {
+  min-height: 32px;
+  margin-bottom: 12px;
+  border-color: rgba(210,210,205,0.18);
+  background: rgba(255,255,255,0.018);
+}
+
+.statStrip {
+  grid-template-columns: repeat(5, 1fr);
+  margin-bottom: 14px;
+  background: rgba(5,5,5,0.78);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.stat {
+  min-height: 84px;
+  padding: 15px 20px;
+}
+
+.stat b {
+  font-size: 17px;
+}
+
+.page,
+.leftStack,
+.compactRow,
+.proofGrid {
+  gap: 12px;
+}
+
+.homeGrid {
+  grid-template-columns: 1.02fr 0.8fr;
+}
+
+.mintGrid {
+  grid-template-columns: minmax(0, 1fr) 500px;
+}
+
+.heroMini,
+.card,
+.contentPage {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.018), rgba(255,255,255,0.004)),
+    var(--panel);
+  border-color: rgba(210,210,205,0.28);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), var(--shadow);
+}
+
+.heroMini {
+  min-height: 270px;
+  padding: 28px 32px 24px;
+}
+
+.heroMini h1,
+.contentPage h1 {
+  max-width: 600px;
+  font-size: clamp(27px, 2.35vw, 40px);
+}
+
+.heroMini > p {
+  max-width: 600px;
+  font-size: 12px;
+}
+
+.homeExplain {
+  margin-top: 14px;
+}
+
+.homeExplain span {
+  min-height: 62px;
+  padding: 12px;
+}
+
+.homeExplain b {
+  font-size: 10px;
+}
+
+.homeExplain em {
+  font-size: 10px;
+}
+
+.heroActions {
+  margin-top: 16px;
+}
+
+.primary,
+.buttonStack .primary {
+  color: #080808;
+  background: linear-gradient(180deg, #ffffff 0%, #cfcfca 42%, #7b7b75 100%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.85), 0 0 22px rgba(255,255,255,0.08);
+}
+
+.ghost,
+.outline {
+  background: rgba(0,0,0,0.3);
+}
+
+.card {
+  padding: 16px 20px;
+}
+
+.cardTitle {
+  margin-bottom: 13px;
+}
+
+.progressCard {
+  min-height: 174px;
+}
+
+.progressHead h2 {
+  font-size: 20px;
+}
+
+.bar {
+  height: 10px;
+  margin: 16px 0 18px;
+}
+
+.metric {
+  padding: 11px 12px 0 0;
+}
+
+.metric strong {
+  font-size: 15px;
+}
+
+.signatureInfo h3 {
+  font-size: 14px;
+}
+
+.signatureInfo p {
+  font-size: 11px;
+}
+
+.signatureInfo code {
+  padding: 7px 9px;
+}
+
+.steps {
+  gap: 9px;
+}
+
+.step b {
+  font-size: 13px;
+}
+
+.step p {
+  font-size: 11px;
+}
+
+.tier {
+  grid-template-columns: 14px minmax(100px, 1fr) 96px 48px;
+  font-size: 12px;
+}
+
+.tier b {
+  font-size: 12px;
+}
+
+.tier span,
+.tier small {
+  font-size: 11px;
+}
+
+.mintTop {
+  grid-template-columns: 1.25fr 0.9fr 0.9fr;
+}
+
+.amount,
+.miniFact {
+  min-height: 40px;
+}
+
+.amount {
+  grid-template-columns: 36px 1fr 36px;
+}
+
+.amount b {
+  font-size: 15px;
+}
+
+.miniFact {
+  padding: 7px 10px;
+}
+
+.resultStrip div {
+  padding: 9px 10px;
+}
+
+.buttonStack {
+  gap: 7px;
+  padding: 6px;
+}
+
+.buttonStack button {
+  min-height: 40px;
+}
+
+.proofConsole,
+.sphincsBox,
+.proofMini div,
+.hashGrid div,
+.resultStrip,
+.miniFact,
+.amount,
+.homeExplain span {
+  background: rgba(255,255,255,0.018);
+  border-color: rgba(210,210,205,0.18);
+}
+
+.proofLine,
+.proofSteps div {
+  padding: 9px 12px;
+}
+
+.proofLine code,
+.proofSteps span {
+  font-size: 10px;
+}
+
+.proofMini div,
+.hashGrid div {
+  padding: 10px;
+}
+
+.contentPage,
+.article {
+  padding: 24px 28px;
+}
+
+.page.proofExplorer {
+  grid-template-columns: 1fr;
+}
+
+.proofIntro {
+  grid-template-columns: minmax(0, 1fr) 120px;
+}
+
+.proofGrid {
+  grid-template-columns: 0.72fr 1.18fr;
+}
+
+.proofStats .metric {
+  padding: 13px 16px;
+}
+
+.proofListCard,
+.proofDetailCard {
+  min-height: 390px;
+}
+
+.proofList {
+  max-height: 420px;
+}
+
+.proofItem {
+  padding: 10px 12px;
+}
+
+.selectedHead h2,
+.selectedHero h2 {
+  font-size: 24px;
+}
+
+.proofDetailTable div,
+.proofRow {
+  grid-template-columns: 160px minmax(0, 1fr) 62px;
+  padding: 9px 12px;
+}
+
+.allocGrid .metric,
+.vaultStatusGrid .metric {
+  min-height: 74px;
+}
+
+.tableLite div {
+  grid-template-columns: 170px minmax(0, 1fr) 76px;
+}
+
 @media (max-width: 1180px) {
   .shell { width: min(100% - 36px, 1100px); }
   .topbar { grid-template-columns: 1fr; }
