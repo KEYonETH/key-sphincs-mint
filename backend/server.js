@@ -54,7 +54,8 @@ const rpcUrl = process.env.MAINNET_RPC_URL || process.env.RPC_URL || process.env
 const chainProvider = rpcUrl ? new ethers.JsonRpcProvider(rpcUrl, CONFIG.chainId) : null;
 const mintGateStatsAbi = [
   'function publicMinted() view returns (uint256)',
-  'function walletMints(address) view returns (uint256)'
+  'function walletMints(address) view returns (uint256)',
+  'function usedProofId(bytes32) view returns (bool)'
 ];
 const tokenStatsAbi = [
   'function publicMintedByGate() view returns (uint256)'
@@ -156,9 +157,11 @@ async function liveStats() {
       const vault = new ethers.Contract(CONFIG.treasuryVaultAddress, treasuryVaultStatsAbi, chainProvider);
       totalMintFeesReceived = await vault.totalMintFeesReceived();
     }
+    const mintPriceWei = ethers.parseEther(TOKENOMICS.mintPriceEth);
+    const successfulMints = mintPriceWei > 0n ? Number(totalMintFeesReceived / mintPriceWei) : 0;
 
     return {
-      totalProofs: proofStats.totalProofs,
+      totalProofs: successfulMints,
       attestationRecords: proofStats.totalProofs,
       mintedTokens: Number(ethers.formatEther(publicMinted)),
       ethRaised: Number(ethers.formatEther(totalMintFeesReceived)),
@@ -173,6 +176,23 @@ async function liveStats() {
       chainError: 'live chain stats unavailable'
     };
   }
+}
+
+async function listMintedProofs(limit, offset) {
+  const localProofs = store.list(Math.max(limit + offset, 100), 0);
+  if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
+    return localProofs.slice(offset, offset + limit);
+  }
+
+  const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
+  const checks = await Promise.allSettled(localProofs.map(async (proof) => ({
+    proof,
+    minted: await mintGate.usedProofId(proof.proofId)
+  })));
+  return checks
+    .filter((result) => result.status === 'fulfilled' && result.value.minted)
+    .map((result) => result.value.proof)
+    .slice(offset, offset + limit);
 }
 
 async function countWalletMints(recipient) {
@@ -312,7 +332,7 @@ app.post('/api/attest', async (req, res) => {
 app.get('/api/proofs', async (req, res) => {
   const limit = Math.min(Number(req.query.limit || 50), 200);
   const offset = Math.max(Number(req.query.offset || 0), 0);
-  res.json({ ok: true, proofs: store.list(limit, offset), stats: await liveStats() });
+  res.json({ ok: true, proofs: await listMintedProofs(limit, offset), stats: await liveStats() });
 });
 
 app.get('/api/proofs/:id', (req, res) => {
