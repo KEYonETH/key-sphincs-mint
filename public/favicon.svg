@@ -1,1 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#fff6df"/><path d="M22 37a10 10 0 1 1 7 7l-3 3h-5v-5l3-3-2-2zm17-13a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="#b58516"/><path d="M39 10v8M49 14l-6 6M54 26h-8" stroke="#d7aa3d" stroke-width="2" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="metal" x1="20" y1="12" x2="104" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff"/>
+      <stop offset="0.3" stop-color="#b8b8b8"/>
+      <stop offset="0.58" stop-color="#f2f2f2"/>
+      <stop offset="1" stop-color="#8f8f8f"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="22" fill="#050505"/>
+  <path d="M64 13 75 34l23-1-11 21 16 18-23 4-8 22-17-16-22 9 3-24-19-14 21-10 3-23 18 13z" fill="#202020" stroke="url(#metal)" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="64" cy="55" r="20" fill="url(#metal)" stroke="#3b3b3b" stroke-width="5"/>
+  <path d="M64 75v35" stroke="url(#metal)" stroke-width="13" stroke-linecap="round"/>
+  <path d="M70 93h25v11H76v9h19v10H64V93z" fill="url(#metal)" stroke="#3b3b3b" stroke-width="4" stroke-linejoin="round"/>
+</svg>

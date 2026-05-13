@@ -101,7 +101,7 @@ function Header({ route, go, wallet, connect }) {
   const nav = ['home', 'mint', 'proof', 'tokenomics', 'vault', 'whitepaper'];
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
-      <div className="brandIcon">⌁</div>
+      <div className="brandIcon"><img src="/key-logo.svg" alt="KEY" /></div>
       <div><div className="brandName">KEY</div><div className="brandSub">SPHINCS Signature Mint</div></div>
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{n}</button>)}</nav>
@@ -154,7 +154,7 @@ function Metric({ label, value, note }) { return <div className="metric"><small>
 function RewardTiers({ tiers }) {
   return <Card title="reward tiers" className="tiersCard"><div className="tierRows">
     {tiers.map((tier, idx) => <div className="tier" key={tier.name}>
-      <span className={`keyDot k${idx}`}>◆</span><b>{tier.name}</b><span>{fmt.format(tier.reward)} KEY</span><small>{tier.odds}</small>
+      <span className={`keyDot k${idx}`} /><b>{tier.name}</b><span>{fmt.format(tier.reward)} KEY</span><small>{tier.odds}</small>
     </div>)}
   </div></Card>;
 }
@@ -170,25 +170,22 @@ function MintFlow() {
 
 function SignatureInfo() {
   return <Card title="signature minting" className="signatureInfo">
-    <h3>How signature minting works</h3>
-    <p>The wallet signature proves who is minting. The SPHINCS-style signature proves the key. The reward is derived from the verified signature hash, not from a backend random number.</p>
-    <code>Not proof-of-work. Not fixed claim. Proof-of-Signature Hash.</code>
+    <h3>How minting works</h3>
+    <p>Generate a key, sign your address, then mint. The backend verifies the signature and the hash assigns the reward.</p>
+    <code>Not proof-of-work. Proof-of-Signature Hash.</code>
   </Card>;
 }
 
 function Home({ go, data }) {
   return <main className="page homeGrid">
     <section className="heroMini">
-      <p className="eyebrow">not proof-of-work • proof-of-signature hash</p>
+      <p className="eyebrow">proof-of-signature hash</p>
       <h1>Mint KEY with a post-quantum signature.</h1>
       <p>Wallet proves who you are. SPHINCS proves your key. The signature hash decides your reward.</p>
       <div className="homeExplain">
-        <div><b>What is KEY?</b><p>KEY turns the SPHINCS signature idea into a simple Ethereum mint ritual. Create a key, sign your address, reveal a tier, and mint the KEY reward assigned by the hash.</p></div>
-        <div className="explainTriplet">
-          <span><b>Wallet</b><em>Proves ownership of the Ethereum address.</em></span>
-          <span><b>Key</b><em>Creates a SPHINCS-style public key hash.</em></span>
-          <span><b>Hash</b><em>Determines the reward tier.</em></span>
-        </div>
+        <span><b>Wallet</b><em>Proves the minter.</em></span>
+        <span><b>Key</b><em>Creates the public hash.</em></span>
+        <span><b>Hash</b><em>Selects the reward tier.</em></span>
       </div>
       <div className="heroActions"><button className="primary" onClick={() => go('mint')}>open mint</button><button className="ghost" onClick={() => go('whitepaper')}>read whitepaper</button></div>
     </section>
@@ -584,7 +581,7 @@ proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PR
   </Card></main>;
 }
 
-function Footer() { return <footer>Proof-of-Signature Hash <span>•</span> Treasury flow can route into locked liquidity via Uniswap v4 hook <span>•</span> © 2026 KEY</footer>; }
+function Footer() { return <footer>KEY <span>•</span> Proof-of-Signature Hash <span>•</span> Ethereum</footer>; }
 
 function App() {
   const [route, go] = useRoute();
