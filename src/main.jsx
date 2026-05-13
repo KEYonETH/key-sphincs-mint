@@ -40,6 +40,8 @@ function bytesToHex(bytes) { return '0x' + Array.from(bytes).map((b) => b.toStri
 function isZeroAddress(addr) { return !addr || addr === ZERO || /^0x0{40}$/i.test(addr); }
 function configuredMintGate(data) { return !isZeroAddress(data?.mintGate) ? data.mintGate : MINT_GATE; }
 function configuredChainId(data) { return Number(data?.chainId || import.meta.env.VITE_CHAIN_ID || 1); }
+function chainHex(chainId) { return `0x${Number(chainId).toString(16)}`; }
+function chainName(chainId) { return Number(chainId) === 1 ? 'Ethereum Mainnet' : `chain ${chainId}`; }
 function pct(n, d) { return Math.min(100, Math.max(0, (Number(n || 0) / Number(d || 1)) * 100)); }
 function signingCommand(message) {
   return `$privateKey = "0xPRIVATEKEY"
@@ -53,6 +55,35 @@ $bytes = [System.IO.File]::ReadAllBytes(".\\backend\\data\\key_sig.bin")
 $sigHex = "0x" + (($bytes | ForEach-Object { $_.ToString("x2") }) -join "")
 $sigHex | Set-Clipboard
 $sigHex`;
+}
+
+async function ensureWalletChain(expectedChainId) {
+  if (!window.ethereum) throw new Error('Install MetaMask or another EVM wallet.');
+  const expected = Number(expectedChainId || 1);
+  const current = Number(await window.ethereum.request({ method: 'eth_chainId' }));
+  if (current === expected) return;
+
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: chainHex(expected) }]
+    });
+  } catch (error) {
+    if (error?.code === 4902 && expected === 1) {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: '0x1',
+          chainName: 'Ethereum Mainnet',
+          nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+          rpcUrls: ['https://cloudflare-eth.com'],
+          blockExplorerUrls: ['https://etherscan.io']
+        }]
+      });
+      return;
+    }
+    throw new Error(`Switch MetaMask to ${chainName(expected)} before minting KEY.`);
+  }
 }
 
 function useRoute() {
@@ -243,6 +274,7 @@ function Mint({ wallet, connect, data, refresh }) {
       setPublicKeyHash(pk);
       const epoch = Math.floor(Date.now() / (1000 * 60 * 10));
       const chainId = configuredChainId(data);
+      await ensureWalletChain(chainId);
       const msgRes = await fetch(`${BACKEND}/api/message?recipient=${addr}&publicKeyHash=${pk}&epoch=${epoch}&chainId=${chainId}`).then(r => r.json());
       if (!msgRes.ok) throw new Error(msgRes.error);
       const provider = new ethers.BrowserProvider(window.ethereum);
@@ -296,6 +328,7 @@ function Mint({ wallet, connect, data, refresh }) {
         setNotice(`${mintProof.tier.name}: ${fmt.format(mintProof.tier.reward)} KEY. Demo mode stops here because mint gate is not configured.`);
         return;
       }
+      await ensureWalletChain(mintProof.typedData?.domain?.chainId || configuredChainId(data));
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
       const gate = new ethers.Contract(mintGateAddress, GATE_ABI, signer);
@@ -527,6 +560,7 @@ function App() {
 
   async function connect() {
     if (!window.ethereum) { alert('Install MetaMask or another EVM wallet.'); return ''; }
+    await ensureWalletChain(configuredChainId(data));
     const provider = new ethers.BrowserProvider(window.ethereum);
     const accounts = await provider.send('eth_requestAccounts', []);
     const addr = ethers.getAddress(accounts[0]); setWallet(addr); return addr;
