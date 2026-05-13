@@ -179,7 +179,7 @@ function Home({ go, data }) {
   return <main className="page homeGrid">
     <section className="heroMini">
       <p className="eyebrow">proof-of-signature hash</p>
-      <h1>Mint KEY with a post-quantum signature.</h1>
+      <h1>Mint KEY with a signature hash.</h1>
       <p>Wallet proves who you are. SPHINCS proves your key. The signature hash decides your reward.</p>
       <div className="homeExplain">
         <span><b>Wallet</b><em>Proves the minter.</em></span>
@@ -349,9 +349,9 @@ function Mint({ wallet, connect, data, refresh }) {
         <div><span>reward</span><b>{proof ? `${fmt.format(proof.tier.reward)} KEY` : 'pending'}</b></div>
       </div>
       <div className="buttonStack">
-        <button className={`outline ${actionClass(hasKey, busy === 'key')}`} onClick={generateKey} disabled={busy}>{busy === 'key' ? 'Generating' : hasKey ? '✓ Key ready' : 'Generate key'}</button>
-        <button className={`outline ${actionClass(hasSigned, busy === 'signing')}`} onClick={signAddress} disabled={busy}>{busy === 'signing' ? 'Signing' : hasSigned ? '✓ Signed' : 'Sign address'}</button>
-        <button className={`primary ${actionClass(hasProof, busy === 'mint')}`} onClick={mintKey} disabled={busy}>{busy === 'mint' ? 'Minting' : hasProof ? '✓ Mint ready' : 'Mint KEY'}</button>
+        <button className={`outline ${actionClass(hasKey, busy === 'key')}`} onClick={generateKey} disabled={busy}>{busy === 'key' ? 'Generating' : hasKey ? 'Key ready' : 'Generate key'}</button>
+        <button className={`outline ${actionClass(hasSigned, busy === 'signing')}`} onClick={signAddress} disabled={busy}>{busy === 'signing' ? 'Signing' : hasSigned ? 'Signed' : 'Sign address'}</button>
+        <button className={`primary ${actionClass(hasProof, busy === 'mint')}`} onClick={mintKey} disabled={busy}>{busy === 'mint' ? 'Minting' : hasProof ? 'Mint ready' : 'Mint KEY'}</button>
       </div>
       {notice && <p className="notice">{notice}</p>}
       <div className="proofConsole">
@@ -381,7 +381,7 @@ function Mint({ wallet, connect, data, refresh }) {
 }
 
 function ProofLine({ label, value }) {
-  return <div className="proofLine"><small>{label}</small><code>{value}</code></div>;
+  return <div className="proofLine"><small>{label}</small><code title={value}>{value}</code></div>;
 }
 
 function Proof({ data }) {
@@ -520,18 +520,11 @@ function Vault({ data }) {
     ['Treasury reserve wallet', addresses.treasuryReserve || import.meta.env.VITE_TREASURY_RESERVE_ADDRESS || 'TBA'],
     ['Contract owner', addresses.contractOwner || import.meta.env.VITE_CONTRACT_OWNER_ADDRESS || 'TBA']
   ];
-  const controlRows = [
-    ['Token owner', controls.tokenOwner || 'TBA'],
-    ['Token mint gate', controls.tokenMintGate || 'TBA'],
-    ['Vault owner', controls.vaultOwner || 'TBA'],
-    ['Vault mint gate', controls.vaultMintGate || 'TBA'],
-    ['Liquidity manager', controls.liquidityManager && !isZeroAddress(controls.liquidityManager) ? controls.liquidityManager : 'not set']
-  ];
   const value = (n, unit) => Number.isFinite(Number(n)) ? `${fmt.format(Number(n))} ${unit}` : `0 ${unit}`;
   const etherscan = (v) => ethers.isAddress(v) ? `https://etherscan.io/address/${v}` : '';
   return <main className="page"><Card title="vault & liquidity" className="article">
     <h1>Vault</h1>
-    <p>KEY liquidity is intentionally transparent. Mint fees go to the treasury vault, the LP reserve is held separately, and the official Uniswap v4 pool will be published here before trading is announced.</p>
+    <p>Mint fees are held by the treasury vault. Reserve wallets, pool status, and liquidity actions are published here before trading is enabled.</p>
     <div className="vaultStatusGrid">
       <Metric label="official trading" value={noPool ? 'not launched' : 'liquidity pending'} note={noPool ? 'no official KEY pool yet' : 'pool exists, LP has not been added'} />
       <Metric label="uniswap v4 pool" value={noPool ? 'not created' : 'created'} note={liquidity.poolId || 'pending'} />
@@ -546,21 +539,10 @@ function Vault({ data }) {
       <div><b>Tick spacing</b><span>{liquidity.tickSpacing || '200'}</span></div>
       {txLink && <div><b>Initialize tx</b><span>{liquidity.initializeTx}</span><a href={txLink} target="_blank" rel="noreferrer">etherscan</a></div>}
     </div>}
-    <div className="flowLine"><span>User mint fee</span><i>→</i><span>MintGate</span><i>→</i><span>TreasuryVault</span><i>→</i><span>published liquidity route</span><i>→</i><span>Uniswap v4 pool</span></div>
-    <h2>Reserve balances</h2>
-    <div className="allocGrid compactAlloc">
-      <Metric label="LP reserve wallet" value={value(balances.lpReserveKEY, 'KEY')} note="reserved for liquidity operations" />
-      <Metric label="treasury reserve wallet" value={value(balances.treasuryReserveKEY, 'KEY')} note="security, deployment, operations" />
-      <Metric label="mint fees received" value={value(balances.totalMintFeesReceivedETH, 'ETH')} note="lifetime mint fees received by vault" />
-      <Metric label="ETH routed" value={value(balances.totalEthRoutedETH, 'ETH')} note="sent from vault to liquidity manager" />
-    </div>
     <h2>Public addresses</h2>
     <div className="tableLite addresses">{addressRows.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span>{etherscan(v) && <a href={etherscan(v)} target="_blank" rel="noreferrer">etherscan</a>}</div>)}</div>
     <h2>Control surface</h2>
-    <p>KEY that users already minted is inside user wallets and cannot be taken by the dev. The project team controls reserve wallets, vault routing, and backend attestation policy, so those addresses are shown publicly here.</p>
-    <div className="tableLite addresses">{controlRows.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span>{etherscan(v) && <a href={etherscan(v)} target="_blank" rel="noreferrer">etherscan</a>}</div>)}</div>
-    <h2>Liquidity policy</h2>
-    <ul><li>The official Uniswap v4 pool is initialized, but trading is not active until liquidity is added.</li><li>The first official pool uses no hook. A custom hook should only be added after production review.</li><li>If liquidity is removable by the team, KEY must describe it as managed liquidity, not locked liquidity.</li><li>If liquidity is later locked, the lock contract and transaction proof should be published here.</li></ul>
+    <p>Minted KEY stays inside user wallets and cannot be taken back by the project. The team only controls reserves, vault routing, verifier policy, and when official liquidity is published.</p>
   </Card></main>;
 }
 
