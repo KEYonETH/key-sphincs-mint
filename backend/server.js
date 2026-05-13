@@ -39,7 +39,36 @@ app.use(cors({
   }
 }));
 app.use(express.json({ limit: '2mb' }));
-app.use(rateLimit({ windowMs: 60_000, max: 120 }));
+app.use(rateLimit({
+  windowMs: 60_000,
+  max: Number(process.env.GLOBAL_RATE_LIMIT_PER_MINUTE || 300),
+  standardHeaders: true,
+  legacyHeaders: false
+}));
+
+const attestLimiter = rateLimit({
+  windowMs: 60_000,
+  max: Number(process.env.ATTEST_RATE_LIMIT_PER_MINUTE || 30),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { ok: false, error: 'Too many mint attempts. Please wait a minute and try again.' }
+});
+
+const sphincsKeyLimiter = rateLimit({
+  windowMs: 60_000,
+  max: Number(process.env.SPHINCS_KEY_RATE_LIMIT_PER_MINUTE || 12),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { ok: false, error: 'Too many key generations. Please wait a minute and try again.' }
+});
+
+const sphincsSignLimiter = rateLimit({
+  windowMs: 60_000,
+  max: Number(process.env.SPHINCS_SIGN_RATE_LIMIT_PER_MINUTE || 20),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { ok: false, error: 'Too many signature requests. Please wait a minute and try again.' }
+});
 
 const attestationPrivateKey = process.env.SIGNER_PRIVATE_KEY;
 if (!attestationPrivateKey || !attestationPrivateKey.startsWith('0x')) {
@@ -52,6 +81,11 @@ const assistedSphincsKeys = new Map();
 const ASSISTED_KEY_TTL_MS = 30 * 60 * 1000;
 const rpcUrl = process.env.MAINNET_RPC_URL || process.env.RPC_URL || process.env.ETH_RPC_URL || '';
 const chainProvider = rpcUrl ? new ethers.JsonRpcProvider(rpcUrl, CONFIG.chainId) : null;
+const STATS_CACHE_TTL_MS = Number(process.env.STATS_CACHE_TTL_MS || 15_000);
+const PROOFS_CACHE_TTL_MS = Number(process.env.PROOFS_CACHE_TTL_MS || 15_000);
+const LIQUIDITY_CACHE_TTL_MS = Number(process.env.LIQUIDITY_CACHE_TTL_MS || 30_000);
+const CACHE_STALE_MS = Number(process.env.CACHE_STALE_MS || 120_000);
+const PROOF_CACHE_MAX_RECORDS = Number(process.env.PROOF_CACHE_MAX_RECORDS || 10_000);
 const mintGateStatsAbi = [
   'function publicMinted() view returns (uint256)',
   'function walletMints(address) view returns (uint256)',
@@ -96,6 +130,77 @@ const AttestSchema = z.object({
   sphincsMessage: z.string().optional()
 });
 
+function createSemaphore(max) {
+  let active = 0;
+  const queue = [];
+
+  return async function runExclusive(task) {
+    if (active >= max) {
+      await new Promise((resolve) => queue.push(resolve));
+    }
+    active += 1;
+    try {
+      return await task();
+    } finally {
+      active -= 1;
+      const next = queue.shift();
+      if (next) next();
+    }
+  };
+}
+
+const runSphincsJob = createSemaphore(Number(process.env.SPHINCS_CONCURRENCY || 2));
+
+function createAsyncCache(label, loader, ttlMs, staleMs = CACHE_STALE_MS) {
+  let cached = null;
+  let expiresAt = 0;
+  let staleUntil = 0;
+  let pending = null;
+
+  async function get({ force = false } = {}) {
+    const now = Date.now();
+    if (!force && cached && now < expiresAt) return cached;
+    if (pending) return pending;
+
+    pending = Promise.resolve()
+      .then(loader)
+      .then((value) => {
+        cached = value;
+        expiresAt = Date.now() + ttlMs;
+        staleUntil = expiresAt + staleMs;
+        return value;
+      })
+      .catch((error) => {
+        if (cached && Date.now() < staleUntil) {
+          console.warn(`[KEY backend] serving stale ${label}: ${error.message}`);
+          return cached;
+        }
+        throw error;
+      })
+      .finally(() => {
+        pending = null;
+      });
+
+    return pending;
+  }
+
+  return {
+    get,
+    clear() {
+      cached = null;
+      expiresAt = 0;
+      staleUntil = 0;
+    }
+  };
+}
+
+function clearLiveCaches() {
+  statsCache.clear();
+  proofListCache.clear();
+  liquidityCache.clear();
+  statusCache.clear();
+}
+
 function saveCanonicalMessage(message) {
   fs.mkdirSync(CONFIG.proofDataDir, { recursive: true });
   fs.writeFileSync(path.join(CONFIG.proofDataDir, 'message.txt'), message, 'utf8');
@@ -108,7 +213,7 @@ function pythonCommand() {
 async function runPython(scriptName, args = []) {
   const python = pythonCommand();
   const script = path.join(PROJECT_ROOT, 'backend', 'verifier', scriptName);
-  return execFileAsync(python, [script, ...args], { cwd: PROJECT_ROOT, timeout: 120_000 });
+  return runSphincsJob(() => execFileAsync(python, [script, ...args], { cwd: PROJECT_ROOT, timeout: 120_000 }));
 }
 
 function cleanupAssistedKeys() {
@@ -121,10 +226,10 @@ function cleanupAssistedKeys() {
 async function deriveSphincsPublicKey(privateKey) {
   const python = pythonCommand();
   const script = path.join(PROJECT_ROOT, 'backend', 'vendor', 'sphincsminus', 'sphincs_minus.py');
-  const result = await execFileAsync(python, [script, 'privtopub', privateKey], {
+  const result = await runSphincsJob(() => execFileAsync(python, [script, 'privtopub', privateKey], {
     cwd: path.dirname(script),
     timeout: 120_000
-  });
+  }));
   const output = `${result.stdout}\n${result.stderr}`;
   const match = output.match(/0x[0-9a-fA-F]+/);
   if (!match) throw new Error('could not derive SPHINCS public key');
@@ -143,7 +248,7 @@ async function signAssistedSphincs(privateKey, message) {
   }
 }
 
-async function liveStats() {
+async function liveStatsUncached() {
   const proofStats = store.stats();
   if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
     return { ...proofStats, source: 'proofs' };
@@ -167,7 +272,7 @@ async function liveStats() {
     }
     const mintPriceWei = ethers.parseEther(TOKENOMICS.mintPriceEth);
     const successfulMints = mintPriceWei > 0n ? Number(totalMintFeesReceived / mintPriceWei) : 0;
-    const confirmedProofs = await listMintedProofs(1_000_000, 0);
+    const confirmedProofs = await listMintedProofsUncached(PROOF_CACHE_MAX_RECORDS, 0);
     const confirmedByTier = {};
     for (const proof of confirmedProofs) {
       confirmedByTier[proof.tier.name] = (confirmedByTier[proof.tier.name] || 0) + 1;
@@ -200,7 +305,7 @@ async function optionalCall(contract, method, fallback, ...args) {
   }
 }
 
-async function liveLiquidityState() {
+async function liveLiquidityStateUncached() {
   const poolId = CONFIG.uniswapV4PoolId || 'not created';
   const hookAddress = CONFIG.uniswapV4HookAddress || ethers.ZeroAddress;
   const state = {
@@ -258,8 +363,8 @@ function isZeroAddressLike(address) {
   return !address || address === 'TBA' || address === 'not created' || address === ethers.ZeroAddress || /^0x0{40}$/i.test(address);
 }
 
-async function listMintedProofs(limit, offset) {
-  const localProofs = store.list(Math.max(limit + offset, 100), 0);
+async function listMintedProofsUncached(limit, offset) {
+  const localProofs = store.list(Math.min(Math.max(limit + offset, 100), PROOF_CACHE_MAX_RECORDS), 0);
   if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
     return localProofs.slice(offset, offset + limit);
   }
@@ -273,6 +378,28 @@ async function listMintedProofs(limit, offset) {
     .filter((result) => result.status === 'fulfilled' && result.value.minted)
     .map((result) => result.value.proof)
     .slice(offset, offset + limit);
+}
+
+const statsCache = createAsyncCache('stats', liveStatsUncached, STATS_CACHE_TTL_MS);
+const liquidityCache = createAsyncCache('liquidity', liveLiquidityStateUncached, LIQUIDITY_CACHE_TTL_MS);
+const proofListCache = createAsyncCache(
+  'proof list',
+  () => listMintedProofsUncached(PROOF_CACHE_MAX_RECORDS, 0),
+  PROOFS_CACHE_TTL_MS
+);
+
+async function liveStats(options) {
+  return statsCache.get(options);
+}
+
+async function liveLiquidityState(options) {
+  return liquidityCache.get(options);
+}
+
+async function listMintedProofs(limit, offset, options) {
+  if (options?.force) proofListCache.clear();
+  const proofs = await proofListCache.get(options);
+  return proofs.slice(offset, offset + limit);
 }
 
 async function countWalletMints(recipient) {
@@ -308,9 +435,19 @@ async function publicStatus() {
   };
 }
 
+const statusCache = createAsyncCache('status', publicStatus, STATS_CACHE_TTL_MS);
+
 app.get('/api/health', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
-app.get('/api/status', async (_req, res) => res.json(await publicStatus()));
-app.get('/api/stats', async (_req, res) => res.json({ ok: true, stats: await liveStats(), tokenomics: TOKENOMICS, liquidity: await liveLiquidityState() }));
+app.get('/api/status', async (req, res) => res.json(await statusCache.get({ force: req.query.refresh === '1' })));
+app.get('/api/stats', async (req, res) => {
+  const options = { force: req.query.refresh === '1' };
+  res.json({
+    ok: true,
+    stats: await liveStats(options),
+    tokenomics: TOKENOMICS,
+    liquidity: await liveLiquidityState(options)
+  });
+});
 
 app.get('/api/message', (req, res) => {
   try {
@@ -341,7 +478,7 @@ app.post('/api/challenge', (req, res) => {
   }
 });
 
-app.post('/api/attest', async (req, res) => {
+app.post('/api/attest', attestLimiter, async (req, res) => {
   try {
     const input = AttestSchema.parse(req.body);
     const recipient = ethers.getAddress(input.recipient);
@@ -402,6 +539,7 @@ app.post('/api/attest', async (req, res) => {
       sphincsVerification,
       mode: CONFIG.sphincsVerifyMode
     });
+    clearLiveCaches();
 
     res.json({ ok: true, ...record });
   } catch (error) {
@@ -413,7 +551,8 @@ app.post('/api/attest', async (req, res) => {
 app.get('/api/proofs', async (req, res) => {
   const limit = Math.min(Number(req.query.limit || 50), 200);
   const offset = Math.max(Number(req.query.offset || 0), 0);
-  res.json({ ok: true, proofs: await listMintedProofs(limit, offset), stats: await liveStats() });
+  const options = { force: req.query.refresh === '1' };
+  res.json({ ok: true, proofs: await listMintedProofs(limit, offset, options), stats: await liveStats(options) });
 });
 
 app.get('/api/proofs/:id', (req, res) => {
@@ -423,11 +562,11 @@ app.get('/api/proofs/:id', (req, res) => {
 });
 
 app.post('/api/export', async (_req, res) => {
-  const snapshot = store.exportSnapshot({ exportedAt: new Date().toISOString(), status: await publicStatus() });
+  const snapshot = store.exportSnapshot({ exportedAt: new Date().toISOString(), status: await statusCache.get() });
   res.json({ ok: true, snapshot });
 });
 
-app.post('/api/sphincs/key', async (_req, res) => {
+app.post('/api/sphincs/key', sphincsKeyLimiter, async (_req, res) => {
   try {
     cleanupAssistedKeys();
     const privateKey = `0x${crypto.randomBytes(32).toString('hex')}`;
@@ -444,7 +583,7 @@ app.post('/api/sphincs/key', async (_req, res) => {
   }
 });
 
-app.post('/api/sphincs/sign', async (req, res) => {
+app.post('/api/sphincs/sign', sphincsSignLimiter, async (req, res) => {
   try {
     cleanupAssistedKeys();
     const schema = z.object({

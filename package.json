@@ -31,7 +31,8 @@
     "check:sepolia": "node scripts/sepolia-final-check.js",
     "check:mainnet": "node scripts/mainnet-readiness-check.js",
     "export:proofs": "node scripts/export-proofs.js",
-    "backup:proofs": "node scripts/backup-proofs.js"
+    "backup:proofs": "node scripts/backup-proofs.js",
+    "backup:proofs:install-cron": "bash scripts/install-proof-backup-cron.sh"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.6.1",

@@ -13,6 +13,7 @@ backend/data/*private*
 backend/data/*signature*
 backend/data/snapshot.json
 backend/data/proofs-backup-*.jsonl
+backend/data/backups/
 backend/vendor/
 logs/
 *.log
