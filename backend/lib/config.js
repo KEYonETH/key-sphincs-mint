@@ -36,11 +36,23 @@ export function requiredEnvAddress(name, fallback = ethers.ZeroAddress) {
   return ethers.getAddress(value);
 }
 
+export function optionalEnvAddress(...names) {
+  for (const name of names) {
+    const value = process.env[name];
+    if (!value) continue;
+    if (!ethers.isAddress(value)) throw new Error(`${name} must be a valid address`);
+    return ethers.getAddress(value);
+  }
+  return ethers.ZeroAddress;
+}
+
 export const CONFIG = Object.freeze({
   port: Number(process.env.PORT || 8787),
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   chainId: Number(process.env.CHAIN_ID || 1),
   mintGateAddress: requiredEnvAddress('MINT_GATE_ADDRESS'),
+  keyTokenAddress: optionalEnvAddress('KEY_TOKEN_ADDRESS', 'VITE_KEY_TOKEN_ADDRESS'),
+  treasuryVaultAddress: optionalEnvAddress('TREASURY_VAULT_ADDRESS', 'VITE_TREASURY_VAULT_ADDRESS'),
   proofDataDir: process.env.PROOF_DATA_DIR || './backend/data',
   sphincsVerifyMode: process.env.SPHINCS_VERIFY_MODE || 'preview',
   sphincsVerifyCommand: process.env.SPHINCS_VERIFY_COMMAND || '',

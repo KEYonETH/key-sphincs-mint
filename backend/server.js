@@ -55,6 +55,12 @@ const chainProvider = rpcUrl ? new ethers.JsonRpcProvider(rpcUrl, CONFIG.chainId
 const mintGateStatsAbi = [
   'function publicMinted() view returns (uint256)'
 ];
+const tokenStatsAbi = [
+  'function publicMintedByGate() view returns (uint256)'
+];
+const treasuryVaultStatsAbi = [
+  'function totalMintFeesReceived() view returns (uint256)'
+];
 
 const hex32 = z.string().regex(/^0x[0-9a-fA-F]{64}$/);
 const hexAny = z.string().regex(/^0x[0-9a-fA-F]+$/);
@@ -134,11 +140,28 @@ async function liveStats() {
   }
 
   try {
-    const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
-    const publicMinted = await mintGate.publicMinted();
+    let publicMinted = 0n;
+    let totalMintFeesReceived = 0n;
+
+    if (CONFIG.mintGateAddress !== ethers.ZeroAddress) {
+      const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
+      publicMinted = await mintGate.publicMinted();
+    } else if (CONFIG.keyTokenAddress !== ethers.ZeroAddress) {
+      const token = new ethers.Contract(CONFIG.keyTokenAddress, tokenStatsAbi, chainProvider);
+      publicMinted = await token.publicMintedByGate();
+    }
+
+    if (CONFIG.treasuryVaultAddress !== ethers.ZeroAddress) {
+      const vault = new ethers.Contract(CONFIG.treasuryVaultAddress, treasuryVaultStatsAbi, chainProvider);
+      totalMintFeesReceived = await vault.totalMintFeesReceived();
+    }
+
     return {
-      ...proofStats,
+      totalProofs: proofStats.totalProofs,
+      attestationRecords: proofStats.totalProofs,
       mintedTokens: Number(ethers.formatEther(publicMinted)),
+      ethRaised: Number(ethers.formatEther(totalMintFeesReceived)),
+      byTier: proofStats.byTier,
       source: 'chain',
       lastUpdated: new Date().toISOString()
     };
