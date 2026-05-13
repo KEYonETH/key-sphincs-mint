@@ -500,22 +500,53 @@ function Tokenomics({ data }) {
 }
 
 function Vault({ data }) {
-  const addresses = [
-    ['KEY token', import.meta.env.VITE_KEY_TOKEN_ADDRESS || 'TBA'],
-    ['Mint gate', MINT_GATE || 'TBA'],
-    ['Treasury vault', import.meta.env.VITE_TREASURY_VAULT_ADDRESS || 'TBA'],
-    ['LP reserve wallet', import.meta.env.VITE_LP_RESERVE_ADDRESS || 'TBA'],
-    ['Uniswap v4 pool id', import.meta.env.VITE_UNISWAP_V4_POOL_ID || 'TBA'],
-    ['Hook address', import.meta.env.VITE_UNISWAP_V4_HOOK_ADDRESS || 'TBA']
+  const liquidity = data.liquidity || {};
+  const addresses = liquidity.addresses || {};
+  const balances = liquidity.balances || {};
+  const controls = liquidity.controls || {};
+  const noPool = !liquidity.poolId || liquidity.poolId === 'TBA' || liquidity.poolId === 'not created';
+  const noHook = !liquidity.hookAddress || isZeroAddress(liquidity.hookAddress);
+  const addressRows = [
+    ['KEY token', addresses.token || import.meta.env.VITE_KEY_TOKEN_ADDRESS || 'TBA'],
+    ['Mint gate', addresses.mintGate || MINT_GATE || 'TBA'],
+    ['Treasury vault', addresses.treasuryVault || import.meta.env.VITE_TREASURY_VAULT_ADDRESS || 'TBA'],
+    ['LP reserve wallet', addresses.lpReserve || import.meta.env.VITE_LP_RESERVE_ADDRESS || 'TBA'],
+    ['Treasury reserve wallet', addresses.treasuryReserve || import.meta.env.VITE_TREASURY_RESERVE_ADDRESS || 'TBA'],
+    ['Contract owner', addresses.contractOwner || import.meta.env.VITE_CONTRACT_OWNER_ADDRESS || 'TBA']
   ];
+  const controlRows = [
+    ['Token owner', controls.tokenOwner || 'TBA'],
+    ['Token mint gate', controls.tokenMintGate || 'TBA'],
+    ['Vault owner', controls.vaultOwner || 'TBA'],
+    ['Vault mint gate', controls.vaultMintGate || 'TBA'],
+    ['Liquidity manager', controls.liquidityManager && !isZeroAddress(controls.liquidityManager) ? controls.liquidityManager : 'not set']
+  ];
+  const value = (n, unit) => Number.isFinite(Number(n)) ? `${fmt.format(Number(n))} ${unit}` : `0 ${unit}`;
+  const etherscan = (v) => ethers.isAddress(v) ? `https://etherscan.io/address/${v}` : '';
   return <main className="page"><Card title="vault & liquidity" className="article">
     <h1>Vault</h1>
-    <p>The mint fee is sent to a treasury vault. After deployment, the vault route can be configured to seed or support locked liquidity with the LP reserve. This page should become the public transparency board for all treasury and liquidity actions.</p>
-    <p>Mint fees are routed to the treasury vault. The vault is designed to support liquidity operations and transparency. After deployment, this page should show vault address, LP reserve address, pool ID, hook address, and liquidity lock proof.</p>
-    <div className="flowLine"><span>User mint fee</span><i>→</i><span>MintGate</span><i>→</i><span>TreasuryVault</span><i>→</i><span>LP route</span><i>→</i><span>Uniswap v4 pool / hook</span></div>
-    <div className="tableLite addresses">{addresses.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span></div>)}</div>
-    <h2>What to publish after launch</h2>
-    <ul><li>Initial LP transaction hash.</li><li>Liquidity lock or custody proof.</li><li>Vault owner / multisig address.</li><li>Any treasury route transaction.</li><li>Hook source code and audit notes if a hook is used.</li></ul>
+    <p>KEY liquidity is intentionally transparent. Mint fees go to the treasury vault, the LP reserve is held separately, and the official Uniswap v4 pool will be published here before trading is announced.</p>
+    <div className="vaultStatusGrid">
+      <Metric label="official trading" value={noPool ? 'not launched' : 'pool configured'} note={noPool ? 'no official KEY liquidity has been added' : 'check pool details before trading'} />
+      <Metric label="uniswap v4 pool" value={noPool ? 'not created' : 'created'} note={liquidity.poolId || 'pending'} />
+      <Metric label="hook" value={noHook ? 'none' : 'configured'} note={noHook ? 'normal v4 pool planned first' : short(liquidity.hookAddress)} />
+      <Metric label="vault ETH" value={value(balances.vaultETH, 'ETH')} note="mint fees currently held by vault" />
+    </div>
+    <div className="flowLine"><span>User mint fee</span><i>→</i><span>MintGate</span><i>→</i><span>TreasuryVault</span><i>→</i><span>published liquidity route</span><i>→</i><span>Uniswap v4 pool</span></div>
+    <h2>Reserve balances</h2>
+    <div className="allocGrid compactAlloc">
+      <Metric label="LP reserve wallet" value={value(balances.lpReserveKEY, 'KEY')} note="reserved for liquidity operations" />
+      <Metric label="treasury reserve wallet" value={value(balances.treasuryReserveKEY, 'KEY')} note="security, deployment, operations" />
+      <Metric label="mint fees received" value={value(balances.totalMintFeesReceivedETH, 'ETH')} note="lifetime mint fees received by vault" />
+      <Metric label="ETH routed" value={value(balances.totalEthRoutedETH, 'ETH')} note="sent from vault to liquidity manager" />
+    </div>
+    <h2>Public addresses</h2>
+    <div className="tableLite addresses">{addressRows.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span>{etherscan(v) && <a href={etherscan(v)} target="_blank" rel="noreferrer">etherscan</a>}</div>)}</div>
+    <h2>Control surface</h2>
+    <p>KEY that users already minted is inside user wallets and cannot be taken by the dev. The project team controls reserve wallets, vault routing, and backend attestation policy, so those addresses are shown publicly here.</p>
+    <div className="tableLite addresses">{controlRows.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span>{etherscan(v) && <a href={etherscan(v)} target="_blank" rel="noreferrer">etherscan</a>}</div>)}</div>
+    <h2>Liquidity policy</h2>
+    <ul><li>No official Uniswap v4 trading pool is announced until a pool ID and initial LP transaction are published here.</li><li>The first official pool should use no hook unless a production hook has been audited.</li><li>If liquidity is removable by the team, KEY must describe it as managed liquidity, not locked liquidity.</li><li>If liquidity is later locked, the lock contract and transaction proof should be published here.</li></ul>
   </Card></main>;
 }
 

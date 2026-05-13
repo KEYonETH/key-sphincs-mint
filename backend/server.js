@@ -58,10 +58,18 @@ const mintGateStatsAbi = [
   'function usedProofId(bytes32) view returns (bool)'
 ];
 const tokenStatsAbi = [
-  'function publicMintedByGate() view returns (uint256)'
+  'function publicMintedByGate() view returns (uint256)',
+  'function balanceOf(address) view returns (uint256)',
+  'function totalSupply() view returns (uint256)',
+  'function owner() view returns (address)',
+  'function mintGate() view returns (address)'
 ];
 const treasuryVaultStatsAbi = [
-  'function totalMintFeesReceived() view returns (uint256)'
+  'function totalMintFeesReceived() view returns (uint256)',
+  'function totalEthRouted() view returns (uint256)',
+  'function owner() view returns (address)',
+  'function mintGate() view returns (address)',
+  'function liquidityManager() view returns (address)'
 ];
 
 const hex32 = z.string().regex(/^0x[0-9a-fA-F]{64}$/);
@@ -184,6 +192,72 @@ async function liveStats() {
   }
 }
 
+async function optionalCall(contract, method, fallback, ...args) {
+  try {
+    return await contract[method](...args);
+  } catch {
+    return fallback;
+  }
+}
+
+async function liveLiquidityState() {
+  const poolId = CONFIG.uniswapV4PoolId || 'not created';
+  const hookAddress = CONFIG.uniswapV4HookAddress || ethers.ZeroAddress;
+  const state = {
+    status: poolId && poolId !== 'TBA' && poolId !== 'not created' ? 'pool configured' : 'not launched',
+    trading: 'not enabled by official KEY liquidity',
+    poolId,
+    hookAddress,
+    hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
+    custody: 'LP reserve and treasury reserve are held by configured reserve wallets. User-minted KEY stays in user wallets.',
+    addresses: {
+      token: CONFIG.keyTokenAddress,
+      mintGate: CONFIG.mintGateAddress,
+      treasuryVault: CONFIG.treasuryVaultAddress,
+      lpReserve: CONFIG.lpReserveAddress,
+      treasuryReserve: CONFIG.treasuryReserveAddress,
+      contractOwner: CONFIG.contractOwnerAddress
+    },
+    balances: {},
+    controls: {}
+  };
+
+  if (!chainProvider) return state;
+
+  try {
+    if (CONFIG.keyTokenAddress !== ethers.ZeroAddress) {
+      const token = new ethers.Contract(CONFIG.keyTokenAddress, tokenStatsAbi, chainProvider);
+      state.controls.tokenOwner = await optionalCall(token, 'owner', ethers.ZeroAddress);
+      state.controls.tokenMintGate = await optionalCall(token, 'mintGate', ethers.ZeroAddress);
+      state.balances.totalSupplyKEY = Number(ethers.formatEther(await optionalCall(token, 'totalSupply', 0n)));
+      if (CONFIG.lpReserveAddress !== ethers.ZeroAddress) {
+        state.balances.lpReserveKEY = Number(ethers.formatEther(await optionalCall(token, 'balanceOf', 0n, CONFIG.lpReserveAddress)));
+      }
+      if (CONFIG.treasuryReserveAddress !== ethers.ZeroAddress) {
+        state.balances.treasuryReserveKEY = Number(ethers.formatEther(await optionalCall(token, 'balanceOf', 0n, CONFIG.treasuryReserveAddress)));
+      }
+    }
+
+    if (CONFIG.treasuryVaultAddress !== ethers.ZeroAddress) {
+      const vault = new ethers.Contract(CONFIG.treasuryVaultAddress, treasuryVaultStatsAbi, chainProvider);
+      state.controls.vaultOwner = await optionalCall(vault, 'owner', ethers.ZeroAddress);
+      state.controls.vaultMintGate = await optionalCall(vault, 'mintGate', ethers.ZeroAddress);
+      state.controls.liquidityManager = await optionalCall(vault, 'liquidityManager', ethers.ZeroAddress);
+      state.balances.vaultETH = Number(ethers.formatEther(await chainProvider.getBalance(CONFIG.treasuryVaultAddress)));
+      state.balances.totalMintFeesReceivedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalMintFeesReceived', 0n)));
+      state.balances.totalEthRoutedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalEthRouted', 0n)));
+    }
+  } catch {
+    state.error = 'live liquidity state unavailable';
+  }
+
+  return state;
+}
+
+function isZeroAddressLike(address) {
+  return !address || address === 'TBA' || address === 'not created' || address === ethers.ZeroAddress || /^0x0{40}$/i.test(address);
+}
+
 async function listMintedProofs(limit, offset) {
   const localProofs = store.list(Math.max(limit + offset, 100), 0);
   if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
@@ -225,6 +299,7 @@ async function publicStatus() {
     tokenomics: TOKENOMICS,
     tiers: TIERS,
     stats: await liveStats(),
+    liquidity: await liveLiquidityState(),
     formulas: {
       signatureHash: 'keccak256(signature)',
       rewardHash: 'keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId)',
@@ -235,7 +310,7 @@ async function publicStatus() {
 
 app.get('/api/health', (_req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 app.get('/api/status', async (_req, res) => res.json(await publicStatus()));
-app.get('/api/stats', async (_req, res) => res.json({ ok: true, stats: await liveStats(), tokenomics: TOKENOMICS }));
+app.get('/api/stats', async (_req, res) => res.json({ ok: true, stats: await liveStats(), tokenomics: TOKENOMICS, liquidity: await liveLiquidityState() }));
 
 app.get('/api/message', (req, res) => {
   try {
