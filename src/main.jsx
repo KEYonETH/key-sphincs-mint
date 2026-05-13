@@ -3,7 +3,10 @@ import { createRoot } from 'react-dom/client';
 import { ethers } from 'ethers';
 import './styles.css';
 
-const BACKEND = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8787';
+const BACKEND = import.meta.env.VITE_BACKEND_URL
+  || (window.location.hostname === 'key-sphincs.xyz' || window.location.hostname === 'www.key-sphincs.xyz'
+    ? 'https://api.key-sphincs.xyz'
+    : 'http://localhost:8787');
 const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || ethers.ZeroAddress;
 const ZERO = ethers.ZeroAddress;
 
@@ -35,6 +38,8 @@ const fmt = new Intl.NumberFormat('en-US');
 function short(x) { return x ? `${x.slice(0, 6)}...${x.slice(-4)}` : 'not connected'; }
 function bytesToHex(bytes) { return '0x' + Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join(''); }
 function isZeroAddress(addr) { return !addr || addr === ZERO || /^0x0{40}$/i.test(addr); }
+function configuredMintGate(data) { return !isZeroAddress(data?.mintGate) ? data.mintGate : MINT_GATE; }
+function configuredChainId(data) { return Number(data?.chainId || import.meta.env.VITE_CHAIN_ID || 1); }
 function pct(n, d) { return Math.min(100, Math.max(0, (Number(n || 0) / Number(d || 1)) * 100)); }
 function signingCommand(message) {
   return `$privateKey = "0xPRIVATEKEY"
@@ -168,7 +173,7 @@ function Mint({ wallet, connect, data, refresh }) {
   const [message, setMessage] = useState('');
   const [walletSignature, setWalletSignature] = useState('');
   const [signedEpoch, setSignedEpoch] = useState(0);
-  const [signedChainId, setSignedChainId] = useState(Number(import.meta.env.VITE_CHAIN_ID || 1));
+  const [signedChainId, setSignedChainId] = useState(configuredChainId(data));
   const [proof, setProof] = useState(null);
   const [busy, setBusy] = useState('');
   const [notice, setNotice] = useState('');
@@ -237,7 +242,7 @@ function Mint({ wallet, connect, data, refresh }) {
       const pk = publicKeyHash || await generateKey();
       setPublicKeyHash(pk);
       const epoch = Math.floor(Date.now() / (1000 * 60 * 10));
-      const chainId = Number(import.meta.env.VITE_CHAIN_ID || 1);
+      const chainId = configuredChainId(data);
       const msgRes = await fetch(`${BACKEND}/api/message?recipient=${addr}&publicKeyHash=${pk}&epoch=${epoch}&chainId=${chainId}`).then(r => r.json());
       if (!msgRes.ok) throw new Error(msgRes.error);
       const provider = new ethers.BrowserProvider(window.ethereum);
@@ -260,7 +265,8 @@ function Mint({ wallet, connect, data, refresh }) {
       throw new Error('Real SPHINCS mode needs public key and signature hex before mint');
     }
     const epoch = signedEpoch || Math.floor(Date.now() / (1000 * 60 * 10));
-    const chainId = signedChainId || Number(import.meta.env.VITE_CHAIN_ID || 1);
+    const chainId = signedChainId || configuredChainId(data);
+    const mintGateAddress = configuredMintGate(data);
     const res = await fetch(`${BACKEND}/api/attest`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -269,7 +275,7 @@ function Mint({ wallet, connect, data, refresh }) {
         walletSignature,
         epoch,
         chainId,
-        verifyingContract: MINT_GATE,
+        verifyingContract: mintGateAddress,
         sphincsPublicKey: sphincsPublicKey.trim(),
         sphincsSignature: sphincsSignatureForRequest,
         sphincsMessage: message
@@ -285,13 +291,14 @@ function Mint({ wallet, connect, data, refresh }) {
     try {
       setBusy('mint'); setNotice('');
       const mintProof = proof || await requestAttestation();
-      if (isZeroAddress(MINT_GATE)) {
+      const mintGateAddress = configuredMintGate(data);
+      if (isZeroAddress(mintGateAddress)) {
         setNotice(`${mintProof.tier.name}: ${fmt.format(mintProof.tier.reward)} KEY. Demo mode stops here because mint gate is not configured.`);
         return;
       }
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const gate = new ethers.Contract(MINT_GATE, GATE_ABI, signer);
+      const gate = new ethers.Contract(mintGateAddress, GATE_ABI, signer);
       const tx = await gate.mintWithAttestation(mintProof.typedData, mintProof.attestation, { value: ethers.parseEther(t.mintPriceEth) });
       setNotice(`Transaction sent: ${tx.hash}`);
       await tx.wait();
