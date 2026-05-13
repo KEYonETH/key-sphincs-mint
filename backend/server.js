@@ -53,7 +53,8 @@ const ASSISTED_KEY_TTL_MS = 30 * 60 * 1000;
 const rpcUrl = process.env.MAINNET_RPC_URL || process.env.RPC_URL || process.env.ETH_RPC_URL || '';
 const chainProvider = rpcUrl ? new ethers.JsonRpcProvider(rpcUrl, CONFIG.chainId) : null;
 const mintGateStatsAbi = [
-  'function publicMinted() view returns (uint256)'
+  'function publicMinted() view returns (uint256)',
+  'function walletMints(address) view returns (uint256)'
 ];
 const tokenStatsAbi = [
   'function publicMintedByGate() view returns (uint256)'
@@ -174,6 +175,16 @@ async function liveStats() {
   }
 }
 
+async function countWalletMints(recipient) {
+  if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
+    return store.countWallet(recipient);
+  }
+
+  const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
+  const count = await mintGate.walletMints(recipient);
+  return Number(count);
+}
+
 async function publicStatus() {
   const chainId = CONFIG.chainId;
   const currentEpoch = Math.floor(Date.now() / (1000 * 60 * 10));
@@ -240,7 +251,7 @@ app.post('/api/attest', async (req, res) => {
       throw new Error('verifyingContract does not match configured MINT_GATE_ADDRESS');
     }
 
-    if (store.countWallet(recipient) >= TOKENOMICS.walletCap) {
+    if ((await countWalletMints(recipient)) >= TOKENOMICS.walletCap) {
       throw new Error(`wallet cap reached: ${TOKENOMICS.walletCap} mints`);
     }
 
