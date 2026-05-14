@@ -13,6 +13,13 @@ const PREVIEW_STATUS = Object.freeze({
   originClaimsOpen: false,
   mintRule: 'one mint per wallet',
   claimRule: 'one non-transferable Origin Claim Right per minting wallet',
+  rankRules: {
+    Genesis: { minLength: 3, reward: '21000' },
+    Quantum: { minLength: 4, reward: '5000' },
+    Golden: { minLength: 5, reward: '1500' },
+    Clean: { minLength: 6, reward: '750' },
+    Normal: { minLength: 7, reward: '500' }
+  },
   nameRules: {
     pattern: '^[a-z]+$',
     alphabet: 'lowercase English letters a-z only',

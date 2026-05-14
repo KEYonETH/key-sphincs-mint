@@ -17,8 +17,8 @@
   - Genesis: 3+ letters
   - Quantum: 4+ letters
   - Golden: 5+ letters
-  - Clean: 7+ letters
-  - Normal: 8+ letters
+  - Clean: 6+ letters
+  - Normal: 7+ letters
 - Names must match `^[a-z]+$`.
 - Names may use lowercase English letters only: `a-z`.
 - Numbers, spaces, symbols, hyphens, underscores, and uppercase letters are not valid.

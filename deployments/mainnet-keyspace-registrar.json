@@ -1,0 +1,13 @@
+{
+  "KEYSpaceRegistrar": "0x3cC9Ecc0c16842f7f6B4C721B7E1D6f706e149F6",
+  "KEYSpaceRegistrarDeployTx": "0x7a1912435f3f4607eec22534907fbffc5f6a6646aa788e4869051d3cef01c755",
+  "owner": "0xc488803B1dbc13754e1cA7241e9335E3777c1fec",
+  "keyToken": "0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2",
+  "identity": "0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741",
+  "primaryMintGate": "0x41Ed7E9E9F2dfd5a4ff9711EAc9182746564CAFD",
+  "legacyMintGates": [
+    "0x0Aea11184B840554F648c7061a7E1D7594E17767"
+  ],
+  "updatedAt": "2026-05-14T15:39:49.538Z",
+  "identityRegistrarSet": false
+}

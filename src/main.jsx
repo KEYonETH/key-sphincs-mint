@@ -501,8 +501,8 @@ function Keyspace({ tiers }) {
     contractsLive: false
   };
   const rankRules = [
-    { key: 'Normal', title: 'Normal Key', short: 'Normal', reward: 500, min: 8, claim: '8+ letters', bond: '500 KEY', origin: 'Normal Origin' },
-    { key: 'Clean', title: 'Clean Key', short: 'Clean', reward: 750, min: 7, claim: '7+ letters', bond: '750 KEY', origin: 'Clean Origin' },
+    { key: 'Normal', title: 'Normal Key', short: 'Normal', reward: 500, min: 7, claim: '7+ letters', bond: '500 KEY', origin: 'Normal Origin' },
+    { key: 'Clean', title: 'Clean Key', short: 'Clean', reward: 750, min: 6, claim: '6+ letters', bond: '750 KEY', origin: 'Clean Origin' },
     { key: 'Golden', title: 'Golden Key', short: 'Golden', reward: 1500, min: 5, claim: '5+ letters', bond: '1,500 KEY', origin: 'Golden Origin' },
     { key: 'Quantum', title: 'Quantum Key', short: 'Quantum', reward: 5000, min: 4, claim: '4+ letters', bond: '5,000 KEY', origin: 'Quantum Origin' },
     { key: 'Genesis', title: 'Genesis Key', short: 'Genesis', reward: 21000, min: 3, claim: '3+ letters', bond: '21,000 KEY', origin: 'Genesis Origin' }
@@ -624,7 +624,7 @@ function Keyspace({ tiers }) {
         <p>All eligible minters can claim when KEYSPACE opens. Your Key Rank controls the minimum name length.</p>
       </div>
       <div className="windowGrid">
-        {['Genesis: 3+ letters', 'Quantum: 4+ letters', 'Golden: 5+ letters', 'Clean: 7+ letters', 'Normal: 8+ letters'].map((item) => <div key={item}>{item}</div>)}
+        {['Genesis: 3+ letters', 'Quantum: 4+ letters', 'Golden: 5+ letters', 'Clean: 6+ letters', 'Normal: 7+ letters'].map((item) => <div key={item}>{item}</div>)}
       </div>
     </section>
 
