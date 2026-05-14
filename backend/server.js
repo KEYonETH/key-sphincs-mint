@@ -130,6 +130,12 @@ const AttestSchema = z.object({
   sphincsMessage: z.string().optional()
 });
 
+function assertConfiguredChain(chainId) {
+  if (Number(chainId) !== Number(CONFIG.chainId)) {
+    throw new Error(`chainId must be ${CONFIG.chainId}`);
+  }
+}
+
 function createSemaphore(max) {
   let active = 0;
   const queue = [];
@@ -463,6 +469,7 @@ app.get('/api/message', (req, res) => {
     const chainId = Number(req.query.chainId || CONFIG.chainId);
     if (!ethers.isAddress(recipient)) throw new Error('recipient query is required');
     if (!/^0x[0-9a-fA-F]{64}$/.test(publicKeyHash)) throw new Error('publicKeyHash query must be bytes32');
+    assertConfiguredChain(chainId);
     const message = buildCanonicalMessage({ recipient, publicKeyHash, epoch, chainId });
     saveCanonicalMessage(message);
     res.json({ ok: true, message, epoch, chainId });
@@ -474,6 +481,7 @@ app.get('/api/message', (req, res) => {
 app.post('/api/challenge', (req, res) => {
   try {
     const input = ChallengeSchema.parse(req.body);
+    assertConfiguredChain(input.chainId);
     const message = buildCanonicalMessage(input);
     saveCanonicalMessage(message);
     const challenge = challenges.issue({ ...input, message });
@@ -490,6 +498,7 @@ app.post('/api/attest', attestLimiter, async (req, res) => {
     const recipient = ethers.getAddress(input.recipient);
     const verifyingContract = ethers.getAddress(input.verifyingContract);
     const chainId = input.chainId;
+    assertConfiguredChain(chainId);
 
     if (CONFIG.mintGateAddress !== ethers.ZeroAddress && verifyingContract !== CONFIG.mintGateAddress) {
       throw new Error('verifyingContract does not match configured MINT_GATE_ADDRESS');
