@@ -6217,6 +6217,15 @@ nav {
   background: rgba(255,255,255,0.33) !important;
 }
 
+.listingCardImage {
+  width: 100% !important;
+  height: 140px !important;
+  object-fit: contain !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: #fffaf0 !important;
+}
+
 .listingCard b {
   color: #000 !important;
   font-size: 20px !important;

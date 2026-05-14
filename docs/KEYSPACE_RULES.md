@@ -38,6 +38,8 @@
 - OpenSea can display KEYSPACE identities as ERC721 assets through `tokenURI` metadata.
 - KEYSPACE Market primary listings use native ETH. The KEY reward remains locked as KeyBond inside the identity.
 - OpenSea ETH listings are separate owner-signed marketplace orders and cannot be forced by the NFT contract to track KEY price in real time.
+- `KEYIdentity.tokenURI(tokenId)` should resolve to `API_BASE_URL + "/api/keyspace/metadata/" + tokenId`, for example `https://api.key-sphincs.xyz/api/keyspace/metadata/421`.
+- Wallets and OpenSea read that metadata JSON, then fetch the SVG card image from `API_BASE_URL + "/api/keyspace/image/" + tokenId + ".svg"`.
 
 ## Backend
 

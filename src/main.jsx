@@ -547,6 +547,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
     ['alpha.key', 'Golden Origin', '1,500 KEY', '0.04 ETH', 'Preview'],
     ['terminal.key', 'Normal Origin', '500 KEY', '0.006 ETH', 'Preview']
   ];
+  const templatePreviewImage = `${BACKEND}/api/keyspace/image/421.svg`;
 
   const [rank, setRank] = useState('Normal');
   const [name, setName] = useState('');
@@ -669,6 +670,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <p>Example .key identities that can trade with ETH after mint-out.</p>
       </div>
       <div className="listingGrid">{listings.map(([name, origin, bond, listing, status]) => <div className="listingCard" key={name}>
+        {name === 'alpha.key' && <img className="listingCardImage" src={templatePreviewImage} alt="alpha.key KEYSPACE identity preview" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />}
         <b>{name}</b>
         <span>{origin}</span>
         <span>KeyBond: {bond}</span>

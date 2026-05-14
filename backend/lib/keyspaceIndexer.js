@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { ethers } from 'ethers';
 import { CONFIG } from './config.js';
 
@@ -54,6 +55,17 @@ const identityAbi = [
   'function ownerOf(uint256 tokenId) view returns (address)'
 ];
 const RANK_NAMES = Object.freeze(['Normal', 'Clean', 'Golden', 'Quantum', 'Genesis']);
+const KEYCARD_TEMPLATES = Object.freeze({
+  Normal: 'normal.svg',
+  Clean: 'clean.svg',
+  Golden: 'golden.svg',
+  Quantum: 'quantum.svg',
+  Genesis: 'genesis.svg'
+});
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const KEYCARD_TEMPLATE_DIR = path.resolve(__dirname, '../templates/keycards');
+const keyCardTemplateCache = new Map();
+const numberFormat = new Intl.NumberFormat('en-US');
 
 function isZeroAddress(address) {
   return !address || address === ethers.ZeroAddress || /^0x0{40}$/i.test(address);
@@ -78,10 +90,19 @@ function escapeXml(value = '') {
 
 function metadataBaseUrl() {
   return String(
+    process.env.API_BASE_URL ||
     process.env.KEYSPACE_PUBLIC_API_URL ||
     process.env.PUBLIC_API_URL ||
     process.env.VITE_BACKEND_URL ||
     'https://api.key-sphincs.xyz'
+  ).replace(/\/$/, '');
+}
+
+function siteBaseUrl() {
+  return String(
+    process.env.KEYSPACE_PUBLIC_SITE_URL ||
+    process.env.PUBLIC_SITE_URL ||
+    'https://www.key-sphincs.xyz'
   ).replace(/\/$/, '');
 }
 
@@ -100,6 +121,76 @@ function formatEth(value) {
 
 function rankName(originRank) {
   return RANK_NAMES[Number(originRank)] || 'Unknown';
+}
+
+function normalizeRank(rank = 'Normal') {
+  if (Number.isInteger(Number(rank)) && RANK_NAMES[Number(rank)]) return RANK_NAMES[Number(rank)];
+  const label = String(rank)
+    .replace(/\.key$/i, '')
+    .replace(/\s+origin$/i, '')
+    .replace(/\s+key$/i, '')
+    .trim()
+    .toLowerCase();
+  return RANK_NAMES.find((name) => name.toLowerCase() === label) || 'Normal';
+}
+
+function sanitizeIdentityName(name = '') {
+  const normalized = normalizeName(name);
+  return isValidKeyspaceName(normalized) ? normalized : 'identity';
+}
+
+function formatKeyBond(value = '0') {
+  const raw = String(value).replace(/\s*KEY$/i, '').replace(/,/g, '').trim();
+  const numeric = Number(raw);
+  if (Number.isFinite(numeric)) return `${numberFormat.format(numeric)} KEY`;
+  return `${String(value).replace(/\s*KEY$/i, '').trim()} KEY`;
+}
+
+function formatMintProof(value = '', tokenId = '') {
+  const raw = String(value || '').trim();
+  if (!raw || raw === ethers.ZeroHash) return `#${tokenId}`;
+  if (raw.startsWith('#')) return raw;
+  if (/^\d+$/.test(raw)) return `#${raw}`;
+  if (/^0x[0-9a-f]{64}$/i.test(raw)) {
+    return `#${(BigInt(raw) % 10000n).toString().padStart(4, '0')}`;
+  }
+  const compact = raw.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8);
+  return compact ? `#${compact}` : `#${tokenId}`;
+}
+
+function formatTokenId(tokenId = '') {
+  return `#${String(tokenId).replace(/\D/g, '') || '0'}`;
+}
+
+function assertTokenId(tokenId) {
+  const normalized = String(tokenId ?? '').trim();
+  if (!/^\d+$/.test(normalized)) throw new Error('tokenId must be numeric');
+  return normalized;
+}
+
+function loadKeyCardTemplate(rank) {
+  const normalizedRank = normalizeRank(rank);
+  const fileName = KEYCARD_TEMPLATES[normalizedRank] || KEYCARD_TEMPLATES.Normal;
+  if (!keyCardTemplateCache.has(fileName)) {
+    keyCardTemplateCache.set(fileName, fs.readFileSync(path.join(KEYCARD_TEMPLATE_DIR, fileName), 'utf8'));
+  }
+  return keyCardTemplateCache.get(fileName);
+}
+
+export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }) {
+  const normalizedRank = normalizeRank(rank);
+  const values = {
+    '{{NAME}}': escapeXml(`${sanitizeIdentityName(name)}.key`),
+    '{{ORIGIN}}': escapeXml(`${normalizedRank} Origin`),
+    '{{KEYBOND}}': escapeXml(formatKeyBond(keyBond)),
+    '{{MINT_PROOF}}': escapeXml(formatMintProof(mintProof, tokenId)),
+    '{{TOKEN_ID}}': escapeXml(formatTokenId(tokenId))
+  };
+  let svg = loadKeyCardTemplate(normalizedRank);
+  for (const [placeholder, value] of Object.entries(values)) {
+    svg = svg.split(placeholder).join(value);
+  }
+  return svg;
 }
 
 function ensureDir(file) {
@@ -204,11 +295,36 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
         keyBond: ethers.formatEther(details.keyBond ?? details[2] ?? 0n),
         originWallet: details.originWallet ?? details[3],
         originProofId: details.originProofId ?? details[4],
+        mintProof: details.originProofId ?? details[4],
         melted: Boolean(details.melted ?? details[5])
       };
     } catch {
       return null;
     }
+  }
+
+  function previewIdentity(tokenId) {
+    if (String(tokenId) !== '421') return null;
+    return {
+      owner: ethers.ZeroAddress,
+      tokenId: '421',
+      name: 'alpha.key',
+      rawName: 'alpha',
+      originRank: 2,
+      keyBond: '1500',
+      originWallet: ethers.ZeroAddress,
+      originProofId: '8842',
+      mintProof: '8842',
+      melted: false,
+      preview: true
+    };
+  }
+
+  async function identityForToken(tokenId, state) {
+    const normalizedTokenId = assertTokenId(tokenId);
+    return await readIdentity(normalizedTokenId) ||
+      state.claims.find((claim) => claim.tokenId === normalizedTokenId) ||
+      previewIdentity(normalizedTokenId);
   }
 
   async function refresh() {
@@ -428,52 +544,44 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
   }
 
   async function metadata(tokenId, options) {
+    const normalizedTokenId = assertTokenId(tokenId);
     const state = await snapshot(options);
-    const identity = await readIdentity(tokenId) || state.claims.find((claim) => claim.tokenId === String(tokenId)) || null;
-    const displayName = identity?.name || `KEYSPACE Preview #${tokenId}`;
-    const originRank = identity?.originRank ?? 'Preview';
-    const originLabel = typeof originRank === 'number' ? `${rankName(originRank)} Origin` : originRank;
-    const keyBond = identity?.keyBond ?? 'Preview';
+    const identity = await identityForToken(normalizedTokenId, state);
+    const displayName = identity?.name || `KEYSPACE Preview #${normalizedTokenId}`;
+    const originLabel = identity ? `${normalizeRank(identity.originRank)} Origin` : 'Preview';
+    const keyBond = identity ? formatKeyBond(identity.keyBond) : 'Preview';
+    const mintProof = identity ? formatMintProof(identity.mintProof || identity.originProofId, normalizedTokenId) : formatTokenId(normalizedTokenId);
     return {
       name: displayName,
-      description: state.contractsLive
-        ? 'KEYSPACE .key identity backed by KEY KeyBond. Native primary trading happens in ETH through KEYSPACE Market.'
-        : 'Preview metadata only. KEYSPACE contracts are not live yet.',
-      image: `${metadataBaseUrl()}/api/keyspace/image/${tokenId}`,
-      external_url: 'https://key-sphincs.xyz/#/keyspace',
-      contractsLive: state.contractsLive,
+      description: 'A SPHINCS Origin Identity backed by KEY.',
+      image: `${metadataBaseUrl()}/api/keyspace/image/${normalizedTokenId}.svg`,
+      external_url: `${siteBaseUrl()}/#/keyspace/${normalizedTokenId}`,
       attributes: [
-        { trait_type: 'Status', value: identity ? 'Claimed' : (state.contractsLive ? 'Ready' : 'Preview') },
-        { trait_type: 'Origin Rank', value: originLabel },
-        { trait_type: 'KeyBond', value: keyBond === 'Preview' ? keyBond : `${keyBond} KEY` },
-        { trait_type: 'Marketplace', value: state.marketplaceLive ? 'KEYSPACE Market Live' : 'Preview' }
+        { trait_type: 'Origin', value: originLabel },
+        { trait_type: 'KeyBond', value: keyBond },
+        { trait_type: 'Mint Proof', value: mintProof },
+        { trait_type: 'Token ID', value: formatTokenId(normalizedTokenId) },
+        { trait_type: 'Identity Type', value: 'SPHINCS Origin' }
       ]
     };
   }
 
   async function image(tokenId, options) {
-    const meta = await metadata(tokenId, options);
-    const title = escapeXml(meta.name);
-    const origin = escapeXml(meta.attributes.find((item) => item.trait_type === 'Origin Rank')?.value || 'Preview');
-    const keyBond = escapeXml(meta.attributes.find((item) => item.trait_type === 'KeyBond')?.value || 'Preview');
-    const status = escapeXml(meta.attributes.find((item) => item.trait_type === 'Status')?.value || 'Preview');
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
-  <rect width="1200" height="1200" fill="#f7f0df"/>
-  <rect x="74" y="74" width="1052" height="1052" rx="28" fill="#fffaf0" stroke="#b88a2b" stroke-width="4"/>
-  <rect x="118" y="118" width="964" height="964" rx="18" fill="#fbf3df" stroke="#d2a84f" stroke-width="2"/>
-  <text x="600" y="230" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="54" fill="#1b1710" letter-spacing="6">KEYSPACE</text>
-  <text x="600" y="500" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="104" font-weight="800" fill="#111111">${title}</text>
-  <text x="600" y="596" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="36" fill="#6f551d">${origin}</text>
-  <g font-family="Inter, Arial, sans-serif" font-size="34" fill="#1b1710">
-    <text x="250" y="760">KeyBond</text>
-    <text x="950" y="760" text-anchor="end" font-weight="700">${keyBond}</text>
-    <text x="250" y="836">Status</text>
-    <text x="950" y="836" text-anchor="end" font-weight="700">${status}</text>
-  </g>
-  <line x1="250" y1="790" x2="950" y2="790" stroke="#d9bd72" stroke-width="2"/>
-  <line x1="250" y1="866" x2="950" y2="866" stroke="#d9bd72" stroke-width="2"/>
-  <text x="600" y="1010" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="26" fill="#6f551d">SPHINCS Origin Identity backed by KEY</text>
-</svg>`;
+    const normalizedTokenId = assertTokenId(tokenId);
+    const state = await snapshot(options);
+    const identity = await identityForToken(normalizedTokenId, state) || {
+      name: 'identity.key',
+      originRank: 0,
+      keyBond: '0',
+      mintProof: normalizedTokenId
+    };
+    return renderKeyIdentitySvg({
+      name: identity.name || identity.rawName,
+      rank: identity.originRank,
+      keyBond: identity.keyBond,
+      mintProof: identity.mintProof || identity.originProofId,
+      tokenId: normalizedTokenId
+    });
   }
 
   function quote(keyAmount = '500') {

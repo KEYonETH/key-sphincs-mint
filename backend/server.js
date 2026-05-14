@@ -377,6 +377,15 @@ function isZeroAddressLike(address) {
   return !address || address === 'TBA' || address === 'not created' || address === ethers.ZeroAddress || /^0x0{40}$/i.test(address);
 }
 
+function keyspaceTokenId(req, res) {
+  const tokenId = String(req.params.tokenId || '').trim();
+  if (!/^\d+$/.test(tokenId)) {
+    res.status(400).json({ ok: false, error: 'tokenId must be numeric' });
+    return null;
+  }
+  return tokenId;
+}
+
 function mintGateAddresses() {
   return [CONFIG.mintGateAddress, ...CONFIG.legacyMintGateAddresses]
     .filter((address) => !isZeroAddressLike(address))
@@ -651,13 +660,25 @@ app.get('/api/keyspace/quote/:keyAmount', async (req, res) => {
 });
 
 app.get('/api/keyspace/metadata/:tokenId', async (req, res) => {
-  res.json(await keyspaceIndexer.metadata(req.params.tokenId, { force: req.query.refresh === '1' }));
+  const tokenId = keyspaceTokenId(req, res);
+  if (!tokenId) return;
+  res.json(await keyspaceIndexer.metadata(tokenId, { force: req.query.refresh === '1' }));
+});
+
+app.get('/api/keyspace/image/:tokenId.svg', async (req, res) => {
+  const tokenId = keyspaceTokenId(req, res);
+  if (!tokenId) return;
+  const svg = await keyspaceIndexer.image(tokenId, { force: req.query.refresh === '1' });
+  res.set('Cache-Control', 'public, max-age=300');
+  res.set('Content-Type', 'image/svg+xml; charset=utf-8').send(svg);
 });
 
 app.get('/api/keyspace/image/:tokenId', async (req, res) => {
-  const svg = await keyspaceIndexer.image(req.params.tokenId, { force: req.query.refresh === '1' });
+  const tokenId = keyspaceTokenId(req, res);
+  if (!tokenId) return;
+  const svg = await keyspaceIndexer.image(tokenId, { force: req.query.refresh === '1' });
   res.set('Cache-Control', 'public, max-age=300');
-  res.type('image/svg+xml').send(svg);
+  res.set('Content-Type', 'image/svg+xml; charset=utf-8').send(svg);
 });
 
 app.post('/api/sphincs/key', sphincsKeyLimiter, async (_req, res) => {
