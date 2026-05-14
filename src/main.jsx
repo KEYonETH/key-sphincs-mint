@@ -3,10 +3,15 @@ import { createRoot } from 'react-dom/client';
 import { ethers } from 'ethers';
 import './styles.css';
 
-const BACKEND = import.meta.env.VITE_BACKEND_URL
-  || (window.location.hostname === 'key-sphincs.xyz' || window.location.hostname === 'www.key-sphincs.xyz'
-    ? 'https://api.key-sphincs.xyz'
-    : 'http://localhost:8787');
+function backendUrl() {
+  const host = window.location.hostname;
+  if (host === 'key-sphincs.xyz' || host === 'www.key-sphincs.xyz') {
+    return 'https://api.key-sphincs.xyz';
+  }
+  return import.meta.env.VITE_BACKEND_URL || 'http://localhost:8787';
+}
+
+const BACKEND = backendUrl();
 const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || ethers.ZeroAddress;
 const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2';
 const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741';
@@ -606,7 +611,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         </div>
       </div>
       <div className="heroIdentityCard">
-        <img className="heroKeycardImage" src={templatePreviewImage} alt="alpha.key KEYSPACE identity card" onError={(event) => {
+        <img className="heroKeycardImage" src={templatePreviewImage} alt="alpha.key KEYSPACE identity card" loading="eager" fetchPriority="high" decoding="async" onError={(event) => {
           event.currentTarget.style.display = 'none';
           event.currentTarget.nextElementSibling.classList.add('show');
         }} />
