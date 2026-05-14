@@ -3,5 +3,8 @@
   "KEYMintGateV2DeployTx": "0x632a5361bfa09338beea5b5b3739574ea96cc8d548c101a447009710d924a5bf",
   "KEYMintGateV2OwnershipTransferred": true,
   "active": false,
-  "updatedAt": "2026-05-14T14:58:06.444Z"
+  "updatedAt": "2026-05-14T15:04:40.610Z",
+  "KEYMintGateV2LegacyAware": "0x41Ed7E9E9F2dfd5a4ff9711EAc9182746564CAFD",
+  "KEYMintGateV2LegacyAwareDeployTx": "0xdee83a70e06b2c3016545ce26003ee1b3a4701bf5b89484ad6e1d5cec68f56d8",
+  "KEYMintGateV2LegacyAwareOwnershipTransferred": true
 }

@@ -75,8 +75,9 @@ const tokenAddress = address("KEY_TOKEN_ADDRESS", optionalValue("VITE_KEY_TOKEN_
 const vaultAddress = address("TREASURY_VAULT_ADDRESS", optionalValue("VITE_TREASURY_VAULT_ADDRESS"));
 const backendSignerAddress = address("BACKEND_SIGNER_ADDRESS");
 const contractOwnerAddress = address("CONTRACT_OWNER_ADDRESS");
+const legacyMintGateAddress = address("MINT_GATE_ADDRESS", optionalValue("VITE_MINT_GATE_ADDRESS"));
 
-const gateArtifact = artifact("KEYMintGate.sol/KEYMintGate.json");
+const gateArtifact = artifact("KEYMintGateV2.sol/KEYMintGateV2.json");
 const tokenAbi = [
   "function owner() view returns(address)",
   "function mintGate() view returns(address)",
@@ -92,9 +93,11 @@ const gateAbi = [
   "function transferOwnership(address newOwner)",
   "function token() view returns(address)",
   "function treasuryVault() view returns(address)",
+  "function legacyMintGate() view returns(address)",
   "function attestationSigner() view returns(address)",
   "function WALLET_CAP() view returns(uint256)",
   "function MINT_PRICE() view returns(uint256)",
+  "function publicMintedTotal() view returns(uint256)",
 ];
 
 console.log("Deploying KEYMintGateV2 replacement");
@@ -103,46 +106,49 @@ console.log("contract owner:", contractOwnerAddress);
 console.log("token:", tokenAddress);
 console.log("vault:", vaultAddress);
 console.log("backend signer:", backendSignerAddress);
+console.log("legacy gate:", legacyMintGateAddress);
 console.log("deployer balance:", ethers.formatEther(await provider.getBalance(deployer.address)), "ETH");
 
-let gateAddress = state.KEYMintGateV2;
+let gateAddress = state.KEYMintGateV2LegacyAware;
 if (gateAddress) {
   const code = await provider.getCode(gateAddress);
-  if (code === "0x") throw new Error(`state has KEYMintGateV2=${gateAddress}, but no code exists there`);
-  console.log("KEYMintGateV2:", gateAddress, "(existing)");
+  if (code === "0x") throw new Error(`state has KEYMintGateV2LegacyAware=${gateAddress}, but no code exists there`);
+  console.log("KEYMintGateV2 legacy-aware:", gateAddress, "(existing)");
 } else {
   const factory = new ethers.ContractFactory(gateArtifact.abi, gateArtifact.bytecode, deployer);
-  const gate = await factory.deploy(tokenAddress, vaultAddress, backendSignerAddress);
-  await waitTx("deploy KEYMintGateV2", gate.deploymentTransaction());
+  const gate = await factory.deploy(tokenAddress, vaultAddress, backendSignerAddress, legacyMintGateAddress);
+  await waitTx("deploy KEYMintGateV2 legacy-aware", gate.deploymentTransaction());
   gateAddress = await gate.getAddress();
-  state.KEYMintGateV2 = gateAddress;
-  state.KEYMintGateV2DeployTx = gate.deploymentTransaction().hash;
+  state.KEYMintGateV2LegacyAware = gateAddress;
+  state.KEYMintGateV2LegacyAwareDeployTx = gate.deploymentTransaction().hash;
   saveState();
-  console.log("KEYMintGateV2:", gateAddress);
+  console.log("KEYMintGateV2 legacy-aware:", gateAddress);
 }
 
 const gate = new ethers.Contract(gateAddress, gateAbi, deployer);
 const token = new ethers.Contract(tokenAddress, tokenAbi, provider);
 const vault = new ethers.Contract(vaultAddress, vaultAbi, provider);
 
-const [walletCap, mintPrice, gateToken, gateVault, gateSigner] = await Promise.all([
+const [walletCap, mintPrice, gateToken, gateVault, gateLegacy, gateSigner] = await Promise.all([
   gate.WALLET_CAP(),
   gate.MINT_PRICE(),
   gate.token(),
   gate.treasuryVault(),
+  gate.legacyMintGate(),
   gate.attestationSigner(),
 ]);
 
 if (walletCap !== 1n) throw new Error(`KEYMintGateV2 wallet cap is ${walletCap}, expected 1`);
 if (ethers.getAddress(gateToken) !== tokenAddress) throw new Error("KEYMintGateV2 token mismatch");
 if (ethers.getAddress(gateVault) !== vaultAddress) throw new Error("KEYMintGateV2 vault mismatch");
+if (ethers.getAddress(gateLegacy) !== legacyMintGateAddress) throw new Error("KEYMintGateV2 legacy gate mismatch");
 if (ethers.getAddress(gateSigner) !== backendSignerAddress) throw new Error("KEYMintGateV2 backend signer mismatch");
 
 let gateOwner = ethers.getAddress(await gate.owner());
 if (gateOwner === ethers.getAddress(deployer.address) && gateOwner !== contractOwnerAddress) {
   await waitTx("transfer KEYMintGateV2 ownership", await gate.transferOwnership(contractOwnerAddress));
   gateOwner = ethers.getAddress(await gate.owner());
-  state.KEYMintGateV2OwnershipTransferred = true;
+  state.KEYMintGateV2LegacyAwareOwnershipTransferred = true;
   saveState();
 }
 
@@ -183,6 +189,8 @@ console.log("KEYMintGateV2:", gateAddress);
 console.log("WALLET_CAP:", String(walletCap));
 console.log("MINT_PRICE:", ethers.formatEther(mintPrice), "ETH");
 console.log("owner:", gateOwner);
+console.log("legacyMintGate:", gateLegacy);
+console.log("publicMintedTotal:", ethers.formatEther(await gate.publicMintedTotal()), "KEY");
 console.log("token.mintGate:", nextTokenGate);
 console.log("vault.mintGate:", nextVaultGate);
 console.log("active:", active);

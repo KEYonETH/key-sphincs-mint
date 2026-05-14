@@ -2,6 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * as keyMintGateSol from './KEYMintGate.sol/index.js';
+export * as keyMintGateV2Sol from './KEYMintGateV2.sol/index.js';
 export * as keyReserveTimelockSol from './KEYReserveTimelock.sol/index.js';
 export * as keyTreasuryVaultSol from './KEYTreasuryVault.sol/index.js';
 export { KEYToken__factory } from './KEYToken__factory.js';

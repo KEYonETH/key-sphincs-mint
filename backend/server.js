@@ -266,12 +266,12 @@ async function liveStatsUncached() {
     let publicMinted = 0n;
     let totalMintFeesReceived = 0n;
 
-    if (CONFIG.mintGateAddress !== ethers.ZeroAddress) {
-      const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
-      publicMinted = await mintGate.publicMinted();
-    } else if (CONFIG.keyTokenAddress !== ethers.ZeroAddress) {
+    if (CONFIG.keyTokenAddress !== ethers.ZeroAddress) {
       const token = new ethers.Contract(CONFIG.keyTokenAddress, tokenStatsAbi, chainProvider);
       publicMinted = await token.publicMintedByGate();
+    } else if (CONFIG.mintGateAddress !== ethers.ZeroAddress) {
+      const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
+      publicMinted = await mintGate.publicMinted();
     }
 
     if (CONFIG.treasuryVaultAddress !== ethers.ZeroAddress) {
@@ -377,16 +377,24 @@ function isZeroAddressLike(address) {
   return !address || address === 'TBA' || address === 'not created' || address === ethers.ZeroAddress || /^0x0{40}$/i.test(address);
 }
 
+function mintGateAddresses() {
+  return [CONFIG.mintGateAddress, ...CONFIG.legacyMintGateAddresses]
+    .filter((address) => !isZeroAddressLike(address))
+    .map((address) => ethers.getAddress(address))
+    .filter((address, index, addresses) => addresses.indexOf(address) === index);
+}
+
 async function listMintedProofsUncached(limit, offset) {
   const localProofs = store.list(Math.min(Math.max(limit + offset, 100), PROOF_CACHE_MAX_RECORDS), 0);
-  if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
+  const gateAddresses = mintGateAddresses();
+  if (!chainProvider || gateAddresses.length === 0) {
     return localProofs.slice(offset, offset + limit);
   }
 
-  const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
+  const mintGates = gateAddresses.map((address) => new ethers.Contract(address, mintGateStatsAbi, chainProvider));
   const checks = await Promise.allSettled(localProofs.map(async (proof) => ({
     proof,
-    minted: await mintGate.usedProofId(proof.proofId)
+    minted: (await Promise.all(mintGates.map((mintGate) => mintGate.usedProofId(proof.proofId)))).some(Boolean)
   })));
   return checks
     .filter((result) => result.status === 'fulfilled' && result.value.minted)
@@ -417,13 +425,17 @@ async function listMintedProofs(limit, offset, options) {
 }
 
 async function countWalletMints(recipient) {
-  if (!chainProvider || CONFIG.mintGateAddress === ethers.ZeroAddress) {
-    return store.countWallet(recipient);
+  const localCount = store.countWallet(recipient);
+  const gateAddresses = mintGateAddresses();
+  if (!chainProvider || gateAddresses.length === 0) {
+    return localCount;
   }
 
-  const mintGate = new ethers.Contract(CONFIG.mintGateAddress, mintGateStatsAbi, chainProvider);
-  const count = await mintGate.walletMints(recipient);
-  return Number(count);
+  const counts = await Promise.all(gateAddresses.map(async (address) => {
+    const mintGate = new ethers.Contract(address, mintGateStatsAbi, chainProvider);
+    return Number(await mintGate.walletMints(recipient));
+  }));
+  return Math.max(localCount, counts.reduce((sum, count) => sum + count, 0));
 }
 
 async function publicStatus() {

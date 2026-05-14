@@ -136,3 +136,33 @@ describe("KEYMintGate", function () {
     ).to.be.revertedWith("bad reward amount");
   });
 });
+
+describe("KEYMintGateV2", function () {
+  it("enforces one mint per wallet across the legacy gate", async function () {
+    const { token, vault, gate, backendSigner, user, otherSigner } = await deployFixture();
+    const first = await makeAttestation({ gate, signer: backendSigner, recipient: user, seed: "legacy", epoch: 1n });
+    await gate.connect(user).mintWithAttestation(first.value, first.signature, { value: ethers.parseEther("0.001") });
+
+    const gateV2 = await ethers.deployContract("KEYMintGateV2", [
+      await token.getAddress(),
+      await vault.getAddress(),
+      backendSigner.address,
+      await gate.getAddress(),
+    ]);
+    await token.setMintGate(await gateV2.getAddress());
+    await vault.setMintGate(await gateV2.getAddress());
+
+    const blocked = await makeAttestation({ gate: gateV2, signer: backendSigner, recipient: user, seed: "v2-blocked", epoch: 2n });
+    await expect(
+      gateV2.connect(user).mintWithAttestation(blocked.value, blocked.signature, { value: ethers.parseEther("0.001") }),
+    ).to.be.revertedWith("wallet cap reached");
+
+    const allowed = await makeAttestation({ gate: gateV2, signer: backendSigner, recipient: otherSigner, seed: "v2-allowed", epoch: 3n });
+    await expect(gateV2.connect(otherSigner).mintWithAttestation(allowed.value, allowed.signature, { value: ethers.parseEther("0.001") }))
+      .to.emit(gateV2, "Minted");
+
+    expect(await gateV2.legacyWalletMints(user.address)).to.equal(1n);
+    expect(await gateV2.walletMints(otherSigner.address)).to.equal(1n);
+    expect(await gateV2.publicMintedTotal()).to.equal(first.value.rewardAmount + allowed.value.rewardAmount);
+  });
+});

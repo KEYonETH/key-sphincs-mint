@@ -46,12 +46,24 @@ export function optionalEnvAddress(...names) {
   return ethers.ZeroAddress;
 }
 
+export function optionalEnvAddresses(name) {
+  return String(process.env[name] || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map((value) => {
+      if (!ethers.isAddress(value)) throw new Error(`${name} contains an invalid address`);
+      return ethers.getAddress(value);
+    });
+}
+
 export const CONFIG = Object.freeze({
   port: Number(process.env.PORT || 8787),
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   chainId: Number(process.env.CHAIN_ID || 1),
   rpcUrl: process.env.RPC_URL || process.env.MAINNET_RPC_URL || process.env.ETH_RPC_URL || '',
   mintGateAddress: requiredEnvAddress('MINT_GATE_ADDRESS', process.env.KEY_MINT_GATE_ADDRESS || ethers.ZeroAddress),
+  legacyMintGateAddresses: optionalEnvAddresses('LEGACY_MINT_GATE_ADDRESSES'),
   keyTokenAddress: optionalEnvAddress('KEY_TOKEN_ADDRESS', 'VITE_KEY_TOKEN_ADDRESS'),
   keyMintGateAddress: optionalEnvAddress('KEY_MINT_GATE_ADDRESS', 'MINT_GATE_ADDRESS', 'VITE_MINT_GATE_ADDRESS'),
   keyIdentityAddress: optionalEnvAddress('KEY_IDENTITY_ADDRESS', 'VITE_KEY_IDENTITY_ADDRESS'),

@@ -70,6 +70,13 @@ function safeAddress(value) {
   return ethers.isAddress(value || '') ? ethers.getAddress(value) : ethers.ZeroAddress;
 }
 
+function mintGateAddresses(primary) {
+  return [primary, ...(CONFIG.legacyMintGateAddresses || [])]
+    .map(safeAddress)
+    .filter((address) => !isZeroAddress(address))
+    .filter((address, index, addresses) => addresses.indexOf(address) === index);
+}
+
 export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir } = {}) {
   const cacheFile = path.join(dataDir, 'keyspace-index.json');
   let cache = loadCache();
@@ -127,19 +134,24 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     const latest = await provider.getBlockNumber();
     const defaultRange = Number(process.env.KEYSPACE_INDEX_BLOCK_RANGE || 250_000);
     const fromBlock = Number(process.env.KEYSPACE_INDEX_FROM_BLOCK || Math.max(0, latest - defaultRange));
-    const [mintGateLive, identityLive, registrarLive, marketLive] = await Promise.all([
-      hasCode(addresses.mintGate),
+    const gateAddresses = mintGateAddresses(addresses.mintGate);
+    const [mintGateLiveResults, identityLive, registrarLive, marketLive] = await Promise.all([
+      Promise.all(gateAddresses.map((address) => hasCode(address))),
       hasCode(addresses.identity),
       hasCode(addresses.registrar),
       hasCode(addresses.market)
     ]);
+    const liveMintGates = gateAddresses.filter((_, index) => mintGateLiveResults[index]);
     const contractsLive = identityLive && registrarLive && marketLive;
-    const [keyMinted, minted] = mintGateLive
-      ? await Promise.all([
-        queryEvents(addresses.mintGate, mintGateAbi, 'KeyMinted', fromBlock, latest),
-        queryEvents(addresses.mintGate, mintGateAbi, 'Minted', fromBlock, latest)
-      ])
-      : [[], []];
+    const gateEvents = await Promise.all(liveMintGates.map(async (address) => {
+      const [keyMinted, minted] = await Promise.all([
+        queryEvents(address, mintGateAbi, 'KeyMinted', fromBlock, latest),
+        queryEvents(address, mintGateAbi, 'Minted', fromBlock, latest)
+      ]);
+      return { keyMinted, minted };
+    }));
+    const keyMinted = gateEvents.flatMap((events) => events.keyMinted);
+    const minted = gateEvents.flatMap((events) => events.minted);
     const mints = [
       ...keyMinted.map((event) => ({
         minter: event.args.minter,
