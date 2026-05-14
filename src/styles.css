@@ -8141,3 +8141,61 @@ body::before,
 body::after {
   display: none !important;
 }
+
+/* Final KEY card previews: show the card art itself, without extra image frames. */
+.heroIdentityCard {
+  min-height: auto !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.heroKeycardImage {
+  width: min(100%, 286px) !important;
+  height: auto !important;
+  aspect-ratio: 1122 / 1402 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.heroStats {
+  display: none !important;
+}
+
+.keycardPreviewGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  align-items: start !important;
+}
+
+.listingCard.keycardOnly {
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.listingCard.keycardOnly .listingCardImage {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1122 / 1402 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 1180px) {
+  .keycardPreviewGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .keycardPreviewGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}

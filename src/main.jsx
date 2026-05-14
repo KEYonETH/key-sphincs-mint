@@ -654,12 +654,13 @@ function Keyspace({ tiers, wallet, connect, data }) {
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
   const listings = [
-    ['ai.key', 'Genesis Origin', '21,000 KEY', 'Auction Preview', 'Not Live'],
-    ['hash.key', 'Quantum Origin', '5,000 KEY', '0.11 ETH', 'Preview'],
-    ['alpha.key', 'Golden Origin', '1,500 KEY', '0.04 ETH', 'Preview'],
-    ['terminal.key', 'Normal Origin', '500 KEY', '0.006 ETH', 'Preview']
+    { name: 'ai.key', origin: 'Genesis Origin', image: '/keycards/genesis-preview.svg' },
+    { name: 'hash.key', origin: 'Quantum Origin', image: '/keycards/quantum-preview.svg' },
+    { name: 'alpha.key', origin: 'Golden Origin', image: '/keycards/golden-preview.svg' },
+    { name: 'cipher.key', origin: 'Clean Origin', image: '/keycards/clean-preview.svg' },
+    { name: 'terminal.key', origin: 'Normal Origin', image: '/keycards/normal-preview.svg' }
   ];
-  const templatePreviewImage = `${BACKEND}/api/keyspace/image/421.svg`;
+  const templatePreviewImage = '/keycards/golden-preview.svg';
 
   const [rank, setRank] = useState('Normal');
   const [name, setName] = useState('');
@@ -787,13 +788,8 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <h2>Market Preview</h2>
         <p>Example .key identities that can trade with ETH after mint-out.</p>
       </div>
-      <div className="listingGrid">{listings.map(([name, origin, bond, listing, status]) => <div className="listingCard" key={name}>
-        {name === 'alpha.key' && <img className="listingCardImage" src={templatePreviewImage} alt="alpha.key KEYSPACE identity preview" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />}
-        <b>{name}</b>
-        <span>{origin}</span>
-        <span>KeyBond: {bond}</span>
-        <span>{listing.includes('Auction') ? 'Market' : 'Example Listing'}: {listing}</span>
-        <em>{status}</em>
+      <div className="listingGrid keycardPreviewGrid">{listings.map((card) => <div className="listingCard keycardOnly" key={card.name}>
+        <img className="listingCardImage" src={card.image} alt={`${card.name} ${card.origin} KEYSPACE identity card`} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
       </div>)}</div>
       <p className="marketNote">.key identities can be listed, bought, and sold with ETH after KEYSPACE goes live. When sold, the KEY KeyBond stays inside the identity and moves to the buyer. OpenSea can show the same ERC721 identity page. {keyQuote?.ethEstimate ? `Reference: 500 KEY KeyBond ≈ ${keyQuote.ethEstimate} ETH.` : ''}</p>
     </section>
