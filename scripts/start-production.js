@@ -7,6 +7,9 @@ const env = { ...process.env };
 if (fs.existsSync(".env.production")) {
   Object.assign(env, dotenv.parse(fs.readFileSync(".env.production")));
   console.log("Using .env.production");
+} else if (fs.existsSync(".env.mainnet")) {
+  Object.assign(env, dotenv.parse(fs.readFileSync(".env.mainnet")));
+  console.log("Using .env.mainnet");
 } else {
   console.log("No .env.production found. Using current shell/.env values.");
 }

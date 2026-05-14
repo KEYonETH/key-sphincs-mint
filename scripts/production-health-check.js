@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import dotenv from "dotenv";
 
-const envFile = fs.existsSync(".env.production") ? ".env.production" : ".env";
+const envFile = fs.existsSync(".env.production") ? ".env.production" : fs.existsSync(".env.mainnet") ? ".env.mainnet" : ".env";
 const parsed = fs.existsSync(envFile) ? dotenv.parse(fs.readFileSync(envFile)) : {};
 const env = { ...process.env, ...parsed };
 
