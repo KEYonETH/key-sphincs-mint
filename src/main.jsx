@@ -98,7 +98,7 @@ function useRoute() {
 }
 
 function Header({ route, go, wallet, connect }) {
-  const nav = ['home', 'mint', 'proof', 'vault', 'whitepaper'];
+  const nav = ['home', 'mint', 'keyspace', 'proof', 'vault', 'whitepaper'];
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
       <div className="brandIcon"><img src="/key-logo.png" alt="KEY" /></div>
@@ -185,6 +185,11 @@ function Home({ go, data }) {
         <span><b>Wallet</b><em>Proves the minter.</em></span>
         <span><b>Key</b><em>Creates the public hash.</em></span>
         <span><b>Hash</b><em>Selects the reward tier.</em></span>
+      </div>
+      <div className="keyspaceTeaser">
+        <b>After Mint: KEYSPACE</b>
+        <p>Mint KEY to reveal your Key Rank. After mint-out, claim a .key identity backed by your KEY reward and trade it with KEY.</p>
+        <button className="miniBtn" onClick={() => go('keyspace')}>Open KEYSPACE → #/keyspace</button>
       </div>
       <div className="heroActions"><button className="primary" onClick={() => go('mint')}>open mint</button><button className="ghost" onClick={() => go('whitepaper')}>read whitepaper</button></div>
     </section>
@@ -375,7 +380,7 @@ function Mint({ wallet, connect, data, refresh }) {
         </div>
       </div>
     </div>
-    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /></div>
+    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /><Card title="KEYSPACE note" className="keyspaceNote"><p>Your reward tier also becomes your Key Rank for KEYSPACE. Higher ranks unlock earlier access to shorter .key identities after mint-out.</p></Card></div>
     </section>
   </main>;
 }
@@ -481,6 +486,148 @@ function DetailRow({ label, value, onCopy }) {
     <code>{value}</code>
     {onCopy && <button className="miniBtn" onClick={onCopy}>copy</button>}
   </div>;
+}
+
+function Keyspace({ tiers }) {
+  const rankRules = [
+    { key: 'Normal', title: 'Normal Key', reward: 500, min: 8, claim: '8+ character .key name', bond: '500 KEY', day: 'Day 5', origin: 'Normal Origin' },
+    { key: 'Clean', title: 'Clean Key', reward: 750, min: 7, claim: '7+ character .key name', bond: '750 KEY', day: 'Day 4', origin: 'Clean Origin' },
+    { key: 'Golden', title: 'Golden Key', reward: 1500, min: 5, claim: '5-6 character .key name', bond: '1,500 KEY', day: 'Day 3', origin: 'Golden Origin' },
+    { key: 'Quantum', title: 'Quantum Key', reward: 5000, min: 4, claim: '4 character .key name', bond: '5,000 KEY', day: 'Day 2', origin: 'Quantum Origin' },
+    { key: 'Genesis', title: 'Genesis Key', reward: 21000, min: 3, claim: '3 character .key name', bond: '21,000 KEY', day: 'Day 1', origin: 'Genesis Origin' }
+  ].map((rule) => {
+    const tier = tiers.find((t) => t.name.toLowerCase() === rule.title.toLowerCase());
+    return tier ? { ...rule, title: tier.name, reward: tier.reward, bond: `${fmt.format(tier.reward)} KEY` } : rule;
+  });
+
+  const [rank, setRank] = useState('Normal');
+  const [name, setName] = useState('');
+  const [preview, setPreview] = useState(null);
+  const selected = rankRules.find((r) => r.key === rank) || rankRules[0];
+
+  function previewClaim() {
+    const raw = name.trim();
+    const valid = /^[a-z0-9]+$/.test(raw);
+    const eligible = valid && raw.length >= selected.min;
+    setPreview({
+      display: raw ? `${raw}.key` : 'name.key',
+      valid,
+      eligible,
+      length: raw.length,
+      rule: selected
+    });
+  }
+
+  return <main className="page keyspacePage">
+    <section className="keyspaceHero">
+      <div>
+        <p className="eyebrow">PREVIEW — OPENS AFTER MINT-OUT</p>
+        <h1>KEYSPACE</h1>
+        <h2>SPHINCS Origin Identities backed by KEY.</h2>
+        <p>Mint KEY first. Reveal your Key Rank. After mint-out, claim a .key identity based on your rank. Your KEY reward becomes the KeyBond inside the identity, and the identity can later be traded with KEY.</p>
+      </div>
+      <div className="warningBox">KEYSPACE is a planned post-mint utility. .key identities, marketplace, KeyBond, melt/redeem, and auctions are not live yet.</div>
+    </section>
+
+    <section className="keyspaceGrid five">
+      <InfoCard title="KEY Supply" value="21,000,000 KEY fixed supply" />
+      <InfoCard title="Public Mint Allocation" value="10,000,000 KEY for public signature mint" />
+      <InfoCard title="KEYSPACE Identity Supply" value="21,000 max .key identities" />
+      <InfoCard title="Origin Names" value="Reserved for users who mint KEY first. Each successful mint creates one Origin Claim Right." />
+      <InfoCard title="Public Names" value="Remaining supply after Origin Claims. Public creation opens later and requires KEY bonding." />
+    </section>
+    <p className="keyspaceRatio">21,000,000 KEY. 21,000 .key identities. One identity for every 1,000 KEY supply.</p>
+
+    <Card title="Why mint KEY first?" className="keyspaceSection">
+      <p>Minting KEY gives more than token rewards. It creates your Key Rank and one Origin Claim Right. Higher ranks claim shorter names earlier.</p>
+      <div className="rankGrid">{rankRules.map((r) => <div className="rankCard" key={r.key}>
+        <b>{r.title}</b>
+        <span>Reward: {fmt.format(r.reward)} KEY</span>
+        <span>Origin claim: {r.claim}</span>
+        <span>KeyBond: {r.bond}</span>
+      </div>)}</div>
+    </Card>
+
+    <Card title="Claim Windows" className="keyspaceSection">
+      <div className="windowGrid">
+        {['Day 1 — Genesis', 'Day 2 — Quantum', 'Day 3 — Golden', 'Day 4 — Clean', 'Day 5 — Normal', 'Day 6+ — Public Create'].map((item) => <div key={item}>{item}</div>)}
+      </div>
+      <p>Higher ranks claim earlier. This gives minters first access to rare .key names before public creation opens.</p>
+    </Card>
+
+    <section className="keyspaceTwo">
+      <Card title="How KeyBond works" className="keyspaceSection">
+        <p>KeyBond is KEY locked inside a .key identity. It gives every identity a base value. Selling the identity transfers the name, its origin rank, and its KeyBond to the buyer.</p>
+        <ol className="compactList">
+          <li>Mint KEY</li>
+          <li>Reveal Key Rank</li>
+          <li>Claim .key identity</li>
+          <li>Your reward KEY locks as KeyBond</li>
+          <li>The .key identity becomes an ERC721-style tradable asset</li>
+          <li>If sold, the KeyBond moves with the identity</li>
+          <li>If melted, the identity burns and the KeyBond can be redeemed minus exit fee</li>
+        </ol>
+      </Card>
+
+      <Card title="Trade identities with KEY" className="keyspaceSection">
+        <div className="marketGrid">
+          {['List .key identities in KEY', 'Buy names with KEY', 'Marketplace fee burns part of KEY', 'KeyBond stays inside the identity when transferred', 'OpenSea visibility possible because names are ERC721-style assets, but KEYSPACE Market is the primary market'].map((item) => <div key={item}>{item}</div>)}
+        </div>
+        <p><b>Primary market:</b> KEYSPACE Market<br /><b>Secondary visibility:</b> OpenSea / Etherscan NFT page</p>
+        <p>KEYSPACE Market is needed because OpenSea will not fully show KeyBond, Origin Rank, melt/redeem, burn fee, and native KEY trading logic.</p>
+      </Card>
+    </section>
+
+    <Card title="Simple Example" className="keyspaceSection">
+      <div className="exampleGrid">
+        <p>A user mints Golden Key. They receive 1,500 KEY and Golden Rank. After mint-out, they claim alpha.key. Their 1,500 KEY becomes the KeyBond inside alpha.key. Later they list alpha.key for 20,000 KEY in KEYSPACE Market. Buyer receives alpha.key + Golden Origin + 1,500 KEY KeyBond.</p>
+        <p>A user mints Genesis Key. They receive 21,000 KEY and Genesis Rank. They claim ai.key. ai.key becomes a Genesis Origin identity backed by 21,000 KEY.</p>
+      </div>
+    </Card>
+
+    <section className="keyspaceTwo">
+      <Card title="Public Create" className="keyspaceSection">
+        <p>After Origin Claim phase, public users can create new .key identities from the remaining 21,000 supply by locking KEY as KeyBond.</p>
+        <div className="tableLite keyspaceTable">
+          {[
+            ['8+ chars', 'lock 500 KEY'],
+            ['7 chars', 'lock 750 KEY'],
+            ['6 chars', 'lock 1,500 KEY'],
+            ['4-5 chars', 'lock 5,000 KEY'],
+            ['3 chars', 'auction / 25,000 KEY bond']
+          ].map(([a, b]) => <div key={a}><b>{a}</b><span>{b}</span></div>)}
+        </div>
+        <p className="smallWarn">Preview only. No contract logic is implemented here.</p>
+      </Card>
+
+      <Card title="SPHINCS Origin" className="keyspaceSection">
+        <p>SPHINCS is not a wallet replacement. It is the origin engine of KEY. The first signature hash decides the mint tier. The mint tier becomes the Key Rank. The Key Rank creates the Origin Class of the .key identity.</p>
+        <div className="originFlow">SPHINCS signature hash → reward tier → Key Rank → Origin Claim → .key identity</div>
+        <p><b>SPHINCS creates the origin.</b><br />KEY backs the identity.<br />The market trades the name.</p>
+      </Card>
+    </section>
+
+    <Card title="Claim Preview" className="keyspaceSimulator">
+      <div className="simControls">
+        <label><span>Select rank</span><select value={rank} onChange={(e) => setRank(e.target.value)}>{rankRules.map((r) => <option key={r.key} value={r.key}>{r.title}</option>)}</select></label>
+        <label><span>Desired name</span><input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} placeholder="alpha" /></label>
+        <button className="primary" onClick={previewClaim}>Preview Claim</button>
+      </div>
+      <div className="simOutput">
+        {preview ? <>
+          <Metric label="status" value={preview.eligible ? 'eligible' : 'not eligible'} note={!preview.valid ? 'Use lowercase letters and numbers only, no spaces.' : `Minimum length: ${preview.rule.min}`} />
+          <Metric label="display" value={preview.display} note={`Current length: ${preview.length}`} />
+          <Metric label="KeyBond" value={preview.rule.bond} note={preview.rule.origin} />
+          <Metric label="origin type" value={preview.rule.origin} note={preview.rule.title} />
+          <Metric label="example listing" value={`${preview.display} for ${fmt.format(preview.rule.reward * 12)} KEY`} note="Preview only. KEYSPACE contracts are not live yet." />
+        </> : <p>Enter a lowercase name, select a rank, and preview the Origin Claim.</p>}
+      </div>
+    </Card>
+  </main>;
+}
+
+function InfoCard({ title, value }) {
+  return <div className="infoCard"><b>{title}</b><span>{value}</span></div>;
 }
 
 function Tokenomics({ data }) {
@@ -595,6 +742,7 @@ function App() {
 
   const page = useMemo(() => {
     if (route === 'mint') return <Mint wallet={wallet} connect={connect} data={data} refresh={refresh} />;
+    if (route === 'keyspace') return <Keyspace tiers={data.tiers} />;
     if (route === 'proof') return <Proof data={data} />;
     if (route === 'vault') return <Vault data={data} />;
     if (route === 'whitepaper') return <Whitepaper data={data} />;
