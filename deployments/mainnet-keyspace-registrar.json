@@ -9,5 +9,6 @@
     "0x0Aea11184B840554F648c7061a7E1D7594E17767"
   ],
   "updatedAt": "2026-05-14T15:39:49.538Z",
-  "identityRegistrarSet": false
+  "identityRegistrarSet": true,
+  "identityRegistrarTxAt": "2026-05-14T15:49:37.762Z"
 }
