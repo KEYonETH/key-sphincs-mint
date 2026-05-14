@@ -6261,6 +6261,120 @@ nav {
   text-align: center !important;
 }
 
+.keyspaceActions {
+  display: grid !important;
+  gap: 12px !important;
+}
+
+.actionStatusGrid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+.actionColumns {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.actionBox {
+  display: grid !important;
+  align-content: start !important;
+  gap: 9px !important;
+  min-height: 258px !important;
+  padding: 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: rgba(255,255,255,0.35) !important;
+}
+
+.actionBox > b,
+.liveListings > b {
+  color: #000 !important;
+  font-size: 14px !important;
+}
+
+.actionBox p,
+.liveListings p {
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.actionBox label {
+  display: grid !important;
+  gap: 5px !important;
+}
+
+.actionBox label span {
+  color: var(--muted) !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+}
+
+.actionBox input {
+  min-width: 0 !important;
+  height: 36px !important;
+  padding: 0 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 4px !important;
+  background: #fffaf0 !important;
+  color: #000 !important;
+  font: 700 12px "IBM Plex Mono", monospace !important;
+}
+
+.actionHint {
+  display: grid !important;
+  gap: 5px !important;
+  padding: 8px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 4px !important;
+  background: #fff8e8 !important;
+}
+
+.actionHint span {
+  color: #704f07 !important;
+  font-size: 11px !important;
+}
+
+.actionBox button {
+  width: 100% !important;
+}
+
+.liveListings {
+  display: grid !important;
+  gap: 7px !important;
+  padding: 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: rgba(255,255,255,0.28) !important;
+}
+
+.liveListings div {
+  display: grid !important;
+  grid-template-columns: 1fr auto auto !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-height: 32px !important;
+  padding: 7px 8px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 4px !important;
+  background: #fffaf0 !important;
+}
+
+.liveListings span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
 .keyspaceTwo {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;

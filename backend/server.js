@@ -607,6 +607,32 @@ app.get('/api/keyspace/wallet/:address', async (req, res) => {
   }
 });
 
+app.get('/api/keyspace/claim-proof/:address', async (req, res) => {
+  try {
+    const owner = ethers.getAddress(req.params.address);
+    const proofs = await listMintedProofs(PROOF_CACHE_MAX_RECORDS, 0, { force: req.query.refresh === '1' });
+    const walletProofs = proofs
+      .filter((proof) => proof.recipient?.toLowerCase() === owner.toLowerCase())
+      .map((proof) => ({
+        recipient: proof.recipient,
+        proofId: proof.proofId,
+        publicKeyHash: proof.publicKeyHash,
+        signatureHash: proof.signatureHash,
+        rewardHash: proof.rewardHash,
+        tier: proof.tier,
+        epoch: proof.epoch,
+        chainId: proof.chainId,
+        mintGate: proof.verifyingContract,
+        typedData: proof.typedData,
+        attestation: proof.attestation,
+        createdAt: proof.createdAt
+      }));
+    res.json({ ok: true, address: owner, proofs: walletProofs });
+  } catch (error) {
+    res.status(400).json({ ok: false, error: error.message || 'invalid wallet address' });
+  }
+});
+
 app.get('/api/keyspace/name/:name', async (req, res) => {
   res.json(await keyspaceIndexer.name(req.params.name, { force: req.query.refresh === '1' }));
 });

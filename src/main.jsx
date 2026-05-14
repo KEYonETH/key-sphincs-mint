@@ -8,6 +8,10 @@ const BACKEND = import.meta.env.VITE_BACKEND_URL
     ? 'https://api.key-sphincs.xyz'
     : 'http://localhost:8787');
 const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || ethers.ZeroAddress;
+const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2';
+const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741';
+const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0x3cC9Ecc0c16842f7f6B4C721B7E1D6f706e149F6';
+const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c';
 const ZERO = ethers.ZeroAddress;
 
 const FALLBACK = {
@@ -33,6 +37,27 @@ const FALLBACK = {
 const GATE_ABI = [
   'function mintWithAttestation((address recipient,bytes32 publicKeyHash,bytes32 signatureHash,bytes32 rewardHash,uint256 rewardAmount,uint256 epoch,uint256 deadline) a, bytes signature) external payable'
 ];
+const ERC20_ABI = [
+  'function approve(address spender,uint256 amount) external returns (bool)',
+  'function allowance(address owner,address spender) view returns (uint256)',
+  'function balanceOf(address owner) view returns (uint256)'
+];
+const REGISTRAR_ABI = [
+  'function claimOrigin(address mintGate,(address recipient,bytes32 publicKeyHash,bytes32 signatureHash,bytes32 rewardHash,uint256 rewardAmount,uint256 epoch,uint256 deadline) attestation,bytes signature,string name) external returns (uint256)'
+];
+const IDENTITY_ABI = [
+  'function ownerOf(uint256 tokenId) view returns (address)',
+  'function approve(address to,uint256 tokenId) external',
+  'function getApproved(uint256 tokenId) view returns (address)',
+  'function isApprovedForAll(address owner,address operator) view returns (bool)',
+  'function nameOf(uint256 tokenId) view returns (string)'
+];
+const MARKET_ABI = [
+  'function listIdentity(uint256 tokenId,uint256 price) external',
+  'function buyIdentity(uint256 tokenId) external payable',
+  'function cancelListing(uint256 tokenId) external',
+  'function getListing(uint256 tokenId) view returns (address seller,uint256 price)'
+];
 
 const fmt = new Intl.NumberFormat('en-US');
 function short(x) { return x ? `${x.slice(0, 6)}...${x.slice(-4)}` : 'not connected'; }
@@ -43,6 +68,7 @@ function configuredChainId(data) { return Number(data?.chainId || import.meta.en
 function chainHex(chainId) { return `0x${Number(chainId).toString(16)}`; }
 function chainName(chainId) { return Number(chainId) === 1 ? 'Ethereum Mainnet' : `chain ${chainId}`; }
 function pct(n, d) { return Math.min(100, Math.max(0, (Number(n || 0) / Number(d || 1)) * 100)); }
+function rankKeyFromTier(tierName = '') { return String(tierName).replace(/\s*Key$/i, ''); }
 function signingCommand(message) {
   return `$privateKey = "0xPRIVATEKEY"
 @'
@@ -489,7 +515,7 @@ function DetailRow({ label, value, onCopy }) {
   </div>;
 }
 
-function Keyspace({ tiers }) {
+function Keyspace({ tiers, wallet, connect, data }) {
   const staticStatus = {
     live: false,
     phase: 'preview',
@@ -593,7 +619,7 @@ function Keyspace({ tiers }) {
         </div>
       </div>
     </section>
-    <p className="keyspaceWarning">KEYSPACE contracts, marketplace, KeyBond, melt/redeem, and auctions are not live yet.</p>
+    <p className="keyspaceWarning">KEYSPACE contracts are deployed, but origin claim, marketplace trading, melt/redeem, and auctions are not open yet.</p>
 
     <section className="keyspaceBlock">
       <div className="sectionHead">
@@ -662,6 +688,14 @@ function Keyspace({ tiers }) {
       </div>
     </section>
 
+    <KeyspaceActions
+      status={keyspaceStatus}
+      wallet={wallet}
+      connect={connect}
+      data={data}
+      rankRules={rankRules}
+    />
+
     <Card title="Claim Preview" className="keyspaceSimulator">
       <div className="simControls">
         <label><span>Rank</span><select value={rank} onChange={(e) => setRank(e.target.value)}>{rankRules.map((r) => <option key={r.key} value={r.key}>{r.short}</option>)}</select></label>
@@ -686,6 +720,221 @@ function Keyspace({ tiers }) {
       </div>
     </Card>
   </main>;
+}
+
+function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
+  const [claimName, setClaimName] = useState('');
+  const [claimProofs, setClaimProofs] = useState([]);
+  const [walletInfo, setWalletInfo] = useState(null);
+  const [liveListings, setLiveListings] = useState([]);
+  const [listTokenId, setListTokenId] = useState('');
+  const [listPrice, setListPrice] = useState('');
+  const [buyTokenId, setBuyTokenId] = useState('');
+  const [buyPrice, setBuyPrice] = useState('');
+  const [busy, setBusy] = useState('');
+  const [notice, setNotice] = useState('');
+  const originOpen = Boolean(status.originClaimsOpen);
+  const marketOpen = Boolean(status.marketplaceLive);
+  const claimProof = claimProofs[0] || null;
+  const claimRank = claimProof ? rankKeyFromTier(claimProof.tier?.name) : 'Normal';
+  const claimRule = rankRules.find((rule) => rule.key === claimRank) || rankRules[0];
+  const normalizedClaimName = claimName.trim().toLowerCase();
+  const claimNameValid = /^[a-z]+$/.test(normalizedClaimName);
+  const claimEligible = Boolean(claimProof && claimNameValid && normalizedClaimName.length >= claimRule.min);
+
+  async function loadKeyspaceWallet(address = wallet) {
+    if (!address) {
+      setClaimProofs([]);
+      setWalletInfo(null);
+      return;
+    }
+    const [walletRes, claimRes, listingRes] = await Promise.all([
+      fetch(`${BACKEND}/api/keyspace/wallet/${address}?refresh=1`).then((res) => res.json()),
+      fetch(`${BACKEND}/api/keyspace/claim-proof/${address}?refresh=1`).then((res) => res.json()),
+      fetch(`${BACKEND}/api/keyspace/listings?refresh=1`).then((res) => res.json())
+    ]);
+    if (walletRes.ok) setWalletInfo(walletRes);
+    if (claimRes.ok) setClaimProofs(claimRes.proofs || []);
+    if (listingRes.ok) setLiveListings(listingRes.listings || []);
+  }
+
+  useEffect(() => {
+    loadKeyspaceWallet().catch(() => {});
+  }, [wallet]);
+
+  async function getSigner() {
+    const address = wallet || await connect();
+    if (!address) throw new Error('connect wallet first');
+    await ensureWalletChain(configuredChainId(data));
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    return { address, signer: await provider.getSigner() };
+  }
+
+  async function claimIdentity() {
+    try {
+      setBusy('claim');
+      setNotice('');
+      if (!originOpen) throw new Error('Origin claim is not open yet.');
+      if (!claimProof) throw new Error('No minted proof found for this wallet.');
+      if (!claimEligible) throw new Error(claimNameValid ? 'This name is too short for your Key Rank.' : 'Only lowercase letters a-z are allowed.');
+      const { address, signer } = await getSigner();
+      if (address.toLowerCase() !== claimProof.recipient.toLowerCase()) throw new Error('Connected wallet does not match the Origin Claim proof.');
+      if (isZeroAddress(KEY_TOKEN) || isZeroAddress(KEY_REGISTRAR)) throw new Error('KEYSPACE contracts are not configured.');
+
+      const rewardAmount = BigInt(claimProof.typedData.rewardAmount);
+      const token = new ethers.Contract(KEY_TOKEN, ERC20_ABI, signer);
+      const balance = await token.balanceOf(address);
+      if (balance < rewardAmount) throw new Error('Wallet does not hold enough KEY for the KeyBond.');
+      const allowance = await token.allowance(address, KEY_REGISTRAR);
+      if (allowance < rewardAmount) {
+        const approveTx = await token.approve(KEY_REGISTRAR, rewardAmount);
+        setNotice(`Approving KeyBond: ${approveTx.hash}`);
+        await approveTx.wait();
+      }
+
+      const registrar = new ethers.Contract(KEY_REGISTRAR, REGISTRAR_ABI, signer);
+      const tx = await registrar.claimOrigin(claimProof.mintGate, claimProof.typedData, claimProof.attestation, normalizedClaimName);
+      setNotice(`Claim sent: ${tx.hash}`);
+      await tx.wait();
+      setNotice(`Identity claimed: ${normalizedClaimName}.key`);
+      await loadKeyspaceWallet(address);
+    } catch (error) {
+      setNotice(error.shortMessage || error.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function listIdentity() {
+    try {
+      setBusy('list');
+      setNotice('');
+      if (!marketOpen) throw new Error('KEYSPACE Market is not open yet.');
+      if (!listTokenId || !listPrice) throw new Error('Enter token ID and ETH price.');
+      const { address, signer } = await getSigner();
+      if (isZeroAddress(KEY_IDENTITY) || isZeroAddress(KEY_MARKET)) throw new Error('KEYSPACE market is not configured.');
+      const tokenId = BigInt(listTokenId);
+      const price = ethers.parseEther(listPrice);
+      if (price <= 0n) throw new Error('ETH price must be greater than zero.');
+
+      const identity = new ethers.Contract(KEY_IDENTITY, IDENTITY_ABI, signer);
+      const owner = await identity.ownerOf(tokenId);
+      if (owner.toLowerCase() !== address.toLowerCase()) throw new Error('Connected wallet does not own this identity.');
+      const approved = await identity.getApproved(tokenId);
+      const approvedForAll = await identity.isApprovedForAll(address, KEY_MARKET);
+      if (approved.toLowerCase() !== KEY_MARKET.toLowerCase() && !approvedForAll) {
+        const approveTx = await identity.approve(KEY_MARKET, tokenId);
+        setNotice(`Approving identity: ${approveTx.hash}`);
+        await approveTx.wait();
+      }
+
+      const market = new ethers.Contract(KEY_MARKET, MARKET_ABI, signer);
+      const tx = await market.listIdentity(tokenId, price);
+      setNotice(`Listing sent: ${tx.hash}`);
+      await tx.wait();
+      setNotice(`Identity #${tokenId} listed for ${listPrice} ETH.`);
+      await loadKeyspaceWallet(address);
+    } catch (error) {
+      setNotice(error.shortMessage || error.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function buyIdentity() {
+    try {
+      setBusy('buy');
+      setNotice('');
+      if (!marketOpen) throw new Error('KEYSPACE Market is not open yet.');
+      if (!buyTokenId) throw new Error('Enter a token ID to buy.');
+      const { address, signer } = await getSigner();
+      const market = new ethers.Contract(KEY_MARKET, MARKET_ABI, signer);
+      const tokenId = BigInt(buyTokenId);
+      const listing = liveListings.find((item) => item.tokenId === String(tokenId));
+      const price = buyPrice ? ethers.parseEther(buyPrice) : (listing ? ethers.parseEther(listing.price) : 0n);
+      if (price <= 0n) throw new Error('Enter the ETH listing price.');
+      const tx = await market.buyIdentity(tokenId, { value: price });
+      setNotice(`Purchase sent: ${tx.hash}`);
+      await tx.wait();
+      setNotice(`Identity #${tokenId} purchased. KeyBond moved with the NFT.`);
+      await loadKeyspaceWallet(address);
+    } catch (error) {
+      setNotice(error.shortMessage || error.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function cancelListing(tokenId = listTokenId) {
+    try {
+      setBusy('cancel');
+      setNotice('');
+      if (!marketOpen) throw new Error('KEYSPACE Market is not open yet.');
+      if (!tokenId) throw new Error('Enter token ID to cancel.');
+      const { address, signer } = await getSigner();
+      const market = new ethers.Contract(KEY_MARKET, MARKET_ABI, signer);
+      const tx = await market.cancelListing(BigInt(tokenId));
+      setNotice(`Cancel sent: ${tx.hash}`);
+      await tx.wait();
+      setNotice(`Listing #${tokenId} cancelled.`);
+      await loadKeyspaceWallet(address);
+    } catch (error) {
+      setNotice(error.shortMessage || error.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  return <Card title="KEYSPACE Actions" className="keyspaceActions">
+    <div className="actionStatusGrid">
+      <Metric label="contracts" value={status.contractsLive ? 'ready' : 'preview'} />
+      <Metric label="origin claim" value={originOpen ? 'open' : 'locked'} note="opens after mint-out" />
+      <Metric label="market" value={marketOpen ? 'open' : 'locked'} note="ETH-native primary market" />
+      <Metric label="wallet" value={wallet ? short(wallet) : 'not connected'} />
+    </div>
+    <div className="actionColumns">
+      <div className="actionBox">
+        <b>Claim .key identity</b>
+        <p>Approve your reward KEY as KeyBond, then claim one identity with your Origin Rank.</p>
+        <label><span>Name</span><input value={claimName} onChange={(e) => setClaimName(e.target.value.toLowerCase())} placeholder="alpha" maxLength={16} /></label>
+        <div className="actionHint">
+          <span>Rank: {claimProof ? claimRank : 'no minted proof'}</span>
+          <span>Required: {claimRule.min}+ letters</span>
+          <span>KeyBond: {claimProof ? `${fmt.format(Number(ethers.formatEther(claimProof.typedData.rewardAmount)))} KEY` : 'pending'}</span>
+        </div>
+        <button className="primary" onClick={claimIdentity} disabled={!originOpen || !claimEligible || busy}>{busy === 'claim' ? 'Claiming' : 'Claim identity'}</button>
+      </div>
+      <div className="actionBox">
+        <b>List identity</b>
+        <p>List an owned `.key` NFT for ETH. The KEY KeyBond stays inside the identity.</p>
+        <label><span>Token ID</span><input value={listTokenId} onChange={(e) => setListTokenId(e.target.value.replace(/\D/g, ''))} placeholder="1" /></label>
+        <label><span>ETH price</span><input value={listPrice} onChange={(e) => setListPrice(e.target.value.replace(/[^0-9.]/g, ''))} placeholder="0.04" /></label>
+        <button className="primary" onClick={listIdentity} disabled={!marketOpen || !listTokenId || !listPrice || busy}>{busy === 'list' ? 'Listing' : 'List for ETH'}</button>
+        <button className="outline" onClick={() => cancelListing()} disabled={!marketOpen || !listTokenId || busy}>Cancel listing</button>
+      </div>
+      <div className="actionBox">
+        <b>Buy identity</b>
+        <p>Buy a listed `.key` with ETH. You receive the NFT and the locked KeyBond rights.</p>
+        <label><span>Token ID</span><input value={buyTokenId} onChange={(e) => setBuyTokenId(e.target.value.replace(/\D/g, ''))} placeholder="1" /></label>
+        <label><span>ETH price</span><input value={buyPrice} onChange={(e) => setBuyPrice(e.target.value.replace(/[^0-9.]/g, ''))} placeholder="listing price" /></label>
+        <button className="primary" onClick={buyIdentity} disabled={!marketOpen || !buyTokenId || busy}>{busy === 'buy' ? 'Buying' : 'Buy with ETH'}</button>
+      </div>
+    </div>
+    <div className="liveListings">
+      <b>Live listings</b>
+      {liveListings.length ? liveListings.slice(0, 6).map((listing) => <div key={listing.tokenId}>
+        <span>#{listing.tokenId}</span><span>{listing.price} ETH</span><button className="miniBtn" onClick={() => { setBuyTokenId(listing.tokenId); setBuyPrice(listing.price); }}>use</button>
+      </div>) : <p>No live listings yet. Preview examples remain visible above until market opens.</p>}
+    </div>
+    {walletInfo?.identities?.length > 0 && <div className="liveListings">
+      <b>Your indexed identities</b>
+      {walletInfo.identities.map((identity) => <div key={identity.tokenId}>
+        <span>#{identity.tokenId} {identity.name}</span><span>{identity.keyBond} KEY</span><button className="miniBtn" onClick={() => setListTokenId(identity.tokenId)}>list</button>
+      </div>)}
+    </div>}
+    <p className="marketNote">Action panel is wired to mainnet contracts but remains locked until KEYSPACE opens. Buying transfers the NFT; KeyBond remains locked inside the identity and follows the NFT owner.</p>
+    {notice && <p className="notice">{notice}</p>}
+  </Card>;
 }
 
 function InfoCard({ title, value }) {
@@ -804,7 +1053,7 @@ function App() {
 
   const page = useMemo(() => {
     if (route === 'mint') return <Mint wallet={wallet} connect={connect} data={data} refresh={refresh} />;
-    if (route === 'keyspace') return <Keyspace tiers={data.tiers} />;
+    if (route === 'keyspace') return <Keyspace tiers={data.tiers} wallet={wallet} connect={connect} data={data} />;
     if (route === 'proof') return <Proof data={data} />;
     if (route === 'vault') return <Vault data={data} />;
     if (route === 'whitepaper') return <Whitepaper data={data} />;
