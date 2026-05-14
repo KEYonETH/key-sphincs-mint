@@ -5825,20 +5825,42 @@ nav {
 
 .keyspaceHero {
   display: grid !important;
-  grid-template-columns: minmax(0, 1fr) 340px !important;
-  gap: 18px !important;
+  grid-template-columns: minmax(0, 1fr) 330px !important;
+  gap: 14px !important;
   align-items: stretch !important;
-  padding: 24px 28px !important;
+  padding: 22px 26px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
   background: rgba(255, 253, 247, 0.78) !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65) !important;
 }
 
+.keyspaceHeroCopy {
+  display: grid !important;
+  align-content: center !important;
+}
+
+.previewBadge {
+  width: fit-content !important;
+  min-height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: #fff8e8 !important;
+  color: var(--gold-dark) !important;
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+}
+
 .keyspaceHero h1 {
-  margin: 6px 0 4px !important;
+  margin: 12px 0 5px !important;
   color: #000 !important;
-  font-size: clamp(36px, 5vw, 72px) !important;
+  font-size: clamp(42px, 5vw, 72px) !important;
   line-height: 0.95 !important;
   letter-spacing: 0 !important;
 }
@@ -5851,11 +5873,109 @@ nav {
 }
 
 .keyspaceHero p:not(.eyebrow) {
-  max-width: 850px !important;
+  max-width: 600px !important;
   margin: 0 !important;
   color: var(--muted) !important;
-  font-size: 13px !important;
+  font-size: 14px !important;
   line-height: 1.55 !important;
+}
+
+.heroTagline {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+  max-width: 760px !important;
+  margin-top: 14px !important;
+}
+
+.heroTagline span {
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 9px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: rgba(255, 255, 255, 0.34) !important;
+  color: #2d251b !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.heroIdentityCard,
+.simIdentityCard {
+  display: grid !important;
+  align-content: start !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 6px !important;
+  background: linear-gradient(180deg, #fffdf7, #fff3d4) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.78) !important;
+}
+
+.heroIdentityCard {
+  min-height: 220px !important;
+  padding: 16px !important;
+}
+
+.identityName {
+  color: #000 !important;
+  font-size: 28px !important;
+  font-weight: 850 !important;
+  line-height: 1 !important;
+}
+
+.identityMeta {
+  margin-top: 7px !important;
+  color: var(--gold-dark) !important;
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+}
+
+.identityRows {
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  gap: 0 !important;
+  margin-top: 14px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+}
+
+.identityRows span,
+.identityRows b {
+  min-height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 7px 9px !important;
+  border-bottom: 1px solid var(--line) !important;
+  font-size: 11px !important;
+}
+
+.identityRows span {
+  color: var(--muted) !important;
+}
+
+.identityRows b {
+  justify-content: flex-end !important;
+  color: #000 !important;
+}
+
+.identityRows span:nth-last-child(-n+2),
+.identityRows b:nth-last-child(-n+1) {
+  border-bottom: 0 !important;
+}
+
+.heroStats {
+  display: grid !important;
+  gap: 6px !important;
+  margin-top: 12px !important;
+}
+
+.heroStats span {
+  color: #6f4e06 !important;
+  font-size: 11px !important;
 }
 
 .warningBox,
@@ -5874,6 +5994,114 @@ nav {
   padding: 16px !important;
   font-size: 12px !important;
   line-height: 1.5 !important;
+}
+
+.keyspaceWarning {
+  margin: -4px 0 0 !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: #fff8e8 !important;
+  color: #704f07 !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.keyspaceBlock {
+  display: grid !important;
+  gap: 10px !important;
+  padding: 16px !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 6px !important;
+  background: rgba(255, 253, 247, 0.72) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65) !important;
+}
+
+.sectionHead {
+  display: flex !important;
+  align-items: end !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.sectionHead h2 {
+  margin: 0 !important;
+  color: #000 !important;
+  font-size: 20px !important;
+  line-height: 1.1 !important;
+}
+
+.sectionHead p {
+  max-width: 560px !important;
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.flowGrid,
+.supplyGrid,
+.listingGrid,
+.keybondGrid {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.flowGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.flowCard {
+  display: grid !important;
+  grid-template-columns: 34px minmax(0, 1fr) !important;
+  column-gap: 10px !important;
+  align-items: start !important;
+  min-height: 86px !important;
+  padding: 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: rgba(255,255,255,0.35) !important;
+}
+
+.flowCard i {
+  width: 28px !important;
+  height: 28px !important;
+  display: grid !important;
+  place-items: center !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: 50% !important;
+  color: var(--gold-dark) !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+}
+
+.flowCard b {
+  color: #000 !important;
+  font-size: 14px !important;
+}
+
+.flowCard p {
+  grid-column: 2 !important;
+  margin: 5px 0 0 !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.originLine,
+.marketNote {
+  margin: 0 !important;
+  padding: 9px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: #fff8e8 !important;
+  color: #704f07 !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
+}
+
+.supplyGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
 }
 
 .keyspaceGrid {
@@ -5896,8 +6124,8 @@ nav {
 }
 
 .infoCard {
-  min-height: 104px !important;
-  padding: 13px !important;
+  min-height: 72px !important;
+  padding: 11px !important;
 }
 
 .infoCard b,
@@ -5911,6 +6139,7 @@ nav {
 
 .infoCard span,
 .rankCard span,
+.listingCard span,
 .marketGrid div,
 .windowGrid div {
   color: var(--muted) !important;
@@ -5937,11 +6166,11 @@ nav {
   display: grid !important;
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   gap: 10px !important;
-  margin-top: 14px !important;
+  margin-top: 0 !important;
 }
 
 .rankCard {
-  min-height: 126px !important;
+  min-height: 98px !important;
   padding: 12px !important;
 }
 
@@ -5959,15 +6188,77 @@ nav {
 
 .windowGrid {
   grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  margin-bottom: 12px !important;
+  margin-top: 2px !important;
+  margin-bottom: 0 !important;
 }
 
 .windowGrid div,
 .marketGrid div {
-  min-height: 42px !important;
+  min-height: 34px !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: center !important;
   padding: 10px !important;
+  border-radius: 999px !important;
+  text-align: center !important;
+}
+
+.listingGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.listingCard {
+  min-height: 124px !important;
+  display: grid !important;
+  gap: 5px !important;
+  padding: 12px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: rgba(255,255,255,0.33) !important;
+}
+
+.listingCard b {
+  color: #000 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+.listingCard em {
+  width: fit-content !important;
+  margin-top: 2px !important;
+  padding: 4px 8px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: #fff8e8 !important;
+  color: var(--gold-dark) !important;
+  font-size: 10px !important;
+  font-style: normal !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+}
+
+.keybondBlock {
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr) !important;
+  align-items: center !important;
+}
+
+.keybondGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.keybondGrid div {
+  min-height: 54px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: rgba(255,255,255,0.35) !important;
+  color: #000 !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-align: center !important;
 }
 
 .keyspaceTwo {
@@ -6018,12 +6309,12 @@ nav {
 }
 
 .keyspaceSimulator {
-  padding: 18px !important;
+  padding: 16px !important;
 }
 
 .simControls {
   display: grid !important;
-  grid-template-columns: 220px minmax(0, 1fr) 190px !important;
+  grid-template-columns: 180px minmax(0, 1fr) 190px !important;
   gap: 10px !important;
   align-items: end !important;
 }
@@ -6082,6 +6373,31 @@ nav {
 
 .simOutput .metric:last-child {
   border-right: 0 !important;
+}
+
+.simIdentityWrap {
+  margin-top: 12px !important;
+}
+
+.simIdentityCard {
+  max-width: 640px !important;
+  padding: 14px !important;
+}
+
+.simIdentityCard.blocked {
+  background: linear-gradient(180deg, #fffdf7, #fff0df) !important;
+}
+
+.simIdentityCard p,
+.simPlaceholder {
+  margin: 10px 0 0 !important;
+  padding: 9px 10px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: #fff8e8 !important;
+  color: #704f07 !important;
+  font-size: 12px !important;
+  line-height: 1.35 !important;
 }
 
 nav button {
@@ -6749,13 +7065,17 @@ footer {
   .homeGrid,
   .proofGrid,
   .keyspaceHero,
-  .keyspaceTwo {
+  .keyspaceTwo,
+  .keybondBlock {
     grid-template-columns: 1fr !important;
   }
 
   .mintSupport,
   .keyspaceGrid.five,
-  .rankGrid {
+  .rankGrid,
+  .supplyGrid,
+  .listingGrid,
+  .flowGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 
@@ -6764,7 +7084,9 @@ footer {
   }
 
   .windowGrid,
-  .simOutput {
+  .simOutput,
+  .heroTagline,
+  .keybondGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
@@ -6802,6 +7124,11 @@ footer {
   .miniGrid.three,
   .keyspaceGrid.five,
   .rankGrid,
+  .supplyGrid,
+  .listingGrid,
+  .flowGrid,
+  .heroTagline,
+  .keybondGrid,
   .windowGrid,
   .marketGrid,
   .exampleGrid,
@@ -6820,5 +7147,17 @@ footer {
 
   .keyspaceHero {
     padding: 18px !important;
+  }
+
+  .sectionHead {
+    display: grid !important;
+  }
+
+  .identityRows {
+    grid-template-columns: 1fr !important;
+  }
+
+  .identityRows b {
+    justify-content: flex-start !important;
   }
 }
