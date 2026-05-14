@@ -63,6 +63,7 @@ const MARKET_ABI = [
   'function cancelListing(uint256 tokenId) external',
   'function getListing(uint256 tokenId) view returns (address seller,uint256 price)'
 ];
+const ROUTES = ['home', 'mint', 'keyspace', 'proof', 'vault', 'whitepaper'];
 
 const fmt = new Intl.NumberFormat('en-US');
 function short(x) { return x ? `${x.slice(0, 6)}...${x.slice(-4)}` : 'not connected'; }
@@ -117,19 +118,45 @@ async function ensureWalletChain(expectedChainId) {
   }
 }
 
+function cleanRoute(value = '') {
+  const normalized = String(value).replace(/^#?\/*/, '').split(/[?#/]/)[0] || 'home';
+  return ROUTES.includes(normalized) ? normalized : 'home';
+}
+
+function routeFromLocation() {
+  if (window.location.hash.startsWith('#/')) return cleanRoute(window.location.hash);
+  return cleanRoute(window.location.pathname);
+}
+
 function useRoute() {
-  const [route, setRoute] = useState(() => window.location.hash.replace('#/', '') || 'home');
+  const [route, setRoute] = useState(routeFromLocation);
   useEffect(() => {
-    const on = () => setRoute(window.location.hash.replace('#/', '') || 'home');
+    const on = () => {
+      const next = routeFromLocation();
+      setRoute(next);
+      if (window.location.hash.startsWith('#/')) {
+        window.history.replaceState(null, '', `/${next}`);
+      }
+    };
+    on();
     window.addEventListener('hashchange', on);
-    return () => window.removeEventListener('hashchange', on);
+    window.addEventListener('popstate', on);
+    return () => {
+      window.removeEventListener('hashchange', on);
+      window.removeEventListener('popstate', on);
+    };
   }, []);
-  const go = (r) => { window.location.hash = `/${r}`; setRoute(r); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const go = (r) => {
+    const next = cleanRoute(r);
+    window.history.pushState(null, '', `/${next}`);
+    setRoute(next);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   return [route, go];
 }
 
 function Header({ route, go, wallet, connect }) {
-  const nav = ['home', 'mint', 'keyspace', 'proof', 'vault', 'whitepaper'];
+  const nav = ROUTES;
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
       <div className="brandIcon"><img src="/key-logo.png" alt="KEY" /></div>
@@ -220,7 +247,7 @@ function Home({ go, data }) {
       <div className="keyspaceTeaser">
         <b>After Mint: KEYSPACE</b>
         <p>Mint KEY once to reveal your Key Rank. After mint-out, claim one .key identity backed by your KEY reward and trade it with ETH.</p>
-        <button className="miniBtn" onClick={() => go('keyspace')}>Open KEYSPACE → #/keyspace</button>
+        <button className="miniBtn" onClick={() => go('keyspace')}>Open KEYSPACE</button>
       </div>
       <div className="heroActions"><button className="primary" onClick={() => go('mint')}>open mint</button><button className="ghost" onClick={() => go('whitepaper')}>read whitepaper</button></div>
     </section>

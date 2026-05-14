@@ -7305,3 +7305,329 @@ footer {
     justify-content: flex-start !important;
   }
 }
+
+/* Final wide compact polish pass */
+body {
+  font-size: 12px !important;
+}
+
+.shell {
+  width: min(1848px, calc(100vw - 32px)) !important;
+  margin: 10px auto !important;
+}
+
+.topbar {
+  grid-template-columns: 310px minmax(720px, 1fr) 230px !important;
+  min-height: 54px !important;
+  padding: 10px 20px !important;
+  gap: 16px !important;
+}
+
+.brandIcon {
+  width: 36px !important;
+  height: 36px !important;
+}
+
+.brandIcon img {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+.brandName {
+  font-size: 15px !important;
+  letter-spacing: 7px !important;
+}
+
+.brandSub {
+  font-size: 10px !important;
+  letter-spacing: 1.7px !important;
+}
+
+nav {
+  height: 36px !important;
+  max-width: 980px !important;
+}
+
+nav button,
+.connect,
+.primary,
+.ghost,
+.miniBtn,
+.copyBtn,
+.actionMini,
+.mintActions button,
+.stepButtons button,
+.toolbar button,
+.pager button {
+  min-height: 34px !important;
+  font-size: 11px !important;
+}
+
+nav button.on::after {
+  width: 34px !important;
+  margin-top: 7px !important;
+}
+
+.connect {
+  min-width: 190px !important;
+  padding: 0 16px !important;
+}
+
+.status {
+  min-height: 34px !important;
+  padding: 0 20px !important;
+  font-size: 10px !important;
+  letter-spacing: 3px !important;
+}
+
+.page {
+  gap: 10px !important;
+  padding: 12px 32px 16px !important;
+}
+
+.card,
+.article,
+.progressCard,
+.mintPanel,
+.proofListCard,
+.proofDetailCard,
+.heroMini,
+.signatureInfo,
+.tiersCard,
+.keyspaceBlock,
+.keyspaceHero {
+  border-radius: 5px !important;
+}
+
+.cardTitle,
+.eyebrow,
+.metric small,
+.stat small,
+.miniFact small,
+.resultStrip span,
+.proofLine small,
+.consoleHead span,
+.tableLite b {
+  font-size: 9px !important;
+  letter-spacing: 3px !important;
+}
+
+.statStrip {
+  margin: 10px 32px 0 !important;
+}
+
+.statStrip .stat {
+  min-height: 54px !important;
+  padding: 10px 16px !important;
+}
+
+.stat b {
+  font-size: clamp(13px, 1.15vw, 17px) !important;
+  line-height: 1.08 !important;
+}
+
+.homeGrid {
+  grid-template-columns: minmax(0, 1.45fr) minmax(520px, 0.72fr) !important;
+  gap: 18px !important;
+}
+
+.heroMini {
+  padding: 20px 26px !important;
+}
+
+.heroMini h1 {
+  max-width: 760px !important;
+  margin: 12px 0 8px !important;
+  font-size: clamp(28px, 3.1vw, 42px) !important;
+  line-height: 1.02 !important;
+}
+
+.heroMini > p:not(.eyebrow),
+.heroMini p,
+.article p,
+.article li,
+.keyspaceHero p:not(.eyebrow),
+.sectionHead p,
+.marketNote,
+.keyspaceWarning,
+.keyspaceTeaser p {
+  font-size: 12px !important;
+  line-height: 1.42 !important;
+}
+
+.homeExplain {
+  gap: 8px !important;
+  margin: 14px 0 !important;
+}
+
+.homeExplain span {
+  min-height: 48px !important;
+  padding: 9px 11px !important;
+}
+
+.homeExplain b {
+  font-size: 11px !important;
+}
+
+.homeExplain em {
+  font-size: 10px !important;
+}
+
+.keyspaceTeaser {
+  gap: 6px !important;
+  margin-top: 12px !important;
+  padding: 11px !important;
+}
+
+.keyspaceTeaser .miniBtn {
+  min-height: 28px !important;
+  padding: 0 12px !important;
+}
+
+.heroActions {
+  gap: 12px !important;
+  margin-top: 18px !important;
+}
+
+.heroActions button {
+  min-height: 34px !important;
+  padding: 0 22px !important;
+}
+
+.progressCard {
+  padding: 18px 24px !important;
+}
+
+.progressHead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto !important;
+  gap: 12px !important;
+  align-items: center !important;
+}
+
+.progressCard h2,
+.progressHead h2 {
+  min-width: 0 !important;
+  margin: 14px 0 !important;
+  white-space: nowrap !important;
+  font-size: clamp(24px, 2.35vw, 38px) !important;
+  line-height: 1 !important;
+}
+
+.pill,
+.progressHead .pill {
+  min-width: 62px !important;
+  min-height: 30px !important;
+  padding: 0 10px !important;
+  font-size: 9px !important;
+}
+
+.bar {
+  height: 10px !important;
+}
+
+.miniGrid.three {
+  margin-top: 16px !important;
+  padding-top: 14px !important;
+}
+
+.miniGrid.three .metric,
+.metric {
+  min-width: 0 !important;
+}
+
+.miniGrid.three .metric {
+  min-height: 46px !important;
+  padding: 0 16px !important;
+}
+
+.metric strong {
+  margin-top: 7px !important;
+  font-size: clamp(14px, 1.35vw, 17px) !important;
+  line-height: 1.12 !important;
+  overflow-wrap: anywhere !important;
+}
+
+.mintStack {
+  grid-template-columns: minmax(0, 1fr) 390px !important;
+}
+
+.mintPanel,
+.card,
+.article {
+  padding: 16px !important;
+}
+
+.keyspaceHero {
+  grid-template-columns: minmax(0, 1fr) 300px !important;
+  padding: 18px 22px !important;
+}
+
+.keyspaceHero h1 {
+  font-size: clamp(36px, 4.2vw, 64px) !important;
+}
+
+.keyspaceHero h2 {
+  font-size: clamp(17px, 2vw, 26px) !important;
+}
+
+.heroTagline span,
+.flowCard p,
+.rankCard span,
+.listingCard span,
+.keybondGrid div,
+.windowGrid div {
+  font-size: 11px !important;
+}
+
+.heroIdentityCard {
+  min-height: 274px !important;
+}
+
+.heroKeycardImage {
+  width: min(100%, 210px) !important;
+  height: 280px !important;
+}
+
+@media (max-width: 1240px) {
+  .shell {
+    width: min(100vw - 24px, 1180px) !important;
+  }
+
+  .topbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .homeGrid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .progressCard h2,
+  .progressHead h2 {
+    font-size: clamp(26px, 6vw, 40px) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: calc(100vw - 12px) !important;
+    margin: 6px auto !important;
+  }
+
+  .page {
+    padding: 10px !important;
+  }
+
+  .statStrip {
+    margin: 8px 10px 0 !important;
+  }
+
+  .progressHead {
+    grid-template-columns: 1fr !important;
+  }
+
+  .progressCard h2,
+  .progressHead h2 {
+    white-space: normal !important;
+  }
+}
