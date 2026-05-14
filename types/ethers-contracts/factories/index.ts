@@ -7,5 +7,6 @@ export * as keyReserveTimelockSol from './KEYReserveTimelock.sol/index.js';
 export * as keySpaceRegistrarSol from './KEYSpaceRegistrar.sol/index.js';
 export * as keyTreasuryVaultSol from './KEYTreasuryVault.sol/index.js';
 export { KEYIdentity__factory } from './KEYIdentity__factory.js';
+export { KEYSpaceMarket__factory } from './KEYSpaceMarket__factory.js';
 export { KEYToken__factory } from './KEYToken__factory.js';
 export { KEYUniswapV4HookConcept__factory } from './KEYUniswapV4HookConcept__factory.js';

@@ -39,11 +39,14 @@ const mintGateAbi = [
   'event Minted(address indexed recipient, bytes32 indexed proofId, bytes32 indexed publicKeyHash, bytes32 signatureHash, bytes32 rewardHash, uint256 rewardAmount, uint256 epoch, uint256 feePaid)'
 ];
 const registrarAbi = [
-  'event IdentityClaimed(address indexed owner, uint256 indexed tokenId, string name, uint8 originRank, uint256 keyBond)'
+  'event IdentityClaimed(address indexed owner, uint256 indexed tokenId, string name, uint8 originRank, uint256 keyBond)',
+  'function originClaimsOpen() view returns (bool)'
 ];
 const marketAbi = [
   'event IdentityListed(uint256 indexed tokenId, address indexed seller, uint256 price)',
-  'event IdentitySold(uint256 indexed tokenId, address indexed seller, address indexed buyer, uint256 price)'
+  'event IdentityListingCancelled(uint256 indexed tokenId, address indexed seller)',
+  'event IdentitySold(uint256 indexed tokenId, address indexed seller, address indexed buyer, uint256 price)',
+  'function marketOpen() view returns (bool)'
 ];
 
 function isZeroAddress(address) {
@@ -66,6 +69,11 @@ function emptyState() {
   return {
     updatedAt: null,
     contractsLive: false,
+    identityLive: false,
+    registrarLive: false,
+    marketLive: false,
+    marketplaceLive: false,
+    originClaimsOpen: false,
     mints: [],
     claims: [],
     listings: [],
@@ -125,6 +133,17 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     }
   }
 
+  async function queryBool(address, abi, functionName, fallback = false) {
+    if (!provider || !(await hasCode(address))) return fallback;
+    try {
+      const contract = new ethers.Contract(address, abi, provider);
+      return Boolean(await contract[functionName]());
+    } catch (error) {
+      console.warn(`[KEYSPACE indexer] ${functionName} unavailable: ${error.shortMessage || error.message}`);
+      return fallback;
+    }
+  }
+
   async function refresh() {
     if (!provider) {
       cache = { ...emptyState(), updatedAt: new Date().toISOString() };
@@ -150,6 +169,10 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     ]);
     const liveMintGates = gateAddresses.filter((_, index) => mintGateLiveResults[index]);
     const contractsLive = identityLive && registrarLive && marketLive;
+    const [originClaimsOpen, marketplaceLive] = await Promise.all([
+      queryBool(addresses.registrar, registrarAbi, 'originClaimsOpen', false),
+      queryBool(addresses.market, marketAbi, 'marketOpen', false)
+    ]);
     const gateEvents = await Promise.all(liveMintGates.map(async (address) => {
       const [keyMinted, minted] = await Promise.all([
         queryEvents(address, mintGateAbi, 'KeyMinted', fromBlock, latest),
@@ -179,16 +202,11 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
       }))
     ];
 
-    if (!contractsLive) {
-      cache = { ...emptyState(), updatedAt: new Date().toISOString(), contractsLive, addresses, mints };
-      saveCache(cache);
-      return cache;
-    }
-
-    const [claimed, listed, sold] = await Promise.all([
-      queryEvents(addresses.registrar, registrarAbi, 'IdentityClaimed', fromBlock, latest),
-      queryEvents(addresses.market, marketAbi, 'IdentityListed', fromBlock, latest),
-      queryEvents(addresses.market, marketAbi, 'IdentitySold', fromBlock, latest)
+    const [claimed, listed, cancelled, sold] = await Promise.all([
+      registrarLive ? queryEvents(addresses.registrar, registrarAbi, 'IdentityClaimed', fromBlock, latest) : [],
+      marketLive ? queryEvents(addresses.market, marketAbi, 'IdentityListed', fromBlock, latest) : [],
+      marketLive ? queryEvents(addresses.market, marketAbi, 'IdentityListingCancelled', fromBlock, latest) : [],
+      marketLive ? queryEvents(addresses.market, marketAbi, 'IdentitySold', fromBlock, latest) : []
     ]);
 
     const sales = sold.map((event) => ({
@@ -199,20 +217,41 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
       txHash: event.transactionHash,
       blockNumber: event.blockNumber
     }));
-    const soldTokenIds = new Set(sales.map((sale) => sale.tokenId));
-    const listings = listed
-      .map((event) => ({
-        tokenId: event.args.tokenId?.toString(),
-        seller: event.args.seller,
-        price: ethers.formatEther(event.args.price || 0n),
-        txHash: event.transactionHash,
-        blockNumber: event.blockNumber
-      }))
-      .filter((listing) => !soldTokenIds.has(listing.tokenId));
+
+    const activeListings = new Map();
+    const marketEvents = [
+      ...listed.map((event) => ({ type: 'listed', event })),
+      ...cancelled.map((event) => ({ type: 'cancelled', event })),
+      ...sold.map((event) => ({ type: 'sold', event }))
+    ].sort((a, b) => {
+      if (a.event.blockNumber !== b.event.blockNumber) return a.event.blockNumber - b.event.blockNumber;
+      return Number(a.event.index ?? a.event.logIndex ?? 0) - Number(b.event.index ?? b.event.logIndex ?? 0);
+    });
+    for (const { type, event } of marketEvents) {
+      const tokenId = event.args.tokenId?.toString();
+      if (!tokenId) continue;
+      if (type === 'listed') {
+        activeListings.set(tokenId, {
+          tokenId,
+          seller: event.args.seller,
+          price: ethers.formatEther(event.args.price || 0n),
+          txHash: event.transactionHash,
+          blockNumber: event.blockNumber
+        });
+      } else {
+        activeListings.delete(tokenId);
+      }
+    }
+    const listings = [...activeListings.values()];
 
     cache = {
       updatedAt: new Date().toISOString(),
       contractsLive,
+      identityLive,
+      registrarLive,
+      marketLive,
+      marketplaceLive,
+      originClaimsOpen,
       addresses,
       mints,
       claims: claimed.map((event) => ({
@@ -253,12 +292,18 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
 
   async function status(options) {
     const state = await snapshot(options);
+    const live = Boolean(state.originClaimsOpen || state.marketplaceLive);
     return {
       ...PREVIEW_STATUS,
-      claimed: state.contractsLive ? state.claims.length : 0,
-      marketplaceLive: false,
-      originClaimsOpen: false,
+      live,
+      phase: live ? 'active' : 'preview',
+      claimed: state.registrarLive ? state.claims.length : 0,
+      marketplaceLive: state.marketplaceLive,
+      originClaimsOpen: state.originClaimsOpen,
       contractsLive: state.contractsLive,
+      identityLive: state.identityLive,
+      registrarLive: state.registrarLive,
+      marketLive: state.marketLive,
       updatedAt: state.updatedAt
     };
   }
@@ -297,9 +342,9 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     return {
       ok: true,
       contractsLive: state.contractsLive,
-      marketplaceLive: false,
-      listings: state.contractsLive ? state.listings : [],
-      previewExamples: state.contractsLive ? [] : PREVIEW_LISTINGS
+      marketplaceLive: state.marketplaceLive,
+      listings: state.marketLive ? state.listings : [],
+      previewExamples: state.marketplaceLive ? [] : PREVIEW_LISTINGS
     };
   }
 
@@ -308,8 +353,8 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     return {
       ok: true,
       contractsLive: state.contractsLive,
-      marketplaceLive: false,
-      sales: state.contractsLive ? state.sales : []
+      marketplaceLive: state.marketplaceLive,
+      sales: state.marketLive ? state.sales : []
     };
   }
 
