@@ -7808,3 +7808,192 @@ nav,
     inset: 6px 10px auto 10px;
   }
 }
+
+/* Global fit and no-overlap pass */
+.shell {
+  overflow-x: clip !important;
+}
+
+.topbar {
+  grid-template-columns: minmax(250px, 300px) minmax(0, 1fr) 220px !important;
+  gap: 14px !important;
+}
+
+.topbar > *,
+nav,
+.brand,
+.connect,
+.page,
+.card,
+.metric,
+.stat,
+.tableLite div,
+.proofDetailTable div,
+.keyspaceHero,
+.heroMini,
+.progressCard,
+.mintPanel {
+  min-width: 0 !important;
+}
+
+nav {
+  width: 100% !important;
+  max-width: none !important;
+  justify-self: stretch !important;
+}
+
+.connect {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 220px !important;
+  justify-self: stretch !important;
+  padding: 0 10px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  letter-spacing: 1.5px !important;
+}
+
+.brandSub,
+nav button,
+.connect,
+.primary,
+.ghost,
+.miniBtn {
+  line-height: 1.1 !important;
+}
+
+.vaultStatusGrid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+}
+
+.vaultStatusGrid .metric,
+.allocGrid .metric,
+.proofStats .metric,
+.miniGrid.three .metric {
+  display: grid !important;
+  align-content: start !important;
+  gap: 6px !important;
+  overflow: hidden !important;
+}
+
+.metric small,
+.metric strong,
+.metric em,
+.stat small,
+.stat b,
+.mintFacts small,
+.mintFacts b,
+.resultStrip span,
+.resultStrip b,
+.tableLite b,
+.tableLite span,
+.proofDetailTable small,
+.proofDetailTable code {
+  max-width: 100% !important;
+}
+
+.metric strong,
+.metric em,
+.stat b,
+.mintFacts b,
+.resultStrip b {
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  white-space: normal !important;
+}
+
+.metric em,
+.vaultStatusGrid .metric em,
+.allocGrid .metric em {
+  display: block !important;
+  color: #6b6256 !important;
+  font-size: 11px !important;
+  line-height: 1.28 !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.vaultStatusGrid .metric strong {
+  font-size: clamp(15px, 1.35vw, 20px) !important;
+  line-height: 1.08 !important;
+}
+
+.tableLite {
+  overflow: visible !important;
+}
+
+.tableLite div,
+.proofDetailTable div {
+  grid-template-columns: minmax(112px, 170px) minmax(0, 1fr) minmax(70px, auto) !important;
+  gap: 10px !important;
+}
+
+.tableLite span,
+.addresses span,
+.proofDetailTable code {
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  line-height: 1.35 !important;
+}
+
+.tableLite a,
+.proofDetailTable button,
+.copyBtn,
+.miniBtn {
+  white-space: nowrap !important;
+}
+
+.progressHead h2 {
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.homeGrid,
+.mintStack,
+.proofGrid,
+.keyspaceHero {
+  max-width: 100% !important;
+}
+
+@media (max-width: 1320px) {
+  .topbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  nav,
+  .connect {
+    max-width: none !important;
+  }
+
+  .connect {
+    justify-self: stretch !important;
+  }
+
+  .vaultStatusGrid,
+  .allocGrid,
+  .proofStats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .vaultStatusGrid,
+  .allocGrid,
+  .proofStats,
+  .statStrip,
+  .tableLite div,
+  .proofDetailTable div {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tableLite a,
+  .proofDetailTable button {
+    justify-self: start !important;
+  }
+}
