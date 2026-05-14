@@ -64,6 +64,7 @@ const MARKET_ABI = [
   'function getListing(uint256 tokenId) view returns (address seller,uint256 price)'
 ];
 const ROUTES = ['home', 'mint', 'keyspace', 'proof', 'vault', 'whitepaper'];
+let activeInjectedProvider = null;
 
 const fmt = new Intl.NumberFormat('en-US');
 function short(x) { return x ? `${x.slice(0, 6)}...${x.slice(-4)}` : 'not connected'; }
@@ -89,20 +90,20 @@ $sigHex | Set-Clipboard
 $sigHex`;
 }
 
-async function ensureWalletChain(expectedChainId) {
-  if (!window.ethereum) throw new Error('Install MetaMask or another EVM wallet.');
+async function ensureWalletChain(expectedChainId, injected = window.ethereum) {
+  if (!injected) throw new Error('Install MetaMask or another EVM wallet.');
   const expected = Number(expectedChainId || 1);
-  const current = Number(await window.ethereum.request({ method: 'eth_chainId' }));
+  const current = Number(await injected.request({ method: 'eth_chainId' }));
   if (current === expected) return;
 
   try {
-    await window.ethereum.request({
+    await injected.request({
       method: 'wallet_switchEthereumChain',
       params: [{ chainId: chainHex(expected) }]
     });
   } catch (error) {
     if (error?.code === 4902 && expected === 1) {
-      await window.ethereum.request({
+      await injected.request({
         method: 'wallet_addEthereumChain',
         params: [{
           chainId: '0x1',
@@ -116,6 +117,30 @@ async function ensureWalletChain(expectedChainId) {
     }
     throw new Error(`Switch MetaMask to ${chainName(expected)} before minting KEY.`);
   }
+}
+
+function walletName(provider, fallback = 'Injected') {
+  if (provider?.info?.name) return provider.info.name;
+  const injected = provider?.provider || provider;
+  if (injected?.isMetaMask) return 'MetaMask';
+  if (injected?.isCoinbaseWallet) return 'Coinbase';
+  if (injected?.isRabby) return 'Rabby';
+  if (injected?.isBraveWallet) return 'Brave';
+  return fallback;
+}
+
+function uniqueWallets(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = item.uuid || item.name || item.provider;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function currentEthereum() {
+  return activeInjectedProvider || window.ethereum;
 }
 
 function cleanRoute(value = '') {
@@ -155,15 +180,27 @@ function useRoute() {
   return [route, go];
 }
 
-function Header({ route, go, wallet, connect }) {
+function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWalletMenu }) {
   const nav = ROUTES;
+  const walletLabel = wallet ? short(wallet) : 'connect';
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
       <div className="brandIcon"><img src="/key-logo.png" alt="KEY" /></div>
       <div><div className="brandName">KEY</div><div className="brandSub">SPHINCS Signature Mint</div></div>
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{n}</button>)}</nav>
-    <button className="connect" onClick={connect}>{wallet ? short(wallet) : 'connect wallet'}</button>
+    <div className="walletSlot">
+      <button className="connect" onClick={() => {
+        if (!wallet && walletProviders.length > 1) setWalletMenu((open) => !open);
+        else connect(walletProviders[0]);
+      }}>{walletLabel}</button>
+      {walletMenu && !wallet && <div className="walletMenu">
+        {walletProviders.length ? walletProviders.map((provider) => <button key={provider.uuid || provider.name} onClick={() => connect(provider)}>
+          {provider.icon && <img src={provider.icon} alt="" />}
+          <span>{provider.name}</span>
+        </button>) : <button onClick={() => connect()}>Browser wallet</button>}
+      </div>}
+    </div>
   </header>;
 }
 
@@ -333,10 +370,10 @@ function Mint({ wallet, connect, data, refresh }) {
       setPublicKeyHash(pk);
       const epoch = Math.floor(Date.now() / (1000 * 60 * 10));
       const chainId = configuredChainId(data);
-      await ensureWalletChain(chainId);
+      await ensureWalletChain(chainId, currentEthereum());
       const msgRes = await fetch(`${BACKEND}/api/message?recipient=${addr}&publicKeyHash=${pk}&epoch=${epoch}&chainId=${chainId}`).then(r => r.json());
       if (!msgRes.ok) throw new Error(msgRes.error);
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      const provider = new ethers.BrowserProvider(currentEthereum());
       const signer = await provider.getSigner();
       const sig = await signer.signMessage(msgRes.message);
       setMessage(msgRes.message); setWalletSignature(sig); setSignedEpoch(msgRes.epoch); setSignedChainId(msgRes.chainId); setNotice('Address signed. Click Mint to reveal the KEY reward.');
@@ -387,8 +424,8 @@ function Mint({ wallet, connect, data, refresh }) {
         setNotice(`${mintProof.tier.name}: ${fmt.format(mintProof.tier.reward)} KEY. Demo mode stops here because mint gate is not configured.`);
         return;
       }
-      await ensureWalletChain(mintProof.typedData?.domain?.chainId || configuredChainId(data));
-      const provider = new ethers.BrowserProvider(window.ethereum);
+      await ensureWalletChain(mintProof.typedData?.domain?.chainId || configuredChainId(data), currentEthereum());
+      const provider = new ethers.BrowserProvider(currentEthereum());
       const signer = await provider.getSigner();
       const gate = new ethers.Contract(mintGateAddress, GATE_ABI, signer);
       const tx = await gate.mintWithAttestation(mintProof.typedData, mintProof.attestation, { value: ethers.parseEther(t.mintPriceEth) });
@@ -805,8 +842,8 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
   async function getSigner() {
     const address = wallet || await connect();
     if (!address) throw new Error('connect wallet first');
-    await ensureWalletChain(configuredChainId(data));
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    await ensureWalletChain(configuredChainId(data), currentEthereum());
+    const provider = new ethers.BrowserProvider(currentEthereum());
     return { address, signer: await provider.getSigner() };
   }
 
@@ -1073,6 +1110,9 @@ function Footer() { return <footer>KEY <span>•</span> Proof-of-Signature Hash 
 function App() {
   const [route, go] = useRoute();
   const [wallet, setWallet] = useState('');
+  const [walletProviders, setWalletProviders] = useState([]);
+  const [walletMenu, setWalletMenu] = useState(false);
+  const [selectedWalletProvider, setSelectedWalletProvider] = useState(null);
   const [data, setData] = useState(FALLBACK);
 
   async function refresh() {
@@ -1082,13 +1122,42 @@ function App() {
     } catch { setData(FALLBACK); }
   }
   useEffect(() => { refresh(); }, []);
+  useEffect(() => {
+    const discovered = [];
+    const add = (detail) => {
+      const provider = detail?.provider || detail;
+      if (!provider?.request) return;
+      discovered.push({
+        uuid: detail?.info?.uuid || walletName(detail, `Wallet ${discovered.length + 1}`),
+        name: walletName(detail, `Wallet ${discovered.length + 1}`),
+        icon: detail?.info?.icon || '',
+        provider
+      });
+      setWalletProviders(uniqueWallets(discovered));
+    };
+    const onAnnounce = (event) => add(event.detail);
+    window.addEventListener('eip6963:announceProvider', onAnnounce);
+    window.dispatchEvent(new Event('eip6963:requestProvider'));
 
-  async function connect() {
-    if (!window.ethereum) { alert('Install MetaMask or another EVM wallet.'); return ''; }
-    await ensureWalletChain(configuredChainId(data));
-    const provider = new ethers.BrowserProvider(window.ethereum);
+    const eth = window.ethereum;
+    if (eth?.providers?.length) eth.providers.forEach((provider, index) => add({ provider, info: { name: walletName(provider, `Wallet ${index + 1}`) } }));
+    else if (eth?.request) add({ provider: eth, info: { name: walletName(eth, 'Browser wallet') } });
+
+    return () => window.removeEventListener('eip6963:announceProvider', onAnnounce);
+  }, []);
+
+  async function connect(walletProvider = selectedWalletProvider || walletProviders[0]) {
+    const injected = walletProvider?.provider || window.ethereum;
+    if (!injected) { alert('Install MetaMask, Coinbase Wallet, or another Ethereum wallet.'); return ''; }
+    await ensureWalletChain(configuredChainId(data), injected);
+    const provider = new ethers.BrowserProvider(injected);
     const accounts = await provider.send('eth_requestAccounts', []);
-    const addr = ethers.getAddress(accounts[0]); setWallet(addr); return addr;
+    const addr = ethers.getAddress(accounts[0]);
+    activeInjectedProvider = injected;
+    setSelectedWalletProvider(walletProvider || null);
+    setWalletMenu(false);
+    setWallet(addr);
+    return addr;
   }
 
   const page = useMemo(() => {
@@ -1100,7 +1169,7 @@ function App() {
     return <Home go={go} data={data} />;
   }, [route, wallet, data]);
 
-  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
+  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} walletProviders={walletProviders} walletMenu={walletMenu} setWalletMenu={setWalletMenu} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);

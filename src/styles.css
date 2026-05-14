@@ -7997,3 +7997,118 @@ nav button,
     justify-self: start !important;
   }
 }
+
+/* Compact wallet button and provider chooser */
+.topbar {
+  grid-template-columns: minmax(240px, 300px) minmax(0, 1fr) 118px !important;
+  align-items: center !important;
+}
+
+.walletSlot {
+  position: relative !important;
+  width: 118px !important;
+  min-width: 0 !important;
+  justify-self: end !important;
+}
+
+.connect {
+  width: 118px !important;
+  max-width: 118px !important;
+  min-width: 0 !important;
+  min-height: 34px !important;
+  padding: 0 8px !important;
+  justify-self: end !important;
+  letter-spacing: 1.2px !important;
+  text-transform: lowercase !important;
+}
+
+.walletMenu {
+  position: absolute !important;
+  z-index: 50 !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  width: 190px !important;
+  display: grid !important;
+  gap: 6px !important;
+  padding: 8px !important;
+  border: 2px solid var(--gold) !important;
+  border-radius: 6px !important;
+  background: rgba(255, 253, 247, 0.98) !important;
+  box-shadow: 0 14px 28px rgba(91, 62, 8, 0.16), inset 0 0 0 1px rgba(255, 249, 229, 0.8) !important;
+}
+
+.walletMenu button {
+  min-height: 32px !important;
+  display: grid !important;
+  grid-template-columns: 20px minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 0 8px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 5px !important;
+  background: #fffaf0 !important;
+  color: #0f0d09 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  text-align: left !important;
+}
+
+.walletMenu button:hover {
+  border-color: var(--gold) !important;
+  background: #fff2cf !important;
+}
+
+.walletMenu img {
+  width: 18px !important;
+  height: 18px !important;
+  border-radius: 999px !important;
+}
+
+.walletMenu span {
+  min-width: 0 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 1320px) {
+  .topbar {
+    grid-template-columns: minmax(0, 1fr) 118px !important;
+  }
+
+  .brand {
+    grid-column: 1 / -1 !important;
+  }
+
+  nav {
+    grid-column: 1 !important;
+  }
+
+  .walletSlot {
+    grid-column: 2 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .brand,
+  nav,
+  .walletSlot {
+    grid-column: 1 !important;
+  }
+
+  .walletSlot,
+  .connect {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .walletMenu {
+    left: 0 !important;
+    right: auto !important;
+    width: min(100%, 240px) !important;
+  }
+}
