@@ -13,7 +13,7 @@ const ZERO = ethers.ZeroAddress;
 const FALLBACK = {
   tokenomics: {
     token: 'KEY', maxSupply: 21_000_000, publicMintPool: 10_000_000, lpReserve: 10_000_000,
-    treasuryReserve: 1_000_000, mintPriceEth: '0.001', walletCap: 3, estimatedMints: 15600, network: 'Ethereum'
+    treasuryReserve: 1_000_000, mintPriceEth: '0.001', walletCap: 1, estimatedMints: 15600, network: 'Ethereum'
   },
   stats: { mintedTokens: 0, ethRaised: 0, totalProofs: 0, byTier: {} },
   tiers: [
@@ -188,7 +188,7 @@ function Home({ go, data }) {
       </div>
       <div className="keyspaceTeaser">
         <b>After Mint: KEYSPACE</b>
-        <p>Mint KEY to reveal your Key Rank. After mint-out, claim a .key identity backed by your KEY reward and trade it with KEY.</p>
+        <p>Mint KEY once to reveal your Key Rank. After mint-out, claim one .key identity backed by your KEY reward and trade it with KEY.</p>
         <button className="miniBtn" onClick={() => go('keyspace')}>Open KEYSPACE → #/keyspace</button>
       </div>
       <div className="heroActions"><button className="primary" onClick={() => go('mint')}>open mint</button><button className="ghost" onClick={() => go('whitepaper')}>read whitepaper</button></div>
@@ -209,6 +209,7 @@ function Mint({ wallet, connect, data, refresh }) {
   const [busy, setBusy] = useState('');
   const [notice, setNotice] = useState('');
   const t = data.tokenomics;
+  const mintLimitText = Number(t.walletCap) === 1 ? '1 mint per wallet' : `${t.walletCap} mint limit`;
   const hasKey = Boolean(publicKeyHash);
   const hasSigned = Boolean(walletSignature && message);
   const hasProof = Boolean(proof);
@@ -346,7 +347,7 @@ function Mint({ wallet, connect, data, refresh }) {
       <div className="cardTitle">mint KEY</div>
       <div className="mintFacts">
         <div><small>price</small><b>{t.mintPriceEth} ETH</b></div>
-        <div><small>limit</small><b>{t.walletCap} mints per wallet</b></div>
+        <div><small>limit</small><b>{mintLimitText}</b></div>
         <div><small>mode</small><b>{data.mode === 'preview' ? 'demo' : 'real SPHINCS'}</b></div>
       </div>
       <div className="resultStrip">
@@ -380,7 +381,7 @@ function Mint({ wallet, connect, data, refresh }) {
         </div>
       </div>
     </div>
-    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /><Card title="KEYSPACE note" className="keyspaceNote"><p>Your reward tier also becomes your Key Rank for KEYSPACE. Higher ranks unlock earlier access to shorter .key identities after mint-out.</p></Card></div>
+    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /><Card title="KEYSPACE note" className="keyspaceNote"><p>Each wallet can mint KEY once. Your reward tier becomes your Key Rank for KEYSPACE. Higher ranks unlock shorter .key identities after mint-out.</p></Card></div>
     </section>
   </main>;
 }
@@ -489,19 +490,29 @@ function DetailRow({ label, value, onCopy }) {
 }
 
 function Keyspace({ tiers }) {
+  const staticStatus = {
+    live: false,
+    phase: 'preview',
+    keySupply: '21000000',
+    identitySupply: '21000',
+    claimed: 0,
+    marketplaceLive: false,
+    originClaimsOpen: false,
+    contractsLive: false
+  };
   const rankRules = [
-    { key: 'Normal', title: 'Normal Key', short: 'Normal', reward: 500, min: 8, claim: '8+ chars', bond: '500 KEY', day: 'Day 5', origin: 'Normal Origin' },
-    { key: 'Clean', title: 'Clean Key', short: 'Clean', reward: 750, min: 7, claim: '7+ chars', bond: '750 KEY', day: 'Day 4', origin: 'Clean Origin' },
-    { key: 'Golden', title: 'Golden Key', short: 'Golden', reward: 1500, min: 5, claim: '5–6 chars', bond: '1,500 KEY', day: 'Day 3', origin: 'Golden Origin' },
-    { key: 'Quantum', title: 'Quantum Key', short: 'Quantum', reward: 5000, min: 4, claim: '4 chars', bond: '5,000 KEY', day: 'Day 2', origin: 'Quantum Origin' },
-    { key: 'Genesis', title: 'Genesis Key', short: 'Genesis', reward: 21000, min: 3, claim: '3 chars', bond: '21,000 KEY', day: 'Day 1', origin: 'Genesis Origin' }
+    { key: 'Normal', title: 'Normal Key', short: 'Normal', reward: 500, min: 8, claim: '8+ letters', bond: '500 KEY', origin: 'Normal Origin' },
+    { key: 'Clean', title: 'Clean Key', short: 'Clean', reward: 750, min: 7, claim: '7+ letters', bond: '750 KEY', origin: 'Clean Origin' },
+    { key: 'Golden', title: 'Golden Key', short: 'Golden', reward: 1500, min: 5, claim: '5+ letters', bond: '1,500 KEY', origin: 'Golden Origin' },
+    { key: 'Quantum', title: 'Quantum Key', short: 'Quantum', reward: 5000, min: 4, claim: '4+ letters', bond: '5,000 KEY', origin: 'Quantum Origin' },
+    { key: 'Genesis', title: 'Genesis Key', short: 'Genesis', reward: 21000, min: 3, claim: '3+ letters', bond: '21,000 KEY', origin: 'Genesis Origin' }
   ].map((rule) => {
     const tier = tiers.find((t) => t.name.toLowerCase() === rule.title.toLowerCase());
     return tier ? { ...rule, title: tier.name, reward: tier.reward, bond: `${fmt.format(tier.reward)} KEY` } : rule;
   });
   const flow = [
     ['Mint KEY', 'SPHINCS signature hash reveals your reward tier and Key Rank.'],
-    ['Claim identity', 'After mint-out, your rank unlocks one .key identity.'],
+    ['Claim identity', 'After mint-out, one Origin Claim unlocks one .key identity.'],
     ['Trade with KEY', 'The identity can be listed, bought, and sold with KEY.']
   ];
   const listings = [
@@ -514,11 +525,27 @@ function Keyspace({ tiers }) {
   const [rank, setRank] = useState('Normal');
   const [name, setName] = useState('');
   const [preview, setPreview] = useState(null);
+  const [keyspaceStatus, setKeyspaceStatus] = useState(staticStatus);
   const selected = rankRules.find((r) => r.key === rank) || rankRules[0];
+  const keySupply = fmt.format(Number(keyspaceStatus.keySupply || staticStatus.keySupply));
+  const identitySupply = fmt.format(Number(keyspaceStatus.identitySupply || staticStatus.identitySupply));
+
+  useEffect(() => {
+    let alive = true;
+    fetch(`${BACKEND}/api/keyspace/status`)
+      .then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE status unavailable')))
+      .then((status) => {
+        if (alive) setKeyspaceStatus({ ...staticStatus, ...status });
+      })
+      .catch(() => {
+        if (alive) setKeyspaceStatus(staticStatus);
+      });
+    return () => { alive = false; };
+  }, []);
 
   function previewClaim() {
     const raw = name.trim().toLowerCase();
-    const valid = /^[a-z0-9]+$/.test(raw);
+    const valid = /^[a-z]+$/.test(raw);
     const eligible = valid && raw.length >= selected.min;
     setPreview({
       display: raw ? `${raw}.key` : 'name.key',
@@ -535,11 +562,11 @@ function Keyspace({ tiers }) {
         <span className="previewBadge">PREVIEW — OPENS AFTER MINT-OUT</span>
         <h1>KEYSPACE</h1>
         <h2>SPHINCS Origin Identities backed by KEY.</h2>
-        <p>Mint KEY. Reveal your rank. Claim a .key identity. Trade it with KEY.</p>
+        <p>Mint KEY once. Reveal your rank. Claim one .key identity after mint-out. Trade it with KEY.</p>
         <div className="heroTagline">
+          <span>One wallet. One mint. One Origin Claim.</span>
           <span>Your signature decides your rank.</span>
-          <span>Your rank unlocks the identity.</span>
-          <span>Your KEY backs the name.</span>
+          <span>Your KEY backs the identity.</span>
         </div>
       </div>
       <div className="heroIdentityCard">
@@ -551,13 +578,13 @@ function Keyspace({ tiers }) {
           <span>Status</span><b>Not Live</b>
         </div>
         <div className="heroStats">
-          <span>21,000 max identities</span>
+          <span>{identitySupply} max identities</span>
           <span>10,000,000 KEY public mint</span>
           <span>KEY-backed identity assets</span>
         </div>
       </div>
     </section>
-    <p className="keyspaceWarning">KEYSPACE is preview only. Contracts, marketplace, KeyBond, melt/redeem, and auctions are not live yet.</p>
+    <p className="keyspaceWarning">KEYSPACE contracts, marketplace, KeyBond, melt/redeem, and auctions are not live yet.</p>
 
     <section className="keyspaceBlock">
       <div className="sectionHead">
@@ -573,18 +600,18 @@ function Keyspace({ tiers }) {
 
     <section className="keyspaceBlock">
       <div className="supplyGrid">
-        <InfoCard title="KEY Supply" value="21,000,000" />
+        <InfoCard title="KEY Supply" value={keySupply} />
         <InfoCard title="Public Mint" value="10,000,000 KEY" />
-        <InfoCard title="KEYSPACE Supply" value="21,000 .key identities" />
+        <InfoCard title="KEYSPACE Supply" value={`${identitySupply} .key identities`} />
         <InfoCard title="Origin Names" value="Minters claim first" />
       </div>
-      <p className="keyspaceRatio">21,000,000 KEY. 21,000 .key identities. One identity for every 1,000 KEY supply.</p>
+      <p className="keyspaceRatio">{keySupply} KEY. {identitySupply} .key identities. One identity for every 1,000 KEY supply.</p>
     </section>
 
     <section className="keyspaceBlock">
       <div className="sectionHead">
         <h2>Mint Rank unlocks name length</h2>
-        <p>Higher ranks claim earlier after mint-out.</p>
+        <p>Higher ranks unlock shorter .key identities after mint-out.</p>
       </div>
       <div className="rankGrid">{rankRules.map((r) => <div className="rankCard" key={r.key}>
         <b>{r.short}</b>
@@ -592,8 +619,12 @@ function Keyspace({ tiers }) {
         <span>Claim: {r.claim}</span>
         <span>KeyBond: {r.bond}</span>
       </div>)}</div>
+      <div className="sectionHead compactHead">
+        <h2>Origin Claim Opens After Mint-Out</h2>
+        <p>All eligible minters can claim when KEYSPACE opens. Your Key Rank controls the minimum name length.</p>
+      </div>
       <div className="windowGrid">
-        {['Day 1 Genesis', 'Day 2 Quantum', 'Day 3 Golden', 'Day 4 Clean', 'Day 5 Normal', 'Day 6+ Public'].map((item) => <div key={item}>{item}</div>)}
+        {['Genesis: 3+ letters', 'Quantum: 4+ letters', 'Golden: 5+ letters', 'Clean: 7+ letters', 'Normal: 8+ letters'].map((item) => <div key={item}>{item}</div>)}
       </div>
     </section>
 
@@ -609,7 +640,7 @@ function Keyspace({ tiers }) {
         <span>{listing.includes('Auction') ? 'Market' : 'Example Listing'}: {listing}</span>
         <em>{status}</em>
       </div>)}</div>
-      <p className="marketNote"><b>Primary market:</b> KEYSPACE Market. <b>Secondary visibility:</b> OpenSea / Etherscan NFT page.</p>
+      <p className="marketNote">.key identities can be listed, bought, and sold with KEY after KEYSPACE goes live. When sold, the KeyBond stays inside the identity and moves to the buyer.</p>
     </section>
 
     <section className="keyspaceBlock keybondBlock">
@@ -625,7 +656,7 @@ function Keyspace({ tiers }) {
     <Card title="Claim Preview" className="keyspaceSimulator">
       <div className="simControls">
         <label><span>Rank</span><select value={rank} onChange={(e) => setRank(e.target.value)}>{rankRules.map((r) => <option key={r.key} value={r.key}>{r.short}</option>)}</select></label>
-        <label><span>Desired name</span><input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} placeholder="alpha" /></label>
+        <label><span>Desired name</span><input value={name} onChange={(e) => setName(e.target.value.toLowerCase())} placeholder="alpha" maxLength={16} /></label>
         <button className="primary" onClick={previewClaim}>Preview Claim</button>
       </div>
       <div className="simIdentityWrap">
@@ -634,14 +665,15 @@ function Keyspace({ tiers }) {
           <div className="identityMeta">Origin: {preview.rule.short}</div>
           <div className="identityRows">
             <span>Eligible</span><b>{preview.eligible ? 'yes' : 'no'}</b>
-            <span>Required length</span><b>{preview.rule.min}+ chars</b>
+            <span>Required</span><b>{preview.rule.min}+ letters</b>
             <span>KeyBond</span><b>{preview.rule.bond}</b>
-            <span>Example market listing</span><b>{fmt.format(preview.rule.reward * 12)} KEY</b>
+            <span>Claim Right</span><b>1 per minting wallet</b>
             <span>Status</span><b>Preview only</b>
           </div>
-          {!preview.valid && <p>Use lowercase letters and numbers only. No spaces.</p>}
-          {preview.valid && !preview.eligible && <p>This name is too short for selected rank.</p>}
-        </div> : <p className="simPlaceholder">Enter a lowercase name, select a rank, and preview the Origin Claim.</p>}
+          {preview.valid && preview.eligible && <p>This name can be claimed by this rank after KEYSPACE opens.</p>}
+          {!preview.valid && <p>Only lowercase letters a-z are allowed. No numbers, spaces, or symbols.</p>}
+          {preview.valid && !preview.eligible && <p>This name is too short for the selected rank.</p>}
+        </div> : <p className="simPlaceholder">Enter a lowercase letters-only name, select a rank, and preview the Origin Claim.</p>}
       </div>
     </Card>
   </main>;
@@ -667,7 +699,7 @@ function Tokenomics({ data }) {
     <p>Mint price is fixed at <b>{t.mintPriceEth} ETH</b>. The weighted average reward is approximately <b>{averageReward} KEY</b>, so a 10,000,000 KEY public mint pool gives roughly <b>±15,600 successful mints</b>.</p>
     <RewardTiers tiers={data.tiers} />
     <h2>Fairness controls</h2>
-    <ul><li>No hidden dynamic price in the frontend.</li><li>Wallet cap is 3 successful mints.</li><li>Public mint pool is capped at 10,000,000 KEY.</li><li>Public key hash and proof ID cannot be reused.</li><li>Reward tier is deterministic from the signature hash.</li></ul>
+    <ul><li>No hidden dynamic price in the frontend.</li><li>Each wallet can mint once.</li><li>Public mint pool is capped at 10,000,000 KEY.</li><li>Public key hash and proof ID cannot be reused.</li><li>Reward tier is deterministic from the signature hash.</li></ul>
   </Card></main>;
 }
 
@@ -724,7 +756,7 @@ function Whitepaper({ data }) {
     <h2>Why KEY is different</h2>
     <ul><li>Not browser hash racing.</li><li>Not a fixed token claim.</li><li>Reward is revealed from the signature hash.</li><li>Every mint can produce a proof record.</li><li>Inspired by hash-based signature flow: key → sign → verify.</li></ul>
     <h2>Reference, not clone</h2>
-    <p>The project is inspired by the SPHINCS-style idea of hash-based post-quantum signatures: key generation, public key derivation, message signing, and verification. KEY does not copy the existing token flow. The mechanism is changed into a tiered mint where the signature hash determines the reward.</p>
+    <p>The project is inspired by the SPHINCS-style idea of hash-based post-quantum signatures: key generation, public key derivation, message signing, and verification. KEY does not copy the existing token flow. The mechanism is changed into a tiered mint where the signature hash decides the reward.</p>
     <h2>Mint lifecycle</h2>
     <ol><li>Generate a fresh public key hash.</li><li>Sign the canonical KEY mint message.</li><li>Backend verifies wallet ownership and, in production, verifies the SPHINCS signature through a configured verifier.</li><li>Backend signs an EIP-712 mint attestation.</li><li>Contract verifies attestation, recomputes tier, enforces caps, receives 0.001 ETH, and mints KEY.</li></ol>
     <h2>Core formula</h2>

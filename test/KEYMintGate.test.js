@@ -105,26 +105,17 @@ describe("KEYMintGate", function () {
     ).to.be.revertedWith("proof used");
   });
 
-  it("enforces the wallet cap", async function () {
+  it("enforces one mint per wallet", async function () {
     const { gate, backendSigner, user } = await deployFixture();
-
-    for (let i = 0; i < 3; i += 1) {
-      const { value, signature } = await makeAttestation({
-        gate,
-        signer: backendSigner,
-        recipient: user,
-        seed: `cap-${i}`,
-        epoch: BigInt(i + 1),
-      });
-      await gate.connect(user).mintWithAttestation(value, signature, { value: ethers.parseEther("0.001") });
-    }
+    const first = await makeAttestation({ gate, signer: backendSigner, recipient: user, seed: "cap-1", epoch: 1n });
+    await gate.connect(user).mintWithAttestation(first.value, first.signature, { value: ethers.parseEther("0.001") });
 
     const { value, signature } = await makeAttestation({
       gate,
       signer: backendSigner,
       recipient: user,
-      seed: "cap-4",
-      epoch: 4n,
+      seed: "cap-2",
+      epoch: 2n,
     });
     await expect(
       gate.connect(user).mintWithAttestation(value, signature, { value: ethers.parseEther("0.001") }),

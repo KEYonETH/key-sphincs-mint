@@ -17,6 +17,7 @@ import { ProofStore } from './lib/store.js';
 import { ChallengeStore } from './lib/challengeStore.js';
 import { verifyWalletOwnership, verifySphincsProof, buildCanonicalMessage } from './lib/sphincsVerifier.js';
 import { computeSignatureHash, signMintAttestation } from './lib/attestation.js';
+import { createKeyspaceIndexer } from './lib/keyspaceIndexer.js';
 
 const execFileAsync = promisify(execFile);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -79,8 +80,9 @@ const store = new ProofStore(CONFIG.proofDataDir);
 const challenges = new ChallengeStore(CONFIG.challengeTtlMs);
 const assistedSphincsKeys = new Map();
 const ASSISTED_KEY_TTL_MS = 30 * 60 * 1000;
-const rpcUrl = process.env.MAINNET_RPC_URL || process.env.RPC_URL || process.env.ETH_RPC_URL || '';
+const rpcUrl = CONFIG.rpcUrl;
 const chainProvider = rpcUrl ? new ethers.JsonRpcProvider(rpcUrl, CONFIG.chainId) : null;
+const keyspaceIndexer = createKeyspaceIndexer({ provider: chainProvider, dataDir: CONFIG.proofDataDir });
 const STATS_CACHE_TTL_MS = Number(process.env.STATS_CACHE_TTL_MS || 15_000);
 const PROOFS_CACHE_TTL_MS = Number(process.env.PROOFS_CACHE_TTL_MS || 15_000);
 const LIQUIDITY_CACHE_TTL_MS = Number(process.env.LIQUIDITY_CACHE_TTL_MS || 30_000);
@@ -505,7 +507,7 @@ app.post('/api/attest', attestLimiter, async (req, res) => {
     }
 
     if ((await countWalletMints(recipient)) >= TOKENOMICS.walletCap) {
-      throw new Error(`wallet cap reached: ${TOKENOMICS.walletCap} mints`);
+      throw new Error(`wallet cap reached: ${TOKENOMICS.walletCap} mint`);
     }
 
     let canonicalMessage = buildCanonicalMessage({ recipient, publicKeyHash: input.publicKeyHash, epoch: input.epoch, chainId });
@@ -579,6 +581,34 @@ app.get('/api/proofs/:id', (req, res) => {
 app.post('/api/export', async (_req, res) => {
   const snapshot = store.exportSnapshot({ exportedAt: new Date().toISOString(), status: await statusCache.get() });
   res.json({ ok: true, snapshot });
+});
+
+app.get('/api/keyspace/status', async (req, res) => {
+  res.json(await keyspaceIndexer.status({ force: req.query.refresh === '1' }));
+});
+
+app.get('/api/keyspace/wallet/:address', async (req, res) => {
+  try {
+    res.json(await keyspaceIndexer.wallet(req.params.address, { force: req.query.refresh === '1' }));
+  } catch (error) {
+    res.status(400).json({ ok: false, error: error.message || 'invalid wallet address' });
+  }
+});
+
+app.get('/api/keyspace/name/:name', async (req, res) => {
+  res.json(await keyspaceIndexer.name(req.params.name, { force: req.query.refresh === '1' }));
+});
+
+app.get('/api/keyspace/listings', async (req, res) => {
+  res.json(await keyspaceIndexer.listings({ force: req.query.refresh === '1' }));
+});
+
+app.get('/api/keyspace/sales', async (req, res) => {
+  res.json(await keyspaceIndexer.sales({ force: req.query.refresh === '1' }));
+});
+
+app.get('/api/keyspace/metadata/:tokenId', async (req, res) => {
+  res.json(await keyspaceIndexer.metadata(req.params.tokenId, { force: req.query.refresh === '1' }));
 });
 
 app.post('/api/sphincs/key', sphincsKeyLimiter, async (_req, res) => {

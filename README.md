@@ -112,7 +112,7 @@ Restart backend:
 npm run backend
 ```
 
-Then click `3 Mint` in the UI. Expected result: backend verifies the real SPHINCS signature, reveals the reward tier, and returns the mint attestation.
+Then click `Mint KEY` in the UI. Expected result: backend verifies the real SPHINCS signature, reveals the reward tier, and returns the mint attestation.
 
 ## Helper Commands
 

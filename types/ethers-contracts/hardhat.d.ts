@@ -13,9 +13,9 @@ declare module "@nomicfoundation/hardhat-ethers/types" {
   getContractFactory(name: 'IKEYToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYToken__factory>
 getContractFactory(name: 'IKEYTreasuryVault', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYTreasuryVault__factory>
 getContractFactory(name: 'KEYMintGate', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYMintGate__factory>
-getContractFactory(name: 'KEYToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYToken__factory>
 getContractFactory(name: 'IERC20Transfer', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Transfer__factory>
 getContractFactory(name: 'KEYReserveTimelock', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYReserveTimelock__factory>
+getContractFactory(name: 'KEYToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYToken__factory>
 getContractFactory(name: 'IERC20Like', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Like__factory>
 getContractFactory(name: 'KEYTreasuryVault', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYTreasuryVault__factory>
 getContractFactory(name: 'KEYUniswapV4HookConcept', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYUniswapV4HookConcept__factory>
@@ -23,9 +23,9 @@ getContractFactory(name: 'KEYUniswapV4HookConcept', signerOrOptions?: ethers.Sig
   getContractAt(name: 'IKEYToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYToken>
 getContractAt(name: 'IKEYTreasuryVault', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYTreasuryVault>
 getContractAt(name: 'KEYMintGate', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYMintGate>
-getContractAt(name: 'KEYToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYToken>
 getContractAt(name: 'IERC20Transfer', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IERC20Transfer>
 getContractAt(name: 'KEYReserveTimelock', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYReserveTimelock>
+getContractAt(name: 'KEYToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYToken>
 getContractAt(name: 'IERC20Like', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IERC20Like>
 getContractAt(name: 'KEYTreasuryVault', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYTreasuryVault>
 getContractAt(name: 'KEYUniswapV4HookConcept', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYUniswapV4HookConcept>
@@ -33,9 +33,9 @@ getContractAt(name: 'KEYUniswapV4HookConcept', address: string | ethers.Addressa
   deployContract(name: 'IKEYToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYToken>
 deployContract(name: 'IKEYTreasuryVault', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTreasuryVault>
 deployContract(name: 'KEYMintGate', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYMintGate>
-deployContract(name: 'KEYToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'IERC20Transfer', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Transfer>
 deployContract(name: 'KEYReserveTimelock', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYReserveTimelock>
+deployContract(name: 'KEYToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'IERC20Like', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Like>
 deployContract(name: 'KEYTreasuryVault', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYTreasuryVault>
 deployContract(name: 'KEYUniswapV4HookConcept', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYUniswapV4HookConcept>
@@ -43,9 +43,9 @@ deployContract(name: 'KEYUniswapV4HookConcept', signerOrOptions?: ethers.Signer 
   deployContract(name: 'IKEYToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYToken>
 deployContract(name: 'IKEYTreasuryVault', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTreasuryVault>
 deployContract(name: 'KEYMintGate', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYMintGate>
-deployContract(name: 'KEYToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'IERC20Transfer', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Transfer>
 deployContract(name: 'KEYReserveTimelock', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYReserveTimelock>
+deployContract(name: 'KEYToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'IERC20Like', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Like>
 deployContract(name: 'KEYTreasuryVault', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYTreasuryVault>
 deployContract(name: 'KEYUniswapV4HookConcept', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYUniswapV4HookConcept>

@@ -8,7 +8,7 @@ The user creates a fresh key context, signs a deterministic mint message, reveal
 
 ## 2. Reference idea
 
-The technical reference is the SPHINCS-style flow: key generation, public key derivation, signing, and verification. KEY uses that idea as a narrative and mechanism reference, but changes the token design into a tiered mint where the signature hash determines the reward.
+The technical reference is the SPHINCS-style flow: key generation, public key derivation, signing, and verification. KEY uses that idea as a narrative and mechanism reference, but changes the token design into a tiered mint where the signature hash decides the reward.
 
 ## 3. Why off-chain verification
 
@@ -57,7 +57,7 @@ Average reward is approximately 638.5 KEY per mint. With a 10,000,000 KEY public
 | LP reserve | 10,000,000 KEY |
 | Treasury reserve | 1,000,000 KEY |
 | Mint price | 0.001 ETH |
-| Wallet cap | 3 successful mints |
+| Wallet cap | 1 successful mint |
 
 ## 8. Contract-level fairness
 

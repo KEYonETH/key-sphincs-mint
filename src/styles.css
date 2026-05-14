@@ -6187,7 +6187,7 @@ nav {
 }
 
 .windowGrid {
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
   margin-top: 2px !important;
   margin-bottom: 0 !important;
 }

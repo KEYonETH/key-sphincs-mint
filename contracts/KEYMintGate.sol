@@ -25,7 +25,7 @@ contract KEYMintGate {
 
     uint256 public constant MINT_PRICE = 0.001 ether;
     uint256 public constant PUBLIC_MINT_POOL = 10_000_000 ether;
-    uint256 public constant WALLET_CAP = 3;
+    uint256 public constant WALLET_CAP = 1;
 
     bytes32 public constant MINT_ATTESTATION_TYPEHASH = keccak256(
         "MintAttestation(address recipient,bytes32 publicKeyHash,bytes32 signatureHash,bytes32 rewardHash,uint256 rewardAmount,uint256 epoch,uint256 deadline)"
@@ -118,14 +118,14 @@ contract KEYMintGate {
         require(msg.value == MINT_PRICE, "wrong mint price");
         require(a.recipient == msg.sender, "recipient mismatch");
         require(block.timestamp <= a.deadline, "attestation expired");
+        bytes32 id = proofId(a);
+        require(!usedProofId[id], "proof used");
+        require(!usedPublicKeyHash[a.publicKeyHash], "public key used");
         require(walletMints[a.recipient] < WALLET_CAP, "wallet cap reached");
         require(a.rewardHash == recomputeRewardHash(a), "bad reward hash");
         require(a.rewardAmount == rewardForHash(a.rewardHash), "bad reward amount");
         require(publicMinted + a.rewardAmount <= PUBLIC_MINT_POOL, "public pool filled");
 
-        bytes32 id = proofId(a);
-        require(!usedProofId[id], "proof used");
-        require(!usedPublicKeyHash[a.publicKeyHash], "public key used");
         require(_recover(_typedDataHash(a), signature) == attestationSigner, "bad attestation");
 
         usedProofId[id] = true;

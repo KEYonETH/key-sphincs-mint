@@ -8,7 +8,7 @@ export const TOKENOMICS = Object.freeze({
   lpReserve: 10_000_000,
   treasuryReserve: 1_000_000,
   mintPriceEth: '0.001',
-  walletCap: 3,
+  walletCap: 1,
   estimatedMints: 15600,
   network: 'Ethereum'
 });
@@ -50,8 +50,13 @@ export const CONFIG = Object.freeze({
   port: Number(process.env.PORT || 8787),
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   chainId: Number(process.env.CHAIN_ID || 1),
-  mintGateAddress: requiredEnvAddress('MINT_GATE_ADDRESS'),
+  rpcUrl: process.env.RPC_URL || process.env.MAINNET_RPC_URL || process.env.ETH_RPC_URL || '',
+  mintGateAddress: requiredEnvAddress('MINT_GATE_ADDRESS', process.env.KEY_MINT_GATE_ADDRESS || ethers.ZeroAddress),
   keyTokenAddress: optionalEnvAddress('KEY_TOKEN_ADDRESS', 'VITE_KEY_TOKEN_ADDRESS'),
+  keyMintGateAddress: optionalEnvAddress('KEY_MINT_GATE_ADDRESS', 'MINT_GATE_ADDRESS', 'VITE_MINT_GATE_ADDRESS'),
+  keyIdentityAddress: optionalEnvAddress('KEY_IDENTITY_ADDRESS', 'VITE_KEY_IDENTITY_ADDRESS'),
+  keyRegistrarAddress: optionalEnvAddress('KEY_REGISTRAR_ADDRESS', 'VITE_KEY_REGISTRAR_ADDRESS'),
+  keyMarketAddress: optionalEnvAddress('KEY_MARKET_ADDRESS', 'VITE_KEY_MARKET_ADDRESS'),
   treasuryVaultAddress: optionalEnvAddress('TREASURY_VAULT_ADDRESS', 'VITE_TREASURY_VAULT_ADDRESS'),
   lpReserveAddress: optionalEnvAddress('LP_RESERVE_RECIPIENT', 'VITE_LP_RESERVE_ADDRESS'),
   treasuryReserveAddress: optionalEnvAddress('TREASURY_RESERVE_RECIPIENT', 'VITE_TREASURY_RESERVE_ADDRESS'),
