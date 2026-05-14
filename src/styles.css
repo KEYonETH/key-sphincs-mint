@@ -7631,3 +7631,180 @@ nav button.on::after {
     white-space: normal !important;
   }
 }
+
+/* Gold clarity and glossy frame fix */
+.shell {
+  width: min(1820px, calc(100vw - 56px)) !important;
+  border: 2px solid var(--gold) !important;
+  box-shadow:
+    0 18px 46px rgba(91, 62, 8, 0.14),
+    0 0 0 1px rgba(255, 246, 215, 0.78) inset,
+    0 0 32px rgba(199, 150, 28, 0.18) !important;
+}
+
+.topbar,
+.statStrip,
+.card,
+.article,
+.progressCard,
+.mintPanel,
+.proofListCard,
+.proofDetailCard,
+.heroMini,
+.signatureInfo,
+.tiersCard,
+.keyspaceBlock,
+.keyspaceHero,
+.proofStats,
+.tableLite,
+.keyspaceTeaser,
+.homeExplain span,
+.mintFacts > div,
+.resultStrip > div,
+.vaultStatusGrid .metric,
+.allocGrid .metric {
+  border-width: 2px !important;
+  border-color: var(--gold) !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 249, 229, 0.8) inset,
+    0 8px 22px rgba(132, 92, 9, 0.07) !important;
+}
+
+nav,
+.connect,
+.primary,
+.ghost,
+.miniBtn,
+.copyBtn,
+.actionMini,
+.mintActions button,
+.stepButtons button,
+.toolbar button,
+.pager button,
+.proofIntro button,
+.buttonStack button,
+.heroActions button {
+  border: 2px solid var(--gold) !important;
+  color: #0f0d09 !important;
+  text-shadow: none !important;
+  box-shadow:
+    0 0 0 1px rgba(255, 249, 229, 0.8) inset,
+    0 6px 14px rgba(128, 91, 8, 0.1) !important;
+}
+
+nav,
+.connect,
+.ghost,
+.miniBtn,
+.copyBtn,
+.actionMini,
+.mintActions button,
+.stepButtons button,
+.toolbar button,
+.pager button,
+.proofIntro button,
+.buttonStack .outline,
+.heroActions .ghost {
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 249, 230, 0.28) 23%, rgba(243, 213, 135, 0.38) 45%, rgba(255, 253, 247, 0.86) 68%, rgba(244, 220, 154, 0.32) 100%),
+    #fffdf7 !important;
+}
+
+.primary,
+.buttonStack button:last-child,
+.heroActions .primary {
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.82), rgba(252, 229, 151, 0.85) 35%, #c7961c 70%, #f6dfa0),
+    #e0bd4e !important;
+  color: #080705 !important;
+}
+
+.ghost:hover,
+.ghost:focus,
+.ghost:focus-visible,
+.ghost:active,
+.heroActions .ghost:hover,
+.heroActions .ghost:focus,
+.heroActions .ghost:focus-visible,
+.heroActions .ghost:active,
+.buttonStack .outline:hover,
+.buttonStack .outline:focus,
+.buttonStack .outline:active {
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 247, 219, 0.72) 35%, rgba(229, 190, 82, 0.52) 62%, rgba(255, 253, 247, 0.92) 100%),
+    #fffdf7 !important;
+  color: #0f0d09 !important;
+  transform: translateY(-1px) !important;
+}
+
+.buttonStack button:active,
+.heroActions button:active {
+  transform: translateY(0) !important;
+}
+
+.proofItem {
+  border: 2px solid var(--gold) !important;
+  background:
+    linear-gradient(120deg, rgba(255, 253, 247, 0.96), rgba(255, 247, 224, 0.82)),
+    #fffdf7 !important;
+  color: #11100d !important;
+  opacity: 1 !important;
+}
+
+.proofItem.on,
+.proofItem:hover,
+.proofItem.selected {
+  background:
+    linear-gradient(120deg, #fffdf7, #fff1c8 56%, #fffaf0),
+    #fff8e8 !important;
+  box-shadow:
+    inset 5px 0 0 var(--gold),
+    0 0 0 1px rgba(255, 249, 229, 0.92) inset,
+    0 8px 20px rgba(128, 91, 8, 0.12) !important;
+}
+
+.proofItem code,
+.proofItem small,
+.proofItem b,
+.proofItem strong,
+.proofItem .tierBadge,
+.tierBadge {
+  color: #11100d !important;
+  opacity: 1 !important;
+}
+
+.proofItem small,
+.proofItem code {
+  background: rgba(255, 250, 240, 0.86) !important;
+  border-color: var(--line) !important;
+}
+
+.selectedHead,
+.proofDetailTable div {
+  background: rgba(255, 253, 247, 0.92) !important;
+}
+
+.proofDetailTable code {
+  color: #4d3500 !important;
+  opacity: 1 !important;
+}
+
+.shell::after {
+  content: "";
+  position: fixed;
+  inset: 10px 28px auto 28px;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 236, 171, 0.85), rgba(199, 150, 28, 0.75), transparent);
+  opacity: 0.75;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    width: calc(100vw - 14px) !important;
+  }
+
+  .shell::after {
+    inset: 6px 10px auto 10px;
+  }
+}
