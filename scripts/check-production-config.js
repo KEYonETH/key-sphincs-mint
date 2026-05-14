@@ -27,8 +27,21 @@ function requireUrl(name) {
   }
 }
 
+function requireUrlList(name) {
+  return requireValue(name)
+    .split(",")
+    .map((value) => {
+      const origin = value.trim();
+      try {
+        return new URL(origin).origin;
+      } catch {
+        throw new Error(`${name} contains an invalid URL: ${origin}`);
+      }
+    });
+}
+
 const backendUrl = requireUrl("VITE_BACKEND_URL");
-const corsOrigin = requireUrl("CORS_ORIGIN");
+const corsOrigins = requireUrlList("CORS_ORIGIN");
 const chainId = Number(requireValue("CHAIN_ID"));
 const viteChainId = Number(requireValue("VITE_CHAIN_ID"));
 if (chainId !== viteChainId) throw new Error("CHAIN_ID and VITE_CHAIN_ID must match");
@@ -37,8 +50,8 @@ if (![1, 11155111].includes(chainId)) throw new Error("CHAIN_ID must be 1 for ma
 if (chainId === 1) {
   const localPattern = /\/\/(localhost|127\.0\.0\.1)(:|\/|$)/i;
   if (!backendUrl.startsWith("https://")) throw new Error("VITE_BACKEND_URL must use HTTPS on mainnet");
-  if (!corsOrigin.startsWith("https://")) throw new Error("CORS_ORIGIN must use HTTPS on mainnet");
-  if (localPattern.test(backendUrl) || localPattern.test(corsOrigin)) {
+  if (corsOrigins.some((origin) => !origin.startsWith("https://"))) throw new Error("CORS_ORIGIN must use HTTPS on mainnet");
+  if (localPattern.test(backendUrl) || corsOrigins.some((origin) => localPattern.test(origin))) {
     throw new Error("Mainnet production URLs must not use localhost");
   }
 }
@@ -63,6 +76,6 @@ if (env.NODE_ENV && env.NODE_ENV !== "production") {
 console.log("Production config check passed.");
 console.log("env file:", envFile);
 console.log("backend:", backendUrl);
-console.log("frontend origin:", corsOrigin);
+console.log("frontend origins:", corsOrigins.join(","));
 console.log("chainId:", chainId);
 console.log("mintGate:", mintGate);
