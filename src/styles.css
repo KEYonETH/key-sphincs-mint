@@ -8131,3 +8131,13 @@ nav button,
     width: min(100%, 240px) !important;
   }
 }
+
+html,
+body {
+  background: #ffffff !important;
+}
+
+body::before,
+body::after {
+  display: none !important;
+}

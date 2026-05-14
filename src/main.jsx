@@ -130,11 +130,17 @@ function walletType(detail) {
   const provider = detail?.provider || detail;
   const info = detail?.info || provider?.info || {};
   const label = `${info.name || ''} ${info.rdns || ''}`.toLowerCase();
+  const hasLabel = Boolean(label.trim());
+  const blocked = ['keplr', 'backpack', 'compass', 'rabby', 'brave', 'okx', 'trust', 'zerion'];
+  if (blocked.some((name) => label.includes(name))) return '';
   if (label.includes('dogeshit') || label.includes('doge')) return 'dogeshit';
-  if (label.includes('phantom') || provider?.isPhantom) return 'phantom';
-  if (label.includes('coinbase') || provider?.isCoinbaseWallet) return 'coinbase';
+  if (label.includes('phantom')) return 'phantom';
+  if (label.includes('coinbase')) return 'coinbase';
   if (label.includes('rainbow')) return 'rainbow';
-  if (label.includes('metamask') || provider?.isMetaMask) return 'metamask';
+  if (label.includes('metamask')) return 'metamask';
+  if (!hasLabel && provider?.isPhantom) return 'phantom';
+  if (!hasLabel && provider?.isCoinbaseWallet) return 'coinbase';
+  if (!hasLabel && (provider?._metamask || provider?.isMetaMask)) return 'metamask';
   return '';
 }
 
