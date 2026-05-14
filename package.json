@@ -26,6 +26,7 @@
     "contracts:deploy:local": "hardhat run scripts/deploy-local.js",
     "contracts:deploy:sepolia": "hardhat run --network sepolia scripts/deploy-sepolia.js",
     "contracts:deploy:mainnet": "node scripts/deploy-mainnet-ethers.js",
+    "contracts:deploy:keyidentity": "node scripts/deploy-keyidentity-mainnet.js",
     "contracts:deploy:mintgate-v2": "node scripts/deploy-mintgate-v2.js",
     "contracts:verify:sepolia": "node scripts/verify-contracts.js sepolia",
     "contracts:verify:mainnet": "node scripts/verify-contracts.js mainnet",

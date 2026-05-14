@@ -5,5 +5,6 @@ export * as keyMintGateSol from './KEYMintGate.sol/index.js';
 export * as keyMintGateV2Sol from './KEYMintGateV2.sol/index.js';
 export * as keyReserveTimelockSol from './KEYReserveTimelock.sol/index.js';
 export * as keyTreasuryVaultSol from './KEYTreasuryVault.sol/index.js';
+export { KEYIdentity__factory } from './KEYIdentity__factory.js';
 export { KEYToken__factory } from './KEYToken__factory.js';
 export { KEYUniswapV4HookConcept__factory } from './KEYUniswapV4HookConcept__factory.js';

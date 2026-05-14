@@ -26,6 +26,16 @@
 - One Origin Claim Right can only be used once.
 - A claimed identity becomes an ERC721-style asset and can be transferred or traded.
 
+## Identity NFT
+
+- `KEYIdentity` is the ERC721 layer for `.key` names.
+- Maximum supply is 21,000 identities.
+- Minting is restricted to the configured registrar.
+- Melting/burning is restricted to the configured registrar.
+- Names are stored without the `.key` suffix and displayed as `name.key`.
+- Names are reserved after minting, including after melt, unless a future governance decision explicitly changes name reuse rules before deployment.
+- Identity metadata stores name, Origin Rank, KeyBond amount, origin wallet, and origin proof ID.
+
 ## Backend
 
 - Backend only indexes data.
