@@ -5912,8 +5912,28 @@ nav {
 }
 
 .heroIdentityCard {
-  min-height: 220px !important;
-  padding: 16px !important;
+  min-height: 300px !important;
+  justify-items: center !important;
+  padding: 12px !important;
+}
+
+.heroKeycardImage {
+  width: min(100%, 230px) !important;
+  height: 306px !important;
+  object-fit: contain !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 6px !important;
+  background: #fffaf0 !important;
+  box-shadow: 0 10px 24px rgba(117, 84, 13, 0.12) !important;
+}
+
+.heroCardFallback {
+  display: none !important;
+  width: 100% !important;
+}
+
+.heroCardFallback.show {
+  display: grid !important;
 }
 
 .identityName {
@@ -5968,9 +5988,10 @@ nav {
 }
 
 .heroStats {
+  width: 100% !important;
   display: grid !important;
   gap: 6px !important;
-  margin-top: 12px !important;
+  margin-top: 10px !important;
 }
 
 .heroStats span {

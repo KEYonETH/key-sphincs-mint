@@ -606,12 +606,18 @@ function Keyspace({ tiers, wallet, connect, data }) {
         </div>
       </div>
       <div className="heroIdentityCard">
-        <div className="identityName">alpha.key</div>
-        <div className="identityMeta">Golden Origin</div>
-        <div className="identityRows">
-          <span>KeyBond</span><b>1,500 KEY</b>
-          <span>Example Listing</span><b>0.04 ETH</b>
-          <span>Status</span><b>Not Live</b>
+        <img className="heroKeycardImage" src={templatePreviewImage} alt="alpha.key KEYSPACE identity card" onError={(event) => {
+          event.currentTarget.style.display = 'none';
+          event.currentTarget.nextElementSibling.classList.add('show');
+        }} />
+        <div className="heroCardFallback">
+          <div className="identityName">alpha.key</div>
+          <div className="identityMeta">Golden Origin</div>
+          <div className="identityRows">
+            <span>KeyBond</span><b>1,500 KEY</b>
+            <span>Example Listing</span><b>0.04 ETH</b>
+            <span>Status</span><b>Not Live</b>
+          </div>
         </div>
         <div className="heroStats">
           <span>{identitySupply} max identities</span>
