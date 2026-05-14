@@ -178,13 +178,14 @@ function loadKeyCardTemplate(rank) {
 }
 
 export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }) {
+  const normalizedTokenId = assertTokenId(tokenId);
   const normalizedRank = normalizeRank(rank);
   const values = {
     '{{NAME}}': escapeXml(`${sanitizeIdentityName(name)}.key`),
     '{{ORIGIN}}': escapeXml(`${normalizedRank} Origin`),
     '{{KEYBOND}}': escapeXml(formatKeyBond(keyBond)),
-    '{{MINT_PROOF}}': escapeXml(formatMintProof(mintProof, tokenId)),
-    '{{TOKEN_ID}}': escapeXml(formatTokenId(tokenId))
+    '{{MINT_PROOF}}': escapeXml(formatMintProof(mintProof, normalizedTokenId)),
+    '{{TOKEN_ID}}': escapeXml(formatTokenId(normalizedTokenId))
   };
   let svg = loadKeyCardTemplate(normalizedRank);
   for (const [placeholder, value] of Object.entries(values)) {
