@@ -64,6 +64,13 @@ const MARKET_ABI = [
   'function getListing(uint256 tokenId) view returns (address seller,uint256 price)'
 ];
 const ROUTES = ['home', 'mint', 'keyspace', 'proof', 'vault', 'whitepaper'];
+const ALLOWED_WALLETS = {
+  metamask: 'MetaMask',
+  phantom: 'Phantom',
+  coinbase: 'Coinbase Wallet',
+  rainbow: 'Rainbow',
+  dogeshit: 'Dogeshit Wallet'
+};
 let activeInjectedProvider = null;
 
 const fmt = new Intl.NumberFormat('en-US');
@@ -119,24 +126,44 @@ async function ensureWalletChain(expectedChainId, injected = window.ethereum) {
   }
 }
 
-function walletName(provider, fallback = 'Injected') {
-  if (provider?.info?.name) return provider.info.name;
-  const injected = provider?.provider || provider;
-  if (injected?.isMetaMask) return 'MetaMask';
-  if (injected?.isCoinbaseWallet) return 'Coinbase';
-  if (injected?.isRabby) return 'Rabby';
-  if (injected?.isBraveWallet) return 'Brave';
-  return fallback;
+function walletType(detail) {
+  const provider = detail?.provider || detail;
+  const info = detail?.info || provider?.info || {};
+  const label = `${info.name || ''} ${info.rdns || ''}`.toLowerCase();
+  if (label.includes('dogeshit') || label.includes('doge')) return 'dogeshit';
+  if (label.includes('phantom') || provider?.isPhantom) return 'phantom';
+  if (label.includes('coinbase') || provider?.isCoinbaseWallet) return 'coinbase';
+  if (label.includes('rainbow')) return 'rainbow';
+  if (label.includes('metamask') || provider?.isMetaMask) return 'metamask';
+  return '';
+}
+
+function walletEntry(detail) {
+  const provider = detail?.provider || detail;
+  if (!provider?.request) return null;
+  const type = walletType(detail);
+  if (!type) return null;
+  return {
+    uuid: type,
+    type,
+    name: ALLOWED_WALLETS[type],
+    icon: detail?.info?.icon || provider?.info?.icon || '',
+    provider
+  };
+}
+
+function windowWalletDetails() {
+  const details = [];
+  const eth = window.ethereum;
+  if (eth?.providers?.length) eth.providers.forEach((provider) => details.push({ provider, info: provider.info || {} }));
+  else if (eth?.request) details.push({ provider: eth, info: eth.info || {} });
+  if (window.phantom?.ethereum?.request) details.push({ provider: window.phantom.ethereum, info: { name: 'Phantom' } });
+  if (window.coinbaseWalletExtension?.request) details.push({ provider: window.coinbaseWalletExtension, info: { name: 'Coinbase Wallet' } });
+  return details;
 }
 
 function walletKey(item) {
-  const provider = item?.provider || item;
-  if (provider?.isMetaMask) return 'metamask';
-  if (provider?.isCoinbaseWallet) return 'coinbase';
-  if (provider?.isRabby) return 'rabby';
-  if (provider?.isBraveWallet) return 'brave';
-  const name = (item?.name || item?.info?.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-  return item?.uuid || name || String(provider);
+  return item?.type || item?.uuid || String(item?.provider || '');
 }
 
 function uniqueWallets(items) {
@@ -208,7 +235,7 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
         {walletProviders.length ? walletProviders.map((provider) => <button key={provider.uuid || provider.name} onClick={() => connect(provider)}>
           <span className={`walletIcon ${provider.icon ? '' : 'empty'}`}>{provider.icon && <img src={provider.icon} alt="" />}</span>
           <span className="walletName">{provider.name}</span>
-        </button>) : <button onClick={() => connect()}>Browser wallet</button>}
+        </button>) : <button onClick={() => connect()}>No supported wallet</button>}
       </div>}
     </div>
   </header>;
@@ -1135,37 +1162,34 @@ function App() {
   useEffect(() => {
     const discovered = [];
     const add = (detail) => {
-      const provider = detail?.provider || detail;
-      if (!provider?.request) return;
-      const wallet = {
-        uuid: detail?.info?.uuid || walletName(detail, `Wallet ${discovered.length + 1}`),
-        name: walletName(detail, `Wallet ${discovered.length + 1}`),
-        icon: detail?.info?.icon || '',
-        provider
-      };
+      const wallet = walletEntry(detail);
+      if (!wallet) return;
       discovered.push(wallet);
       setWalletProviders(uniqueWallets(discovered));
     };
     const onAnnounce = (event) => add(event.detail);
     window.addEventListener('eip6963:announceProvider', onAnnounce);
     window.dispatchEvent(new Event('eip6963:requestProvider'));
+    const requestAgain = setTimeout(() => window.dispatchEvent(new Event('eip6963:requestProvider')), 400);
 
-    const eth = window.ethereum;
-    if (eth?.providers?.length) eth.providers.forEach((provider, index) => add({ provider, info: { name: walletName(provider, `Wallet ${index + 1}`) } }));
-    else if (eth?.request) add({ provider: eth, info: { name: walletName(eth, 'Browser wallet') } });
+    windowWalletDetails().forEach(add);
 
-    return () => window.removeEventListener('eip6963:announceProvider', onAnnounce);
+    return () => {
+      window.removeEventListener('eip6963:announceProvider', onAnnounce);
+      clearTimeout(requestAgain);
+    };
   }, []);
 
   async function connect(walletProvider = selectedWalletProvider || walletProviders[0]) {
-    const injected = walletProvider?.provider || window.ethereum;
-    if (!injected) { alert('Install MetaMask, Coinbase Wallet, or another Ethereum wallet.'); return ''; }
+    const selected = walletProvider || uniqueWallets(windowWalletDetails().map(walletEntry).filter(Boolean))[0];
+    const injected = selected?.provider;
+    if (!injected) { alert('Enable MetaMask, Phantom, Coinbase Wallet, Rainbow, or Dogeshit Wallet for this site.'); return ''; }
     await ensureWalletChain(configuredChainId(data), injected);
     const provider = new ethers.BrowserProvider(injected);
     const accounts = await provider.send('eth_requestAccounts', []);
     const addr = ethers.getAddress(accounts[0]);
     activeInjectedProvider = injected;
-    setSelectedWalletProvider(walletProvider || null);
+    setSelectedWalletProvider(selected);
     setWalletMenu(false);
     setWallet(addr);
     return addr;
