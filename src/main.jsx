@@ -188,7 +188,7 @@ function Home({ go, data }) {
       </div>
       <div className="keyspaceTeaser">
         <b>After Mint: KEYSPACE</b>
-        <p>Mint KEY once to reveal your Key Rank. After mint-out, claim one .key identity backed by your KEY reward and trade it with KEY.</p>
+        <p>Mint KEY once to reveal your Key Rank. After mint-out, claim one .key identity backed by your KEY reward and trade it with ETH.</p>
         <button className="miniBtn" onClick={() => go('keyspace')}>Open KEYSPACE → #/keyspace</button>
       </div>
       <div className="heroActions"><button className="primary" onClick={() => go('mint')}>open mint</button><button className="ghost" onClick={() => go('whitepaper')}>read whitepaper</button></div>
@@ -513,13 +513,13 @@ function Keyspace({ tiers }) {
   const flow = [
     ['Mint KEY', 'SPHINCS signature hash reveals your reward tier and Key Rank.'],
     ['Claim identity', 'After mint-out, one Origin Claim unlocks one .key identity.'],
-    ['Trade with KEY', 'The identity can be listed, bought, and sold with KEY.']
+    ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
   const listings = [
     ['ai.key', 'Genesis Origin', '21,000 KEY', 'Auction Preview', 'Not Live'],
-    ['hash.key', 'Quantum Origin', '5,000 KEY', '55,000 KEY', 'Preview'],
-    ['alpha.key', 'Golden Origin', '1,500 KEY', '20,000 KEY', 'Preview'],
-    ['terminal.key', 'Normal Origin', '500 KEY', '3,000 KEY', 'Preview']
+    ['hash.key', 'Quantum Origin', '5,000 KEY', '0.11 ETH', 'Preview'],
+    ['alpha.key', 'Golden Origin', '1,500 KEY', '0.04 ETH', 'Preview'],
+    ['terminal.key', 'Normal Origin', '500 KEY', '0.006 ETH', 'Preview']
   ];
 
   const [rank, setRank] = useState('Normal');
@@ -571,7 +571,7 @@ function Keyspace({ tiers }) {
         <span className="previewBadge">PREVIEW — OPENS AFTER MINT-OUT</span>
         <h1>KEYSPACE</h1>
         <h2>SPHINCS Origin Identities backed by KEY.</h2>
-        <p>Mint KEY once. Reveal your rank. Claim one .key identity after mint-out. Trade it with KEY.</p>
+        <p>Mint KEY once. Reveal your rank. Claim one .key identity after mint-out. Trade it with ETH.</p>
         <div className="heroTagline">
           <span>One wallet. One mint. One Origin Claim.</span>
           <span>Your signature decides your rank.</span>
@@ -583,7 +583,7 @@ function Keyspace({ tiers }) {
         <div className="identityMeta">Golden Origin</div>
         <div className="identityRows">
           <span>KeyBond</span><b>1,500 KEY</b>
-          <span>Example Listing</span><b>20,000 KEY</b>
+          <span>Example Listing</span><b>0.04 ETH</b>
           <span>Status</span><b>Not Live</b>
         </div>
         <div className="heroStats">
@@ -640,7 +640,7 @@ function Keyspace({ tiers }) {
     <section className="keyspaceBlock">
       <div className="sectionHead">
         <h2>Market Preview</h2>
-        <p>Example .key identities that can trade with KEY after mint-out.</p>
+        <p>Example .key identities that can trade with ETH after mint-out.</p>
       </div>
       <div className="listingGrid">{listings.map(([name, origin, bond, listing, status]) => <div className="listingCard" key={name}>
         <b>{name}</b>
@@ -649,7 +649,7 @@ function Keyspace({ tiers }) {
         <span>{listing.includes('Auction') ? 'Market' : 'Example Listing'}: {listing}</span>
         <em>{status}</em>
       </div>)}</div>
-      <p className="marketNote">.key identities can be listed, bought, and sold with KEY after KEYSPACE goes live. When sold, the KeyBond stays inside the identity and moves to the buyer. OpenSea can show the ERC721 identity page, but ETH listings there are manual owner-signed listings. {keyQuote?.ethEstimate ? `Reference: 500 KEY ≈ ${keyQuote.ethEstimate} ETH.` : ''}</p>
+      <p className="marketNote">.key identities can be listed, bought, and sold with ETH after KEYSPACE goes live. When sold, the KEY KeyBond stays inside the identity and moves to the buyer. OpenSea can show the same ERC721 identity page. {keyQuote?.ethEstimate ? `Reference: 500 KEY KeyBond ≈ ${keyQuote.ethEstimate} ETH.` : ''}</p>
     </section>
 
     <section className="keyspaceBlock keybondBlock">

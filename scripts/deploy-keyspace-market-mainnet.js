@@ -48,6 +48,17 @@ function artifact(contractPath) {
   return JSON.parse(fs.readFileSync(path.join("artifacts", "contracts", contractPath), "utf8"));
 }
 
+function deployOverrides() {
+  const overrides = {};
+  const maxFeeGwei = value("DEPLOY_MAX_FEE_GWEI");
+  const maxPriorityFeeGwei = value("DEPLOY_MAX_PRIORITY_FEE_GWEI", "0.0002");
+  if (maxFeeGwei) {
+    overrides.maxFeePerGas = ethers.parseUnits(maxFeeGwei, "gwei");
+    overrides.maxPriorityFeePerGas = ethers.parseUnits(maxPriorityFeeGwei, "gwei");
+  }
+  return overrides;
+}
+
 async function waitTx(label, tx) {
   console.log(`${label} tx: ${tx.hash}`);
   const receipt = await tx.wait();
@@ -66,43 +77,62 @@ const network = await provider.getNetwork();
 if (network.chainId !== 1n) throw new Error(`Expected mainnet chainId 1, got ${network.chainId}`);
 
 const owner = address("CONTRACT_OWNER_ADDRESS");
-const keyToken = address("KEY_TOKEN_ADDRESS", value("VITE_KEY_TOKEN_ADDRESS"));
 const identity = address("KEY_IDENTITY_ADDRESS", value("VITE_KEY_IDENTITY_ADDRESS"));
 
 console.log("Deploying KEYSpaceMarket");
 console.log("deployer:", deployer.address);
 console.log("owner:", owner);
-console.log("KEY token:", keyToken);
 console.log("KEYIdentity:", identity);
+console.log("payment:", "native ETH");
 console.log("deployer balance:", ethers.formatEther(await provider.getBalance(deployer.address)), "ETH");
 
-await requireCode(provider, "KEY token", keyToken);
 await requireCode(provider, "KEYIdentity", identity);
 
 let marketAddress = state.KEYSpaceMarket || optionalAddress("KEY_MARKET_ADDRESS", value("VITE_KEY_MARKET_ADDRESS"));
 if (marketAddress !== ethers.ZeroAddress) {
-  await requireCode(provider, "KEYSpaceMarket", marketAddress);
-  console.log("KEYSpaceMarket:", marketAddress, "(existing)");
-} else {
+  try {
+    await requireCode(provider, "KEYSpaceMarket", marketAddress);
+    const existing = new ethers.Contract(marketAddress, [
+      "function identity() view returns(address)",
+      "function keyToken() view returns(address)"
+    ], provider);
+    await existing.keyToken();
+    console.log("Existing KEYSpaceMarket uses KEY payments. Deploying ETH replacement.");
+    state.previousKEYSpaceMarket = marketAddress;
+    marketAddress = ethers.ZeroAddress;
+  } catch {
+    console.log("KEYSpaceMarket:", marketAddress, "(existing ETH market)");
+  }
+}
+
+if (marketAddress === ethers.ZeroAddress) {
+  if (state.KEYSpaceMarket) {
+    state.previousKEYSpaceMarket = state.previousKEYSpaceMarket || state.KEYSpaceMarket;
+  }
+  if (value("KEY_MARKET_ADDRESS") || value("VITE_KEY_MARKET_ADDRESS")) {
+    state.previousEnvKEYSpaceMarket = optionalAddress("KEY_MARKET_ADDRESS", value("VITE_KEY_MARKET_ADDRESS"));
+  }
   const art = artifact("KEYSpaceMarket.sol/KEYSpaceMarket.json");
   const factory = new ethers.ContractFactory(art.abi, art.bytecode, deployer);
-  const market = await factory.deploy(owner, keyToken, identity);
+  const market = await factory.deploy(owner, identity, deployOverrides());
   await waitTx("deploy KEYSpaceMarket", market.deploymentTransaction());
   marketAddress = await market.getAddress();
   state.KEYSpaceMarket = marketAddress;
   state.KEYSpaceMarketDeployTx = market.deploymentTransaction().hash;
   state.owner = owner;
-  state.keyToken = keyToken;
   state.identity = identity;
+  state.paymentToken = "ETH";
   state.marketOpenDefault = false;
   state.updatedAt = new Date().toISOString();
   saveState();
   console.log("KEYSpaceMarket:", marketAddress);
+} else {
+  state.updatedAt = new Date().toISOString();
+  saveState();
 }
 
 const marketAbi = [
   "function owner() view returns(address)",
-  "function keyToken() view returns(address)",
   "function identity() view returns(address)",
   "function marketOpen() view returns(bool)",
   "function feeBps() view returns(uint16)",
@@ -112,8 +142,8 @@ const market = new ethers.Contract(marketAddress, marketAbi, provider);
 const summary = {
   KEYSpaceMarket: marketAddress,
   owner: await market.owner(),
-  keyToken: await market.keyToken(),
   identity: await market.identity(),
+  paymentToken: "ETH",
   marketOpen: await market.marketOpen(),
   feeBps: String(await market.feeBps()),
   feeRecipient: await market.feeRecipient()

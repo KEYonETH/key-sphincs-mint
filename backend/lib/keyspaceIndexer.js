@@ -28,10 +28,10 @@ const PREVIEW_STATUS = Object.freeze({
 });
 
 const PREVIEW_LISTINGS = Object.freeze([
-  { name: 'ai.key', origin: 'Genesis Origin', keyBond: '21000', market: 'Auction Preview', status: 'Not Live' },
-  { name: 'hash.key', origin: 'Quantum Origin', keyBond: '5000', exampleListing: '55000', status: 'Preview' },
-  { name: 'alpha.key', origin: 'Golden Origin', keyBond: '1500', exampleListing: '20000', status: 'Preview' },
-  { name: 'terminal.key', origin: 'Normal Origin', keyBond: '500', exampleListing: '3000', status: 'Preview' }
+  { name: 'ai.key', origin: 'Genesis Origin', keyBond: '21000', market: 'Auction Preview', paymentToken: 'ETH', status: 'Not Live' },
+  { name: 'hash.key', origin: 'Quantum Origin', keyBond: '5000', exampleListing: '0.11', paymentToken: 'ETH', status: 'Preview' },
+  { name: 'alpha.key', origin: 'Golden Origin', keyBond: '1500', exampleListing: '0.04', paymentToken: 'ETH', status: 'Preview' },
+  { name: 'terminal.key', origin: 'Normal Origin', keyBond: '500', exampleListing: '0.006', paymentToken: 'ETH', status: 'Preview' }
 ]);
 
 const mintGateAbi = [
@@ -281,6 +281,7 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
       seller: event.args.seller,
       buyer: event.args.buyer,
       price: ethers.formatEther(event.args.price || 0n),
+      paymentToken: 'ETH',
       txHash: event.transactionHash,
       blockNumber: event.blockNumber
     }));
@@ -302,6 +303,7 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
           tokenId,
           seller: event.args.seller,
           price: ethers.formatEther(event.args.price || 0n),
+          paymentToken: 'ETH',
           txHash: event.transactionHash,
           blockNumber: event.blockNumber
         });
@@ -435,7 +437,7 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     return {
       name: displayName,
       description: state.contractsLive
-        ? 'KEYSPACE .key identity backed by KEY KeyBond. Trading with native KEY happens through KEYSPACE Market.'
+        ? 'KEYSPACE .key identity backed by KEY KeyBond. Native primary trading happens in ETH through KEYSPACE Market.'
         : 'Preview metadata only. KEYSPACE contracts are not live yet.',
       image: `${metadataBaseUrl()}/api/keyspace/image/${tokenId}`,
       external_url: 'https://key-sphincs.xyz/#/keyspace',
@@ -488,7 +490,7 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
       ethEstimate: formatEth(ethEstimate),
       source: 'configured KEY/ETH reference price',
       liveOracle: false,
-      note: 'Estimate only. OpenSea ETH listings must be signed by the NFT owner and are not automatically updated by KEYSPACE contracts.'
+      note: 'Estimate only. KEYSPACE primary listings are ETH-native; OpenSea ETH listings still require owner-signed marketplace orders.'
     };
   }
 

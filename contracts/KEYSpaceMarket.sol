@@ -1,19 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @title KEYSPACE Market
-/// @notice Native KEY marketplace for KEYSPACE .key identity NFTs.
+/// @notice Native ETH marketplace for KEYSPACE .key identity NFTs. KEY remains locked as KeyBond inside the identity.
 contract KEYSpaceMarket is Ownable {
     struct Listing {
         address seller;
         uint256 price;
     }
 
-    IERC20 public immutable keyToken;
     IERC721 public immutable identity;
 
     bool public marketOpen;
@@ -39,6 +37,7 @@ contract KEYSpaceMarket is Ownable {
     error NotSellerOrOwner();
     error SellerNoLongerOwner();
     error TransferFailed();
+    error WrongPayment();
     error Locked();
 
     modifier nonReentrant() {
@@ -48,9 +47,8 @@ contract KEYSpaceMarket is Ownable {
         locked = false;
     }
 
-    constructor(address initialOwner, address keyToken_, address identity_) Ownable(initialOwner) {
-        if (keyToken_ == address(0) || identity_ == address(0)) revert InvalidAddress();
-        keyToken = IERC20(keyToken_);
+    constructor(address initialOwner, address identity_) Ownable(initialOwner) {
+        if (identity_ == address(0)) revert InvalidAddress();
         identity = IERC721(identity_);
         feeRecipient = initialOwner;
     }
@@ -89,11 +87,12 @@ contract KEYSpaceMarket is Ownable {
         emit IdentityListingCancelled(tokenId, listing.seller);
     }
 
-    function buyIdentity(uint256 tokenId) external nonReentrant {
+    function buyIdentity(uint256 tokenId) external payable nonReentrant {
         if (!marketOpen) revert MarketClosed();
 
         Listing memory listing = listings[tokenId];
         if (listing.seller == address(0)) revert NotListed();
+        if (msg.value != listing.price) revert WrongPayment();
         if (identity.ownerOf(tokenId) != listing.seller) revert SellerNoLongerOwner();
         if (!_isApproved(tokenId, listing.seller)) revert NotApproved();
 
@@ -102,8 +101,8 @@ contract KEYSpaceMarket is Ownable {
         uint256 fee = (listing.price * feeBps) / 10_000;
         uint256 sellerProceeds = listing.price - fee;
 
-        if (!keyToken.transferFrom(msg.sender, listing.seller, sellerProceeds)) revert TransferFailed();
-        if (fee > 0 && !keyToken.transferFrom(msg.sender, feeRecipient, fee)) revert TransferFailed();
+        _sendEth(listing.seller, sellerProceeds);
+        if (fee > 0) _sendEth(feeRecipient, fee);
 
         identity.safeTransferFrom(listing.seller, msg.sender, tokenId);
         emit IdentitySold(tokenId, listing.seller, msg.sender, listing.price);
@@ -116,5 +115,10 @@ contract KEYSpaceMarket is Ownable {
 
     function _isApproved(uint256 tokenId, address owner) internal view returns (bool) {
         return identity.getApproved(tokenId) == address(this) || identity.isApprovedForAll(owner, address(this));
+    }
+
+    function _sendEth(address to, uint256 amount) internal {
+        (bool ok, ) = payable(to).call{value: amount}("");
+        if (!ok) revert TransferFailed();
     }
 }

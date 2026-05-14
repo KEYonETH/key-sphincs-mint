@@ -4,9 +4,8 @@ import { network } from "hardhat";
 const { ethers } = await network.create();
 
 async function deployMarketFixture() {
-  const [owner, lpReserve, treasuryReserve, registrar, seller, buyer, feeRecipient, other] = await ethers.getSigners();
+  const [owner, registrar, seller, buyer, feeRecipient, other] = await ethers.getSigners();
 
-  const token = await ethers.deployContract("KEYToken", [lpReserve.address, treasuryReserve.address]);
   const identity = await ethers.deployContract("KEYIdentity", [
     owner.address,
     "https://api.key-sphincs.xyz/api/keyspace/metadata/",
@@ -14,7 +13,6 @@ async function deployMarketFixture() {
   await identity.connect(owner).setRegistrar(registrar.address);
   const market = await ethers.deployContract("KEYSpaceMarket", [
     owner.address,
-    await token.getAddress(),
     await identity.getAddress(),
   ]);
 
@@ -27,15 +25,14 @@ async function deployMarketFixture() {
     ethers.id("proof-alpha"),
   );
 
-  return { owner, lpReserve, treasuryReserve, registrar, seller, buyer, feeRecipient, other, token, identity, market };
+  return { owner, registrar, seller, buyer, feeRecipient, other, identity, market };
 }
 
 describe("KEYSpaceMarket", function () {
   it("deploys closed with owner-controlled fee settings", async function () {
-    const { owner, token, identity, market, feeRecipient } = await deployMarketFixture();
+    const { owner, identity, market, feeRecipient } = await deployMarketFixture();
 
     expect(await market.owner()).to.equal(owner.address);
-    expect(await market.keyToken()).to.equal(await token.getAddress());
     expect(await market.identity()).to.equal(await identity.getAddress());
     expect(await market.marketOpen()).to.equal(false);
     expect(await market.feeBps()).to.equal(0n);
@@ -52,7 +49,7 @@ describe("KEYSpaceMarket", function () {
 
   it("lists only approved identities while market is open", async function () {
     const { seller, buyer, identity, market } = await deployMarketFixture();
-    const price = ethers.parseEther("20000");
+    const price = ethers.parseEther("0.04");
 
     await expect(market.connect(seller).listIdentity(1, price)).to.be.revertedWithCustomError(market, "MarketClosed");
 
@@ -71,9 +68,9 @@ describe("KEYSpaceMarket", function () {
     expect(listedPrice).to.equal(price);
   });
 
-  it("buys listed identities with KEY and pays the configured fee", async function () {
-    const { lpReserve, seller, buyer, feeRecipient, token, identity, market } = await deployMarketFixture();
-    const price = ethers.parseEther("20000");
+  it("buys listed identities with ETH and pays the configured fee", async function () {
+    const { seller, buyer, feeRecipient, identity, market } = await deployMarketFixture();
+    const price = ethers.parseEther("0.04");
     const feeBps = 250n;
     const fee = (price * feeBps) / 10_000n;
     const sellerProceeds = price - fee;
@@ -83,20 +80,16 @@ describe("KEYSpaceMarket", function () {
     await identity.connect(seller).approve(await market.getAddress(), 1);
     await market.connect(seller).listIdentity(1, price);
 
-    await token.connect(lpReserve).transfer(buyer.address, price);
-    await token.connect(buyer).approve(await market.getAddress(), price);
+    const sellerBefore = await ethers.provider.getBalance(seller.address);
+    const feeBefore = await ethers.provider.getBalance(feeRecipient.address);
 
-    const sellerBefore = await token.balanceOf(seller.address);
-    const feeBefore = await token.balanceOf(feeRecipient.address);
-
-    await expect(market.connect(buyer).buyIdentity(1))
+    await expect(market.connect(buyer).buyIdentity(1, { value: price }))
       .to.emit(market, "IdentitySold")
       .withArgs(1n, seller.address, buyer.address, price);
 
     expect(await identity.ownerOf(1)).to.equal(buyer.address);
-    expect(await token.balanceOf(seller.address)).to.equal(sellerBefore + sellerProceeds);
-    expect(await token.balanceOf(feeRecipient.address)).to.equal(feeBefore + fee);
-    expect(await token.balanceOf(buyer.address)).to.equal(0n);
+    expect(await ethers.provider.getBalance(seller.address)).to.equal(sellerBefore + sellerProceeds);
+    expect(await ethers.provider.getBalance(feeRecipient.address)).to.equal(feeBefore + fee);
     const [listedSeller, listedPrice] = await market.getListing(1);
     expect(listedSeller).to.equal(ethers.ZeroAddress);
     expect(listedPrice).to.equal(0n);
@@ -104,7 +97,7 @@ describe("KEYSpaceMarket", function () {
 
   it("allows sellers or current owners to cancel stale listings", async function () {
     const { seller, buyer, other, identity, market } = await deployMarketFixture();
-    const price = ethers.parseEther("1000");
+    const price = ethers.parseEther("0.006");
 
     await market.setMarketOpen(true);
     await identity.connect(seller).approve(await market.getAddress(), 1);
@@ -119,7 +112,7 @@ describe("KEYSpaceMarket", function () {
     await market.connect(seller).listIdentity(1, price);
     await identity.connect(seller).transferFrom(seller.address, buyer.address, 1);
 
-    await expect(market.connect(other).buyIdentity(1)).to.be.revertedWithCustomError(market, "SellerNoLongerOwner");
+    await expect(market.connect(other).buyIdentity(1, { value: price })).to.be.revertedWithCustomError(market, "SellerNoLongerOwner");
     await expect(market.connect(buyer).cancelListing(1))
       .to.emit(market, "IdentityListingCancelled")
       .withArgs(1n, seller.address);
@@ -127,16 +120,17 @@ describe("KEYSpaceMarket", function () {
 
   it("rejects buying unlisted identities and closed-market buys", async function () {
     const { seller, buyer, identity, market } = await deployMarketFixture();
-    const price = ethers.parseEther("1000");
+    const price = ethers.parseEther("0.006");
 
-    await expect(market.connect(buyer).buyIdentity(1)).to.be.revertedWithCustomError(market, "MarketClosed");
+    await expect(market.connect(buyer).buyIdentity(1, { value: price })).to.be.revertedWithCustomError(market, "MarketClosed");
 
     await market.setMarketOpen(true);
-    await expect(market.connect(buyer).buyIdentity(1)).to.be.revertedWithCustomError(market, "NotListed");
+    await expect(market.connect(buyer).buyIdentity(1, { value: price })).to.be.revertedWithCustomError(market, "NotListed");
 
     await identity.connect(seller).approve(await market.getAddress(), 1);
     await market.connect(seller).listIdentity(1, price);
+    await expect(market.connect(buyer).buyIdentity(1, { value: price - 1n })).to.be.revertedWithCustomError(market, "WrongPayment");
     await market.setMarketOpen(false);
-    await expect(market.connect(buyer).buyIdentity(1)).to.be.revertedWithCustomError(market, "MarketClosed");
+    await expect(market.connect(buyer).buyIdentity(1, { value: price })).to.be.revertedWithCustomError(market, "MarketClosed");
   });
 });

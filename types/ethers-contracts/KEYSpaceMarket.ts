@@ -6,7 +6,7 @@ import type { TypedContractEvent, TypedDeferredTopicFilter, TypedEventLog, Typed
   
 
   export interface KEYSpaceMarketInterface extends Interface {
-    getFunction(nameOrSignature: "buyIdentity" | "cancelListing" | "feeBps" | "feeRecipient" | "getListing" | "identity" | "keyToken" | "listIdentity" | "listings" | "marketOpen" | "owner" | "renounceOwnership" | "setFee" | "setMarketOpen" | "transferOwnership"): FunctionFragment;
+    getFunction(nameOrSignature: "buyIdentity" | "cancelListing" | "feeBps" | "feeRecipient" | "getListing" | "identity" | "listIdentity" | "listings" | "marketOpen" | "owner" | "renounceOwnership" | "setFee" | "setMarketOpen" | "transferOwnership"): FunctionFragment;
 
     getEvent(nameOrSignatureOrTopic: "FeeSet" | "IdentityListed" | "IdentityListingCancelled" | "IdentitySold" | "MarketOpenSet" | "OwnershipTransferred"): EventFragment;
 
@@ -16,7 +16,6 @@ encodeFunctionData(functionFragment: 'feeBps', values?: undefined): string;
 encodeFunctionData(functionFragment: 'feeRecipient', values?: undefined): string;
 encodeFunctionData(functionFragment: 'getListing', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'identity', values?: undefined): string;
-encodeFunctionData(functionFragment: 'keyToken', values?: undefined): string;
 encodeFunctionData(functionFragment: 'listIdentity', values: [BigNumberish, BigNumberish]): string;
 encodeFunctionData(functionFragment: 'listings', values: [BigNumberish]): string;
 encodeFunctionData(functionFragment: 'marketOpen', values?: undefined): string;
@@ -32,7 +31,6 @@ decodeFunctionResult(functionFragment: 'feeBps', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'feeRecipient', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'getListing', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'identity', data: BytesLike): Result;
-decodeFunctionResult(functionFragment: 'keyToken', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'listIdentity', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'listings', data: BytesLike): Result;
 decodeFunctionResult(functionFragment: 'marketOpen', data: BytesLike): Result;
@@ -153,7 +151,7 @@ decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Re
     buyIdentity: TypedContractMethod<
       [tokenId: BigNumberish, ],
       [void],
-      'nonpayable'
+      'payable'
     >
     
 
@@ -191,14 +189,6 @@ decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Re
 
     
     identity: TypedContractMethod<
-      [],
-      [string],
-      'view'
-    >
-    
-
-    
-    keyToken: TypedContractMethod<
       [],
       [string],
       'view'
@@ -275,7 +265,7 @@ decodeFunctionResult(functionFragment: 'transferOwnership', data: BytesLike): Re
     getFunction(nameOrSignature: 'buyIdentity'): TypedContractMethod<
       [tokenId: BigNumberish, ],
       [void],
-      'nonpayable'
+      'payable'
     >;
 getFunction(nameOrSignature: 'cancelListing'): TypedContractMethod<
       [tokenId: BigNumberish, ],
@@ -298,11 +288,6 @@ getFunction(nameOrSignature: 'getListing'): TypedContractMethod<
       'view'
     >;
 getFunction(nameOrSignature: 'identity'): TypedContractMethod<
-      [],
-      [string],
-      'view'
-    >;
-getFunction(nameOrSignature: 'keyToken'): TypedContractMethod<
       [],
       [string],
       'view'

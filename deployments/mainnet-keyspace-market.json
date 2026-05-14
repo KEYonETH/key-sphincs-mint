@@ -1,9 +1,11 @@
 {
-  "KEYSpaceMarket": "0x0C598939CfE9BF2e39a419501d27eC9Eb548CaA1",
-  "KEYSpaceMarketDeployTx": "0x4a9a5d23cb9dc125cf9056f2864852584e7b629b62b69083cd2ae1ce10ae71f8",
+  "KEYSpaceMarket": "0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c",
+  "KEYSpaceMarketDeployTx": "0x7cb047bd69f7e8a7516b4e416fd088da2df6abdeb36ed79d722c6a4255f35cfe",
   "owner": "0xc488803B1dbc13754e1cA7241e9335E3777c1fec",
-  "keyToken": "0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2",
   "identity": "0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741",
   "marketOpenDefault": false,
-  "updatedAt": "2026-05-14T16:13:13.997Z"
+  "updatedAt": "2026-05-14T16:29:27.480Z",
+  "previousKEYSpaceMarket": "0x0C598939CfE9BF2e39a419501d27eC9Eb548CaA1",
+  "previousEnvKEYSpaceMarket": "0x0C598939CfE9BF2e39a419501d27eC9Eb548CaA1",
+  "paymentToken": "ETH"
 }
