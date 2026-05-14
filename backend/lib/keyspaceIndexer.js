@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { ethers } from 'ethers';
 import { CONFIG } from './config.js';
 
@@ -55,16 +54,13 @@ const identityAbi = [
   'function ownerOf(uint256 tokenId) view returns (address)'
 ];
 const RANK_NAMES = Object.freeze(['Normal', 'Clean', 'Golden', 'Quantum', 'Genesis']);
-const KEYCARD_TEMPLATES = Object.freeze({
-  Normal: 'normal.svg',
-  Clean: 'clean.svg',
-  Golden: 'golden.svg',
-  Quantum: 'quantum.svg',
-  Genesis: 'genesis.svg'
+const KEYCARD_STYLES = Object.freeze({
+  Normal: { accent: '#8f8a80', deep: '#3e3a35', glow: '#f2f0ea', soft: '#f7f5ef' },
+  Clean: { accent: '#2f6f34', deep: '#173f1e', glow: '#e9f5e7', soft: '#f3fbf1' },
+  Golden: { accent: '#d69b12', deep: '#3a2814', glow: '#fff1ba', soft: '#fff8df' },
+  Quantum: { accent: '#7a5bdb', deep: '#37256f', glow: '#eee8ff', soft: '#f6f2ff' },
+  Genesis: { accent: '#df6f91', deep: '#64223a', glow: '#ffe5ee', soft: '#fff2f6' }
 });
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const KEYCARD_TEMPLATE_DIR = path.resolve(__dirname, '../templates/keycards');
-const keyCardTemplateCache = new Map();
 const numberFormat = new Intl.NumberFormat('en-US');
 
 function isZeroAddress(address) {
@@ -168,30 +164,87 @@ function assertTokenId(tokenId) {
   return normalized;
 }
 
-function loadKeyCardTemplate(rank) {
-  const normalizedRank = normalizeRank(rank);
-  const fileName = KEYCARD_TEMPLATES[normalizedRank] || KEYCARD_TEMPLATES.Normal;
-  if (!keyCardTemplateCache.has(fileName)) {
-    keyCardTemplateCache.set(fileName, fs.readFileSync(path.join(KEYCARD_TEMPLATE_DIR, fileName), 'utf8'));
-  }
-  return keyCardTemplateCache.get(fileName);
-}
-
 export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }) {
   const normalizedTokenId = assertTokenId(tokenId);
   const normalizedRank = normalizeRank(rank);
-  const values = {
-    '{{NAME}}': escapeXml(`${sanitizeIdentityName(name)}.key`),
-    '{{ORIGIN}}': escapeXml(`${normalizedRank} Origin`),
-    '{{KEYBOND}}': escapeXml(formatKeyBond(keyBond)),
-    '{{MINT_PROOF}}': escapeXml(formatMintProof(mintProof, normalizedTokenId)),
-    '{{TOKEN_ID}}': escapeXml(formatTokenId(normalizedTokenId))
-  };
-  let svg = loadKeyCardTemplate(normalizedRank);
-  for (const [placeholder, value] of Object.entries(values)) {
-    svg = svg.split(placeholder).join(value);
-  }
-  return svg;
+  const style = KEYCARD_STYLES[normalizedRank] || KEYCARD_STYLES.Normal;
+  const displayName = escapeXml(`${sanitizeIdentityName(name)}.key`);
+  const origin = escapeXml(`${normalizedRank} Origin`);
+  const bond = escapeXml(formatKeyBond(keyBond));
+  const proof = escapeXml(formatMintProof(mintProof, normalizedTokenId));
+  const id = escapeXml(formatTokenId(normalizedTokenId));
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1122" height="1402" viewBox="0 0 1122 1402" role="img" aria-label="${displayName} KEYSPACE identity">
+  <defs>
+    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${style.glow}"/>
+      <stop offset="0.28" stop-color="${style.accent}"/>
+      <stop offset="0.55" stop-color="#fffdf6"/>
+      <stop offset="1" stop-color="${style.deep}"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${style.soft}"/>
+      <stop offset="0.45" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#f8efe0"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="50%" cy="30%" r="75%">
+      <stop offset="0" stop-color="${style.glow}" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="${style.deep}" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+  <rect width="1122" height="1402" fill="none"/>
+  <rect x="144" y="84" width="834" height="1234" rx="48" fill="url(#frame)" filter="url(#shadow)"/>
+  <rect x="166" y="106" width="790" height="1190" rx="38" fill="url(#paper)" stroke="#fff9e8" stroke-width="7"/>
+  <rect x="184" y="124" width="754" height="1154" rx="30" fill="none" stroke="${style.accent}" stroke-width="2" opacity="0.78"/>
+  <rect x="184" y="124" width="754" height="1154" rx="30" fill="url(#halo)" opacity="0.75"/>
+
+  <text x="561" y="262" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="28" font-weight="700" letter-spacing="10" fill="${style.accent}">KEYSPACE IDENTITY</text>
+  <line x1="286" y1="336" x2="520" y2="336" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
+  <path d="M561 326 L571 336 L561 346 L551 336 Z" fill="${style.accent}"/>
+  <line x1="602" y1="336" x2="836" y2="336" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
+
+  <g transform="translate(302 466)" stroke="${style.deep}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M42 0 L82 58 L42 118 L2 58 Z" fill="${style.glow}"/>
+    <path d="M42 118 L42 194"/>
+    <path d="M42 152 L76 152"/>
+    <path d="M42 180 L64 180"/>
+    <path d="M18 58 L42 22 L66 58 L42 94 Z" fill="${style.accent}" stroke="${style.accent}" stroke-width="5"/>
+  </g>
+
+  <text x="632" y="545" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="86" font-weight="500" letter-spacing="1" fill="${style.deep}">${displayName}</text>
+  <text x="561" y="622" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="28" font-weight="700" letter-spacing="8" fill="${style.accent}">SPHINCS ORIGIN IDENTITY</text>
+  <line x1="286" y1="702" x2="520" y2="702" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
+  <path d="M561 692 L571 702 L561 712 L551 702 Z" fill="${style.accent}"/>
+  <line x1="602" y1="702" x2="836" y2="702" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
+
+  <rect x="222" y="774" width="678" height="362" rx="30" fill="#fffdf8" fill-opacity="0.6" stroke="${style.accent}" stroke-width="1.6"/>
+  <g font-family="IBM Plex Mono, Courier New, monospace" font-size="29" fill="#17130d">
+    <text x="272" y="845" letter-spacing="8">ORIGIN</text>
+    <text x="848" y="845" text-anchor="end">${origin}</text>
+    <line x1="260" y1="890" x2="862" y2="890" stroke="${style.accent}" stroke-width="2"/>
+    <circle cx="260" cy="890" r="4" fill="${style.accent}"/><circle cx="862" cy="890" r="4" fill="${style.accent}"/>
+
+    <text x="272" y="940" letter-spacing="8">KEYBOND</text>
+    <text x="848" y="940" text-anchor="end">${bond}</text>
+    <line x1="260" y1="984" x2="862" y2="984" stroke="${style.accent}" stroke-width="2"/>
+    <circle cx="260" cy="984" r="4" fill="${style.accent}"/><circle cx="862" cy="984" r="4" fill="${style.accent}"/>
+
+    <text x="272" y="1034" letter-spacing="8">MINT PROOF</text>
+    <text x="848" y="1034" text-anchor="end">${proof}</text>
+    <line x1="260" y1="1078" x2="862" y2="1078" stroke="${style.accent}" stroke-width="2"/>
+    <circle cx="260" cy="1078" r="4" fill="${style.accent}"/><circle cx="862" cy="1078" r="4" fill="${style.accent}"/>
+
+    <text x="272" y="1128" letter-spacing="8">TOKEN ID</text>
+    <text x="848" y="1128" text-anchor="end">${id}</text>
+  </g>
+
+  <rect x="354" y="1182" width="414" height="58" rx="29" fill="#fffdf8" fill-opacity="0.7" stroke="${style.accent}" stroke-width="2"/>
+  <text x="561" y="1221" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="22" font-weight="700" letter-spacing="7" fill="${style.accent}">KEY-BACKED IDENTITY</text>
+</svg>`;
 }
 
 function ensureDir(file) {

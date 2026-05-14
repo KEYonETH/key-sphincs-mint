@@ -627,6 +627,28 @@ function DetailRow({ label, value, onCopy }) {
   </div>;
 }
 
+function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, className = '' }) {
+  return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`}>
+    <div className="webKeyCardInner">
+      <div className="cardTop">KEYSPACE IDENTITY</div>
+      <div className="cardRule"><span /><i /><span /></div>
+      <div className="cardIdentity">
+        <img src="/key-logo.png" alt="" />
+        <b>{name}</b>
+      </div>
+      <div className="cardSub">SPHINCS ORIGIN IDENTITY</div>
+      <div className="cardRule mid"><span /><i /><span /></div>
+      <div className="cardDetails">
+        <span>ORIGIN</span><b>{origin}</b>
+        <span>KEYBOND</span><b>{keyBond}</b>
+        <span>MINT PROOF</span><b>{mintProof}</b>
+        <span>TOKEN ID</span><b>{tokenId}</b>
+      </div>
+      <div className="cardFooter">KEY-BACKED IDENTITY</div>
+    </div>
+  </div>;
+}
+
 function Keyspace({ tiers, wallet, connect, data }) {
   const staticStatus = {
     live: false,
@@ -654,13 +676,13 @@ function Keyspace({ tiers, wallet, connect, data }) {
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
   const listings = [
-    { name: 'ai.key', origin: 'Genesis Origin', image: '/keycards/genesis-preview.svg' },
-    { name: 'hash.key', origin: 'Quantum Origin', image: '/keycards/quantum-preview.svg' },
-    { name: 'alpha.key', origin: 'Golden Origin', image: '/keycards/golden-preview.svg' },
-    { name: 'cipher.key', origin: 'Clean Origin', image: '/keycards/clean-preview.svg' },
-    { name: 'terminal.key', origin: 'Normal Origin', image: '/keycards/normal-preview.svg' }
+    { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1' },
+    { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404' },
+    { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421' },
+    { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206' },
+    { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107' }
   ];
-  const templatePreviewImage = '/keycards/golden-preview.svg';
+  const heroCard = listings[2];
 
   const [rank, setRank] = useState('Normal');
   const [name, setName] = useState('');
@@ -719,10 +741,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         </div>
       </div>
       <div className="heroIdentityCard">
-        <img className="heroKeycardImage" src={templatePreviewImage} alt="alpha.key KEYSPACE identity card" loading="eager" fetchPriority="high" decoding="async" onError={(event) => {
-          event.currentTarget.style.display = 'none';
-          event.currentTarget.nextElementSibling.classList.add('show');
-        }} />
+        <KeyIdentityCard {...heroCard} className="heroWebCard" />
         <div className="heroCardFallback">
           <div className="identityName">alpha.key</div>
           <div className="identityMeta">Golden Origin</div>
@@ -789,7 +808,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <p>Example .key identities that can trade with ETH after mint-out.</p>
       </div>
       <div className="listingGrid keycardPreviewGrid">{listings.map((card) => <div className="listingCard keycardOnly" key={card.name}>
-        <img className="listingCardImage" src={card.image} alt={`${card.name} ${card.origin} KEYSPACE identity card`} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+        <KeyIdentityCard {...card} />
       </div>)}</div>
       <p className="marketNote">.key identities can be listed, bought, and sold with ETH after KEYSPACE goes live. When sold, the KEY KeyBond stays inside the identity and moves to the buyer. OpenSea can show the same ERC721 identity page. {keyQuote?.ethEstimate ? `Reference: 500 KEY KeyBond ≈ ${keyQuote.ethEstimate} ETH.` : ''}</p>
     </section>
