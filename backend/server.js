@@ -619,8 +619,19 @@ app.get('/api/keyspace/sales', async (req, res) => {
   res.json(await keyspaceIndexer.sales({ force: req.query.refresh === '1' }));
 });
 
+app.get('/api/keyspace/quote/:keyAmount', async (req, res) => {
+  const quote = keyspaceIndexer.quote(req.params.keyAmount);
+  res.status(quote.ok ? 200 : 400).json(quote);
+});
+
 app.get('/api/keyspace/metadata/:tokenId', async (req, res) => {
   res.json(await keyspaceIndexer.metadata(req.params.tokenId, { force: req.query.refresh === '1' }));
+});
+
+app.get('/api/keyspace/image/:tokenId', async (req, res) => {
+  const svg = await keyspaceIndexer.image(req.params.tokenId, { force: req.query.refresh === '1' });
+  res.set('Cache-Control', 'public, max-age=300');
+  res.type('image/svg+xml').send(svg);
 });
 
 app.post('/api/sphincs/key', sphincsKeyLimiter, async (_req, res) => {

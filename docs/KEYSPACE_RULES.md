@@ -35,6 +35,8 @@
 - Names are stored without the `.key` suffix and displayed as `name.key`.
 - Names are reserved after minting, including after melt, unless a future governance decision explicitly changes name reuse rules before deployment.
 - Identity metadata stores name, Origin Rank, KeyBond amount, origin wallet, and origin proof ID.
+- OpenSea can display KEYSPACE identities as ERC721 assets through `tokenURI` metadata.
+- OpenSea ETH listings are separate owner-signed marketplace orders. They cannot be forced by the NFT contract to track KEY price in real time.
 
 ## Backend
 
@@ -43,3 +45,4 @@
 - Backend does not run trading.
 - Backend does not transfer KEY or NFTs.
 - Backend helps read status, wallet rank, listings, sales, and metadata.
+- Backend may expose KEY-to-ETH reference quotes for UI display, but these are estimates unless a live oracle/liquid market is configured.

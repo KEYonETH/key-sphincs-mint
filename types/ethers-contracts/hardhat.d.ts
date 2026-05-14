@@ -11,81 +11,81 @@ import * as Contracts from "./index.js";
 declare module "@nomicfoundation/hardhat-ethers/types" {
   interface HardhatEthersHelpers extends HardhatEthersHelpersBase {
   getContractFactory(name: 'KEYIdentity', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYIdentity__factory>
+getContractFactory(name: 'IERC20Transfer', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Transfer__factory>
+getContractFactory(name: 'KEYReserveTimelock', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYReserveTimelock__factory>
 getContractFactory(name: 'IKEYToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYToken__factory>
 getContractFactory(name: 'IKEYTreasuryVault', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYTreasuryVault__factory>
 getContractFactory(name: 'KEYMintGate', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYMintGate__factory>
-getContractFactory(name: 'IERC20Transfer', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Transfer__factory>
-getContractFactory(name: 'KEYReserveTimelock', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYReserveTimelock__factory>
 getContractFactory(name: 'IKEYMintGateLegacy', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYMintGateLegacy__factory>
 getContractFactory(name: 'IKEYTokenV2', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYTokenV2__factory>
 getContractFactory(name: 'IKEYTreasuryVaultV2', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYTreasuryVaultV2__factory>
 getContractFactory(name: 'KEYMintGateV2', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYMintGateV2__factory>
+getContractFactory(name: 'KEYToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYToken__factory>
 getContractFactory(name: 'KEYSpaceMarket', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYSpaceMarket__factory>
 getContractFactory(name: 'IKEYBondToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYBondToken__factory>
 getContractFactory(name: 'IKEYIdentityMint', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYIdentityMint__factory>
 getContractFactory(name: 'IKEYMintGateOrigin', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IKEYMintGateOrigin__factory>
 getContractFactory(name: 'KEYSpaceRegistrar', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYSpaceRegistrar__factory>
-getContractFactory(name: 'KEYToken', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYToken__factory>
 getContractFactory(name: 'IERC20Like', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.IERC20Like__factory>
 getContractFactory(name: 'KEYTreasuryVault', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYTreasuryVault__factory>
 getContractFactory(name: 'KEYUniswapV4HookConcept', signerOrOptions?: ethers.Signer | FactoryOptions): Promise<Contracts.KEYUniswapV4HookConcept__factory>
 
   getContractAt(name: 'KEYIdentity', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYIdentity>
+getContractAt(name: 'IERC20Transfer', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IERC20Transfer>
+getContractAt(name: 'KEYReserveTimelock', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYReserveTimelock>
 getContractAt(name: 'IKEYToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYToken>
 getContractAt(name: 'IKEYTreasuryVault', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYTreasuryVault>
 getContractAt(name: 'KEYMintGate', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYMintGate>
-getContractAt(name: 'IERC20Transfer', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IERC20Transfer>
-getContractAt(name: 'KEYReserveTimelock', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYReserveTimelock>
 getContractAt(name: 'IKEYMintGateLegacy', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYMintGateLegacy>
 getContractAt(name: 'IKEYTokenV2', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYTokenV2>
 getContractAt(name: 'IKEYTreasuryVaultV2', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYTreasuryVaultV2>
 getContractAt(name: 'KEYMintGateV2', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYMintGateV2>
+getContractAt(name: 'KEYToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYToken>
 getContractAt(name: 'KEYSpaceMarket', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYSpaceMarket>
 getContractAt(name: 'IKEYBondToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYBondToken>
 getContractAt(name: 'IKEYIdentityMint', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYIdentityMint>
 getContractAt(name: 'IKEYMintGateOrigin', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IKEYMintGateOrigin>
 getContractAt(name: 'KEYSpaceRegistrar', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYSpaceRegistrar>
-getContractAt(name: 'KEYToken', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYToken>
 getContractAt(name: 'IERC20Like', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.IERC20Like>
 getContractAt(name: 'KEYTreasuryVault', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYTreasuryVault>
 getContractAt(name: 'KEYUniswapV4HookConcept', address: string | ethers.Addressable, signer?: ethers.Signer): Promise<Contracts.KEYUniswapV4HookConcept>
 
   deployContract(name: 'KEYIdentity', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYIdentity>
+deployContract(name: 'IERC20Transfer', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Transfer>
+deployContract(name: 'KEYReserveTimelock', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYReserveTimelock>
 deployContract(name: 'IKEYToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYToken>
 deployContract(name: 'IKEYTreasuryVault', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTreasuryVault>
 deployContract(name: 'KEYMintGate', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYMintGate>
-deployContract(name: 'IERC20Transfer', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Transfer>
-deployContract(name: 'KEYReserveTimelock', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYReserveTimelock>
 deployContract(name: 'IKEYMintGateLegacy', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYMintGateLegacy>
 deployContract(name: 'IKEYTokenV2', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTokenV2>
 deployContract(name: 'IKEYTreasuryVaultV2', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTreasuryVaultV2>
 deployContract(name: 'KEYMintGateV2', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYMintGateV2>
+deployContract(name: 'KEYToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'KEYSpaceMarket', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYSpaceMarket>
 deployContract(name: 'IKEYBondToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYBondToken>
 deployContract(name: 'IKEYIdentityMint', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYIdentityMint>
 deployContract(name: 'IKEYMintGateOrigin', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYMintGateOrigin>
 deployContract(name: 'KEYSpaceRegistrar', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYSpaceRegistrar>
-deployContract(name: 'KEYToken', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'IERC20Like', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Like>
 deployContract(name: 'KEYTreasuryVault', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYTreasuryVault>
 deployContract(name: 'KEYUniswapV4HookConcept', signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYUniswapV4HookConcept>
 
   deployContract(name: 'KEYIdentity', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYIdentity>
+deployContract(name: 'IERC20Transfer', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Transfer>
+deployContract(name: 'KEYReserveTimelock', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYReserveTimelock>
 deployContract(name: 'IKEYToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYToken>
 deployContract(name: 'IKEYTreasuryVault', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTreasuryVault>
 deployContract(name: 'KEYMintGate', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYMintGate>
-deployContract(name: 'IERC20Transfer', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Transfer>
-deployContract(name: 'KEYReserveTimelock', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYReserveTimelock>
 deployContract(name: 'IKEYMintGateLegacy', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYMintGateLegacy>
 deployContract(name: 'IKEYTokenV2', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTokenV2>
 deployContract(name: 'IKEYTreasuryVaultV2', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYTreasuryVaultV2>
 deployContract(name: 'KEYMintGateV2', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYMintGateV2>
+deployContract(name: 'KEYToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'KEYSpaceMarket', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYSpaceMarket>
 deployContract(name: 'IKEYBondToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYBondToken>
 deployContract(name: 'IKEYIdentityMint', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYIdentityMint>
 deployContract(name: 'IKEYMintGateOrigin', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IKEYMintGateOrigin>
 deployContract(name: 'KEYSpaceRegistrar', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYSpaceRegistrar>
-deployContract(name: 'KEYToken', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYToken>
 deployContract(name: 'IERC20Like', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.IERC20Like>
 deployContract(name: 'KEYTreasuryVault', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYTreasuryVault>
 deployContract(name: 'KEYUniswapV4HookConcept', args: any[], signerOrOptions?: ethers.Signer | DeployContractOptions): Promise<Contracts.KEYUniswapV4HookConcept>

@@ -526,6 +526,7 @@ function Keyspace({ tiers }) {
   const [name, setName] = useState('');
   const [preview, setPreview] = useState(null);
   const [keyspaceStatus, setKeyspaceStatus] = useState(staticStatus);
+  const [keyQuote, setKeyQuote] = useState(null);
   const selected = rankRules.find((r) => r.key === rank) || rankRules[0];
   const keySupply = fmt.format(Number(keyspaceStatus.keySupply || staticStatus.keySupply));
   const identitySupply = fmt.format(Number(keyspaceStatus.identitySupply || staticStatus.identitySupply));
@@ -539,6 +540,14 @@ function Keyspace({ tiers }) {
       })
       .catch(() => {
         if (alive) setKeyspaceStatus(staticStatus);
+      });
+    fetch(`${BACKEND}/api/keyspace/quote/500`)
+      .then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE quote unavailable')))
+      .then((quote) => {
+        if (alive) setKeyQuote(quote);
+      })
+      .catch(() => {
+        if (alive) setKeyQuote(null);
       });
     return () => { alive = false; };
   }, []);
@@ -640,7 +649,7 @@ function Keyspace({ tiers }) {
         <span>{listing.includes('Auction') ? 'Market' : 'Example Listing'}: {listing}</span>
         <em>{status}</em>
       </div>)}</div>
-      <p className="marketNote">.key identities can be listed, bought, and sold with KEY after KEYSPACE goes live. When sold, the KeyBond stays inside the identity and moves to the buyer.</p>
+      <p className="marketNote">.key identities can be listed, bought, and sold with KEY after KEYSPACE goes live. When sold, the KeyBond stays inside the identity and moves to the buyer. OpenSea can show the ERC721 identity page, but ETH listings there are manual owner-signed listings. {keyQuote?.ethEstimate ? `Reference: 500 KEY ≈ ${keyQuote.ethEstimate} ETH.` : ''}</p>
     </section>
 
     <section className="keyspaceBlock keybondBlock">

@@ -48,6 +48,12 @@ const marketAbi = [
   'event IdentitySold(uint256 indexed tokenId, address indexed seller, address indexed buyer, uint256 price)',
   'function marketOpen() view returns (bool)'
 ];
+const identityAbi = [
+  'function identityOf(uint256 tokenId) view returns (tuple(string name,uint8 originRank,uint256 keyBond,address originWallet,bytes32 originProofId,bool melted))',
+  'function nameOf(uint256 tokenId) view returns (string)',
+  'function ownerOf(uint256 tokenId) view returns (address)'
+];
+const RANK_NAMES = Object.freeze(['Normal', 'Clean', 'Golden', 'Quantum', 'Genesis']);
 
 function isZeroAddress(address) {
   return !address || address === ethers.ZeroAddress || /^0x0{40}$/i.test(address);
@@ -59,6 +65,41 @@ function normalizeName(name = '') {
 
 function isValidKeyspaceName(name = '') {
   return /^[a-z]+$/.test(normalizeName(name));
+}
+
+function escapeXml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
+function metadataBaseUrl() {
+  return String(
+    process.env.KEYSPACE_PUBLIC_API_URL ||
+    process.env.PUBLIC_API_URL ||
+    process.env.VITE_BACKEND_URL ||
+    'https://api.key-sphincs.xyz'
+  ).replace(/\/$/, '');
+}
+
+function keyPerEthReference() {
+  const direct = Number(String(process.env.KEYSPACE_KEY_PER_ETH || process.env.KEY_PER_ETH || '').replace(/,/g, ''));
+  if (Number.isFinite(direct) && direct > 0) return direct;
+  const priceText = CONFIG.uniswapV4InitialPrice || '1 ETH = 500,000 KEY';
+  const match = String(priceText).match(/1\s*ETH\s*=\s*([\d,._]+)\s*KEY/i);
+  const parsed = match ? Number(match[1].replace(/[,_]/g, '')) : NaN;
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 500_000;
+}
+
+function formatEth(value) {
+  return Number(value).toFixed(8).replace(/0+$/, '').replace(/\.$/, '');
+}
+
+function rankName(originRank) {
+  return RANK_NAMES[Number(originRank)] || 'Unknown';
 }
 
 function ensureDir(file) {
@@ -141,6 +182,32 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     } catch (error) {
       console.warn(`[KEYSPACE indexer] ${functionName} unavailable: ${error.shortMessage || error.message}`);
       return fallback;
+    }
+  }
+
+  async function readIdentity(tokenId) {
+    const normalizedTokenId = String(tokenId);
+    if (!provider || isZeroAddress(CONFIG.keyIdentityAddress)) return null;
+    try {
+      const contract = new ethers.Contract(CONFIG.keyIdentityAddress, identityAbi, provider);
+      const [displayName, details, owner] = await Promise.all([
+        contract.nameOf(normalizedTokenId),
+        contract.identityOf(normalizedTokenId),
+        contract.ownerOf(normalizedTokenId)
+      ]);
+      return {
+        owner,
+        tokenId: normalizedTokenId,
+        name: displayName,
+        rawName: details.name ?? details[0],
+        originRank: Number(details.originRank ?? details[1] ?? 0),
+        keyBond: ethers.formatEther(details.keyBond ?? details[2] ?? 0n),
+        originWallet: details.originWallet ?? details[3],
+        originProofId: details.originProofId ?? details[4],
+        melted: Boolean(details.melted ?? details[5])
+      };
+    } catch {
+      return null;
     }
   }
 
@@ -360,22 +427,70 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
 
   async function metadata(tokenId, options) {
     const state = await snapshot(options);
-    const identity = state.claims.find((claim) => claim.tokenId === String(tokenId)) || null;
+    const identity = await readIdentity(tokenId) || state.claims.find((claim) => claim.tokenId === String(tokenId)) || null;
     const displayName = identity?.name || `KEYSPACE Preview #${tokenId}`;
+    const originRank = identity?.originRank ?? 'Preview';
+    const originLabel = typeof originRank === 'number' ? `${rankName(originRank)} Origin` : originRank;
+    const keyBond = identity?.keyBond ?? 'Preview';
     return {
       name: displayName,
       description: state.contractsLive
-        ? 'KEYSPACE .key identity metadata.'
+        ? 'KEYSPACE .key identity backed by KEY KeyBond. Trading with native KEY happens through KEYSPACE Market.'
         : 'Preview metadata only. KEYSPACE contracts are not live yet.',
-      image: null,
+      image: `${metadataBaseUrl()}/api/keyspace/image/${tokenId}`,
+      external_url: 'https://key-sphincs.xyz/#/keyspace',
       contractsLive: state.contractsLive,
       attributes: [
-        { trait_type: 'Status', value: state.contractsLive ? 'Indexed' : 'Preview' },
-        { trait_type: 'Origin Rank', value: identity?.originRank ?? 'Preview' },
-        { trait_type: 'KeyBond', value: identity?.keyBond ?? 'Preview' }
+        { trait_type: 'Status', value: identity ? 'Claimed' : (state.contractsLive ? 'Ready' : 'Preview') },
+        { trait_type: 'Origin Rank', value: originLabel },
+        { trait_type: 'KeyBond', value: keyBond === 'Preview' ? keyBond : `${keyBond} KEY` },
+        { trait_type: 'Marketplace', value: state.marketplaceLive ? 'KEYSPACE Market Live' : 'Preview' }
       ]
     };
   }
 
-  return { status, wallet, name, listings, sales, metadata, snapshot };
+  async function image(tokenId, options) {
+    const meta = await metadata(tokenId, options);
+    const title = escapeXml(meta.name);
+    const origin = escapeXml(meta.attributes.find((item) => item.trait_type === 'Origin Rank')?.value || 'Preview');
+    const keyBond = escapeXml(meta.attributes.find((item) => item.trait_type === 'KeyBond')?.value || 'Preview');
+    const status = escapeXml(meta.attributes.find((item) => item.trait_type === 'Status')?.value || 'Preview');
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <rect width="1200" height="1200" fill="#f7f0df"/>
+  <rect x="74" y="74" width="1052" height="1052" rx="28" fill="#fffaf0" stroke="#b88a2b" stroke-width="4"/>
+  <rect x="118" y="118" width="964" height="964" rx="18" fill="#fbf3df" stroke="#d2a84f" stroke-width="2"/>
+  <text x="600" y="230" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="54" fill="#1b1710" letter-spacing="6">KEYSPACE</text>
+  <text x="600" y="500" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="104" font-weight="800" fill="#111111">${title}</text>
+  <text x="600" y="596" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="36" fill="#6f551d">${origin}</text>
+  <g font-family="Inter, Arial, sans-serif" font-size="34" fill="#1b1710">
+    <text x="250" y="760">KeyBond</text>
+    <text x="950" y="760" text-anchor="end" font-weight="700">${keyBond}</text>
+    <text x="250" y="836">Status</text>
+    <text x="950" y="836" text-anchor="end" font-weight="700">${status}</text>
+  </g>
+  <line x1="250" y1="790" x2="950" y2="790" stroke="#d9bd72" stroke-width="2"/>
+  <line x1="250" y1="866" x2="950" y2="866" stroke="#d9bd72" stroke-width="2"/>
+  <text x="600" y="1010" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="26" fill="#6f551d">SPHINCS Origin Identity backed by KEY</text>
+</svg>`;
+  }
+
+  function quote(keyAmount = '500') {
+    const amount = Number(String(keyAmount).replace(/,/g, ''));
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return { ok: false, error: 'Invalid KEY amount' };
+    }
+    const keyPerEth = keyPerEthReference();
+    const ethEstimate = amount / keyPerEth;
+    return {
+      ok: true,
+      keyAmount: String(amount),
+      keyPerEth: String(keyPerEth),
+      ethEstimate: formatEth(ethEstimate),
+      source: 'configured KEY/ETH reference price',
+      liveOracle: false,
+      note: 'Estimate only. OpenSea ETH listings must be signed by the NFT owner and are not automatically updated by KEYSPACE contracts.'
+    };
+  }
+
+  return { status, wallet, name, listings, sales, metadata, image, quote, snapshot };
 }
