@@ -8027,7 +8027,7 @@ nav button,
   z-index: 50 !important;
   top: calc(100% + 8px) !important;
   right: 0 !important;
-  width: 190px !important;
+  width: 230px !important;
   display: grid !important;
   gap: 6px !important;
   padding: 8px !important;
@@ -8038,17 +8038,17 @@ nav button,
 }
 
 .walletMenu button {
-  min-height: 32px !important;
+  min-height: 38px !important;
   display: grid !important;
-  grid-template-columns: 20px minmax(0, 1fr) !important;
+  grid-template-columns: 28px minmax(0, 1fr) !important;
   align-items: center !important;
-  gap: 8px !important;
-  padding: 0 8px !important;
+  gap: 10px !important;
+  padding: 0 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
   background: #fffaf0 !important;
   color: #0f0d09 !important;
-  font-size: 11px !important;
+  font-size: 12px !important;
   font-weight: 800 !important;
   text-align: left !important;
 }
@@ -8059,12 +8059,31 @@ nav button,
 }
 
 .walletMenu img {
-  width: 18px !important;
-  height: 18px !important;
-  border-radius: 999px !important;
+  width: 24px !important;
+  height: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
 }
 
-.walletMenu span {
+.walletIcon {
+  width: 28px !important;
+  height: 28px !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+}
+
+.walletIcon.empty {
+  width: 24px !important;
+  height: 24px !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+  background: #fff8e8 !important;
+}
+
+.walletName {
   min-width: 0 !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;

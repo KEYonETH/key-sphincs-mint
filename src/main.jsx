@@ -129,14 +129,24 @@ function walletName(provider, fallback = 'Injected') {
   return fallback;
 }
 
+function walletKey(item) {
+  const provider = item?.provider || item;
+  if (provider?.isMetaMask) return 'metamask';
+  if (provider?.isCoinbaseWallet) return 'coinbase';
+  if (provider?.isRabby) return 'rabby';
+  if (provider?.isBraveWallet) return 'brave';
+  const name = (item?.name || item?.info?.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  return item?.uuid || name || String(provider);
+}
+
 function uniqueWallets(items) {
-  const seen = new Set();
-  return items.filter((item) => {
-    const key = item.uuid || item.name || item.provider;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
+  const wallets = new Map();
+  items.forEach((item) => {
+    const key = walletKey(item);
+    const current = wallets.get(key);
+    if (!current || (!current.icon && item.icon)) wallets.set(key, item);
   });
+  return Array.from(wallets.values());
 }
 
 function currentEthereum() {
@@ -196,8 +206,8 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
       }}>{walletLabel}</button>
       {walletMenu && !wallet && <div className="walletMenu">
         {walletProviders.length ? walletProviders.map((provider) => <button key={provider.uuid || provider.name} onClick={() => connect(provider)}>
-          {provider.icon && <img src={provider.icon} alt="" />}
-          <span>{provider.name}</span>
+          <span className={`walletIcon ${provider.icon ? '' : 'empty'}`}>{provider.icon && <img src={provider.icon} alt="" />}</span>
+          <span className="walletName">{provider.name}</span>
         </button>) : <button onClick={() => connect()}>Browser wallet</button>}
       </div>}
     </div>
@@ -1127,12 +1137,13 @@ function App() {
     const add = (detail) => {
       const provider = detail?.provider || detail;
       if (!provider?.request) return;
-      discovered.push({
+      const wallet = {
         uuid: detail?.info?.uuid || walletName(detail, `Wallet ${discovered.length + 1}`),
         name: walletName(detail, `Wallet ${discovered.length + 1}`),
         icon: detail?.info?.icon || '',
         provider
-      });
+      };
+      discovered.push(wallet);
       setWalletProviders(uniqueWallets(discovered));
     };
     const onAnnounce = (event) => add(event.detail);
