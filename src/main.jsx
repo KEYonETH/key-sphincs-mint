@@ -656,7 +656,7 @@ function Vault({ data }) {
   const balances = liquidity.balances || {};
   const controls = liquidity.controls || {};
   const noPool = !liquidity.poolId || liquidity.poolId === 'TBA' || liquidity.poolId === 'not created';
-  const noHook = !liquidity.hookAddress || isZeroAddress(liquidity.hookAddress);
+  const noLiquidityModule = !liquidity.hookAddress || isZeroAddress(liquidity.hookAddress);
   const txLink = liquidity.initializeTx ? `https://etherscan.io/tx/${liquidity.initializeTx}` : '';
   const addressRows = [
     ['KEY token', addresses.token || import.meta.env.VITE_KEY_TOKEN_ADDRESS || 'TBA'],
@@ -675,7 +675,7 @@ function Vault({ data }) {
     <div className="vaultStatusGrid">
       <Metric label="official trading" value={noPool ? 'not launched' : 'liquidity pending'} note={noPool ? 'no official KEY pool yet' : 'pool exists, LP has not been added'} />
       <Metric label="uniswap v4 pool" value={noPool ? 'not created' : 'created'} note={liquidity.poolId || 'pending'} />
-      <Metric label="hook" value={noHook ? 'none' : 'configured'} note={noHook ? 'normal v4 pool planned first' : short(liquidity.hookAddress)} />
+      <Metric label="liquidity module" value={noLiquidityModule ? 'none' : 'configured'} note={noLiquidityModule ? 'standard pool planned first' : short(liquidity.hookAddress)} />
       <Metric label="vault ETH" value={value(balances.vaultETH, 'ETH')} note="mint fees currently held by vault" />
     </div>
     {!noPool && <div className="tableLite addresses poolDetails">
@@ -713,7 +713,7 @@ proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PR
     <h2>Trust model</h2>
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
     <h2>Mainnet readiness</h2>
-    <ul><li>Switch backend from preview mode to real SPHINCS verifier command mode.</li><li>Verify contract source on Etherscan.</li><li>Use a multisig for treasury and reserve ownership.</li><li>Publish proof snapshots and liquidity actions.</li><li>Audit the mint gate, token, vault, and hook route.</li></ul>
+    <ul><li>Switch backend from preview mode to real SPHINCS verifier command mode.</li><li>Verify contract source on Etherscan.</li><li>Use a multisig for treasury and reserve ownership.</li><li>Publish proof snapshots and liquidity actions.</li><li>Audit the mint gate, token, vault, and liquidity route.</li></ul>
   </Card></main>;
 }
 
