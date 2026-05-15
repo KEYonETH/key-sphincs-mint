@@ -8381,3 +8381,143 @@ body::after {
 .heroWebCard {
   max-width: 340px !important;
 }
+
+/* Final bright shell + tighter KEY identity cards. */
+html,
+body,
+#root {
+  background: #ffffff !important;
+}
+
+body::before,
+body::after {
+  display: none !important;
+}
+
+.shell {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,251,241,0.96)) !important;
+  border: 3px solid #c99006 !important;
+  border-radius: 10px !important;
+  box-shadow:
+    0 28px 70px rgba(76, 52, 8, 0.14),
+    0 6px 0 rgba(158, 105, 0, 0.14),
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 0 0 1px rgba(255,255,255,0.7) !important;
+}
+
+.topbar,
+.status,
+.page > section,
+.card,
+.metric,
+.progressCard,
+.mintPanel,
+.keyspaceHero,
+.keyspaceBlock,
+.keyspaceWarning,
+.flowCard,
+.rankCard,
+.tableLite,
+.proofDetailTable,
+.resultStrip {
+  box-shadow:
+    0 12px 28px rgba(88, 57, 5, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.92) !important;
+}
+
+.brandIcon {
+  width: 44px !important;
+  height: 44px !important;
+}
+
+.brandIcon img {
+  width: 38px !important;
+  height: 38px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 5px 7px rgba(138, 91, 0, 0.22)) !important;
+}
+
+.keycardPreviewGrid {
+  gap: 14px !important;
+}
+
+.webKeyCard {
+  border-radius: 7% / 5.5% !important;
+  padding: clamp(8px, 3.4cqw, 13px) !important;
+  box-shadow:
+    0 18px 32px var(--card-shadow),
+    0 5px 0 color-mix(in srgb, var(--card-deep), transparent 38%),
+    inset 3px 3px 0 rgba(255,255,255,0.76),
+    inset -7px -9px 18px rgba(0,0,0,0.2) !important;
+}
+
+.webKeyCardInner {
+  grid-template-rows: auto auto minmax(0, 0.62fr) auto auto minmax(112px, 1.52fr) auto !important;
+  padding: 7.2% 6.6% 6.4% !important;
+  border-width: 2px !important;
+}
+
+.cardTop {
+  font-size: clamp(8px, 4.2cqw, 16px) !important;
+  letter-spacing: clamp(1px, 1.65cqw, 5px) !important;
+}
+
+.cardRule {
+  margin: 5.5% 0 3.2% !important;
+  width: 72% !important;
+}
+
+.cardRule.mid {
+  margin: 3.8% 0 4.2% !important;
+}
+
+.cardIdentity b {
+  font-size: clamp(28px, 13.1cqw, 60px) !important;
+  transform: translateY(-1px) !important;
+}
+
+.cardSub {
+  margin-top: 1% !important;
+  font-size: clamp(7px, 3.15cqw, 13px) !important;
+  letter-spacing: clamp(0.8px, 1.05cqw, 4px) !important;
+  line-height: 1.15 !important;
+}
+
+.cardDetails {
+  align-self: stretch !important;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr) !important;
+  padding: 5.2% 6% !important;
+  border-radius: 6% / 10% !important;
+}
+
+.cardDetails span,
+.cardDetails b {
+  min-height: 21px !important;
+  line-height: 1 !important;
+}
+
+.cardDetails span {
+  font-size: clamp(7px, 2.55cqw, 11px) !important;
+  letter-spacing: clamp(0.6px, 0.85cqw, 3px) !important;
+}
+
+.cardDetails b {
+  font-size: clamp(8px, 2.85cqw, 12px) !important;
+  letter-spacing: 0 !important;
+}
+
+.cardFooter {
+  margin-top: 5.6% !important;
+  padding: 2.8% 5.4% !important;
+  font-size: clamp(7px, 2.7cqw, 12px) !important;
+  letter-spacing: clamp(0.8px, 0.95cqw, 3.5px) !important;
+}
+
+.heroWebCard {
+  max-width: 360px !important;
+}
+
+.heroWebCard .cardIdentity b {
+  font-size: clamp(40px, 15.2cqw, 74px) !important;
+}
