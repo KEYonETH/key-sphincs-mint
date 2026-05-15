@@ -8453,8 +8453,9 @@ body::after {
 }
 
 .webKeyCardInner {
-  grid-template-rows: auto auto minmax(0, 0.62fr) auto auto minmax(112px, 1.52fr) auto !important;
-  padding: 7.2% 6.6% 6.4% !important;
+  grid-template-rows: auto auto auto auto auto minmax(104px, 1fr) auto !important;
+  row-gap: 2.6% !important;
+  padding: 7% 6.4% 6.2% !important;
   border-width: 2px !important;
 }
 
@@ -8464,36 +8465,36 @@ body::after {
 }
 
 .cardRule {
-  margin: 5.5% 0 3.2% !important;
+  margin: 3.5% 0 1.2% !important;
   width: 72% !important;
 }
 
 .cardRule.mid {
-  margin: 3.8% 0 4.2% !important;
+  margin: 1.4% 0 2.2% !important;
 }
 
 .cardIdentity b {
-  font-size: clamp(28px, 13.1cqw, 60px) !important;
+  font-size: clamp(22px, calc(88cqw / var(--name-chars, 9)), 58px) !important;
   transform: translateY(-1px) !important;
 }
 
 .cardSub {
-  margin-top: 1% !important;
-  font-size: clamp(7px, 3.15cqw, 13px) !important;
-  letter-spacing: clamp(0.8px, 1.05cqw, 4px) !important;
-  line-height: 1.15 !important;
+  margin-top: 0 !important;
+  font-size: clamp(7px, 2.85cqw, 12px) !important;
+  letter-spacing: clamp(0.6px, 0.92cqw, 3.2px) !important;
+  line-height: 1.08 !important;
 }
 
 .cardDetails {
   align-self: stretch !important;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr) !important;
-  padding: 5.2% 6% !important;
+  padding: 4.8% 5.8% !important;
   border-radius: 6% / 10% !important;
 }
 
 .cardDetails span,
 .cardDetails b {
-  min-height: 21px !important;
+  min-height: clamp(18px, 7.6cqw, 30px) !important;
   line-height: 1 !important;
 }
 
@@ -8503,15 +8504,15 @@ body::after {
 }
 
 .cardDetails b {
-  font-size: clamp(8px, 2.85cqw, 12px) !important;
+  font-size: clamp(7px, calc(43cqw / var(--value-chars, 12)), 12px) !important;
   letter-spacing: 0 !important;
 }
 
 .cardFooter {
-  margin-top: 5.6% !important;
-  padding: 2.8% 5.4% !important;
-  font-size: clamp(7px, 2.7cqw, 12px) !important;
-  letter-spacing: clamp(0.8px, 0.95cqw, 3.5px) !important;
+  margin-top: 4.2% !important;
+  padding: 2.4% 5% !important;
+  font-size: clamp(7px, 2.45cqw, 11px) !important;
+  letter-spacing: clamp(0.6px, 0.82cqw, 3px) !important;
 }
 
 .heroWebCard {
@@ -8519,5 +8520,33 @@ body::after {
 }
 
 .heroWebCard .cardIdentity b {
-  font-size: clamp(40px, 15.2cqw, 74px) !important;
+  font-size: clamp(40px, calc(132cqw / var(--name-chars, 9)), 74px) !important;
+}
+
+.keycardPreviewGrid .webKeyCardInner {
+  grid-template-rows: auto auto auto auto auto minmax(96px, 1fr) auto !important;
+  row-gap: 2.2% !important;
+}
+
+.keycardPreviewGrid .cardTop {
+  font-size: clamp(8px, 3.55cqw, 13px) !important;
+  letter-spacing: clamp(0.8px, 1.25cqw, 4px) !important;
+}
+
+.keycardPreviewGrid .cardIdentity b {
+  font-size: clamp(21px, calc(82cqw / var(--name-chars, 9)), 48px) !important;
+}
+
+.keycardPreviewGrid .cardSub {
+  font-size: clamp(7px, 2.45cqw, 10px) !important;
+  letter-spacing: clamp(0.5px, 0.75cqw, 2.6px) !important;
+}
+
+.keycardPreviewGrid .cardDetails span {
+  font-size: clamp(7px, 2.15cqw, 9px) !important;
+  letter-spacing: clamp(0.4px, 0.68cqw, 2.3px) !important;
+}
+
+.keycardPreviewGrid .cardDetails b {
+  font-size: clamp(7px, calc(39cqw / var(--value-chars, 12)), 10px) !important;
 }

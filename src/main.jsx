@@ -628,7 +628,15 @@ function DetailRow({ label, value, onCopy }) {
 }
 
 function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, className = '' }) {
-  return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`}>
+  const nameChars = Math.max(6, String(name).length);
+  const valueChars = Math.max(
+    String(origin).length,
+    String(keyBond).length,
+    String(mintProof).length,
+    String(tokenId).length,
+    8
+  );
+  return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`} style={{ '--name-chars': nameChars, '--value-chars': valueChars }}>
     <div className="webKeyCardInner">
       <div className="cardTop">KEYSPACE IDENTITY</div>
       <div className="cardRule"><span /><i /><span /></div>

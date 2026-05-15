@@ -168,7 +168,9 @@ export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }
   const normalizedTokenId = assertTokenId(tokenId);
   const normalizedRank = normalizeRank(rank);
   const style = KEYCARD_STYLES[normalizedRank] || KEYCARD_STYLES.Normal;
-  const displayName = escapeXml(`${sanitizeIdentityName(name)}.key`);
+  const cleanName = sanitizeIdentityName(name);
+  const displayName = escapeXml(`${cleanName}.key`);
+  const nameSize = Math.max(54, Math.min(92, Math.floor(820 / Math.max(cleanName.length + 4, 9))));
   const origin = escapeXml(`${normalizedRank} Origin`);
   const bond = escapeXml(formatKeyBond(keyBond));
   const proof = escapeXml(formatMintProof(mintProof, normalizedTokenId));
@@ -207,7 +209,7 @@ export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }
   <path d="M561 326 L571 336 L561 346 L551 336 Z" fill="${style.accent}"/>
   <line x1="602" y1="336" x2="836" y2="336" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
 
-  <text x="561" y="548" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="92" font-weight="500" letter-spacing="1" fill="${style.deep}">${displayName}</text>
+  <text x="561" y="548" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="${nameSize}" font-weight="500" letter-spacing="1" fill="${style.deep}">${displayName}</text>
   <text x="561" y="622" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="28" font-weight="700" letter-spacing="8" fill="${style.accent}">SPHINCS ORIGIN IDENTITY</text>
   <line x1="286" y1="702" x2="520" y2="702" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
   <path d="M561 692 L571 702 L561 712 L551 702 Z" fill="${style.accent}"/>
