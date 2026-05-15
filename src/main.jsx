@@ -228,7 +228,7 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
   const walletLabel = wallet ? short(wallet) : 'connect';
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
-      <div className="brandIcon"><img src="/key-logo.png" alt="KEY" /></div>
+      <div className="brandIcon"><img src="/key-logo.svg" alt="KEY" /></div>
       <div><div className="brandName">KEY</div><div className="brandSub">SPHINCS Signature Mint</div></div>
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{n}</button>)}</nav>

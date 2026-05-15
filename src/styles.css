@@ -8787,3 +8787,45 @@ body::after {
     padding: 14px !important;
   }
 }
+
+/* Final QA mobile guard: mint panels must never sit side by side on phones. */
+@media (max-width: 760px) {
+  .mintPage,
+  .mintPage .mintStack,
+  .mintPage .mintSupport {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mintPage .mintStack > *,
+  .mintPage .mintSupport > *,
+  .mintPage .mintPanel,
+  .mintPage .signatureInfo,
+  .mintPage .tiersCard,
+  .mintPage .keyspaceNote {
+    grid-column: 1 / -1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .mintPage .mintFacts,
+  .mintPage .resultStrip,
+  .mintPage .buttonStack,
+  .mintPage .mintActions,
+  .mintPage .proofLines,
+  .mintPage .proofLine {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .mintPage .mintPanel,
+  .mintPage .signatureInfo,
+  .mintPage .tiersCard,
+  .mintPage .keyspaceNote,
+  .mintPage .progressCard {
+    overflow: hidden !important;
+  }
+}
