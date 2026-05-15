@@ -9629,3 +9629,481 @@ body::after {
     word-break: break-word !important;
   }
 }
+
+/* True 80% fit pass: every major control scales with the compact shell. */
+@media (min-width: 1181px) {
+  .shell {
+    width: min(80vw, 1480px) !important;
+    max-width: 80vw !important;
+  }
+
+  .topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 108px !important;
+    grid-template-rows: auto auto !important;
+    align-items: center !important;
+    gap: 10px 12px !important;
+    padding: 12px 24px 14px !important;
+  }
+
+  .brand {
+    grid-column: 1 / -1 !important;
+    width: fit-content !important;
+    gap: 12px !important;
+  }
+
+  .brandIcon {
+    width: 34px !important;
+    height: 34px !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .brandIcon img {
+    width: 34px !important;
+    height: 34px !important;
+    background: transparent !important;
+    object-fit: contain !important;
+  }
+
+  .brandName,
+  .brand h1 {
+    font-size: 15px !important;
+    letter-spacing: 6px !important;
+  }
+
+  .brandSub,
+  .brand p {
+    font-size: 10px !important;
+    letter-spacing: 3px !important;
+  }
+
+  .topbar nav {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 32px !important;
+    justify-self: stretch !important;
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  }
+
+  .walletSlot {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    width: 108px !important;
+    min-width: 0 !important;
+    justify-self: end !important;
+    position: relative !important;
+    z-index: 4000 !important;
+  }
+
+  .topbar nav button,
+  .connect {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 8px !important;
+    font-size: 9.5px !important;
+    letter-spacing: 1.4px !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+    white-space: nowrap !important;
+  }
+
+  .connect {
+    width: 108px !important;
+    max-width: 108px !important;
+  }
+
+  .walletMenu {
+    width: 220px !important;
+    right: 0 !important;
+    top: calc(100% + 8px) !important;
+    z-index: 9999 !important;
+  }
+
+  .walletMenu button {
+    min-height: 36px !important;
+    padding: 7px 10px !important;
+    font-size: 11.5px !important;
+    gap: 9px !important;
+  }
+
+  .walletIcon,
+  .walletIcon img,
+  .walletMenu img {
+    width: 24px !important;
+    height: 24px !important;
+    object-fit: contain !important;
+  }
+
+  .page {
+    padding: 10px 24px 16px !important;
+    gap: 10px !important;
+  }
+
+  .statStrip {
+    margin: 10px 24px 0 !important;
+  }
+
+  .statStrip .stat,
+  .metric,
+  .mintFacts > div,
+  .resultStrip > div,
+  .proofLine,
+  .proofDetailTable div {
+    min-width: 0 !important;
+  }
+
+  .statStrip .stat b,
+  .metric strong,
+  .mintFacts b,
+  .resultStrip b {
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+  }
+
+  .homeGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(310px, 0.62fr) !important;
+    gap: 12px !important;
+  }
+
+  .mintStack {
+    grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.72fr) !important;
+    gap: 12px !important;
+  }
+
+  .heroMini,
+  .progressCard,
+  .mintPanel,
+  .signatureInfo,
+  .article,
+  .proofIntro,
+  .proofListCard,
+  .proofDetailCard,
+  .keyspaceBlock,
+  .keyspaceHero,
+  .vaultPanel,
+  .card {
+    padding: 12px 14px !important;
+    border-width: 2px !important;
+  }
+
+  .heroMini h1 {
+    font-size: clamp(27px, 2.15vw, 34px) !important;
+    line-height: 1.08 !important;
+  }
+
+  .progressHead {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 6px 0 10px !important;
+  }
+
+  .progressCard h2,
+  .progressHead h2,
+  .homeGrid .progressHead h2 {
+    min-width: 0 !important;
+    margin: 6px 0 !important;
+    font-size: clamp(20px, 1.55vw, 30px) !important;
+    line-height: 1.05 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .progressHead .pill,
+  .pill,
+  .progressPercent {
+    min-width: 58px !important;
+    width: auto !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 10px !important;
+    font-size: 9px !important;
+    justify-self: end !important;
+  }
+
+  .bar {
+    height: 10px !important;
+    margin: 8px 0 10px !important;
+  }
+
+  .miniGrid.three,
+  .homeGrid .progressCard .miniGrid.three {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+  }
+
+  .miniGrid.three .metric,
+  .homeGrid .progressCard .miniGrid.three .metric {
+    min-height: 54px !important;
+    padding: 9px 11px !important;
+  }
+
+  .miniGrid.three .metric small,
+  .homeGrid .progressCard .miniGrid.three .metric small {
+    font-size: 8px !important;
+    letter-spacing: 2.4px !important;
+    line-height: 1.25 !important;
+  }
+
+  .miniGrid.three .metric strong,
+  .homeGrid .progressCard .miniGrid.three .metric strong {
+    font-size: clamp(15px, 1.1vw, 19px) !important;
+    line-height: 1.12 !important;
+  }
+
+  .mintFacts {
+    gap: 8px !important;
+  }
+
+  .mintFacts > div,
+  .resultStrip > div {
+    padding: 10px 12px !important;
+    min-height: 56px !important;
+  }
+
+  .mintFacts small,
+  .resultStrip span,
+  .proofConsole small,
+  .keyReveal small {
+    font-size: 8px !important;
+    letter-spacing: 3px !important;
+  }
+
+  .mintFacts b,
+  .resultStrip b {
+    font-size: 16px !important;
+  }
+
+  .buttonStack {
+    gap: 8px !important;
+  }
+
+  .buttonStack button,
+  .outline,
+  .primary,
+  .ghost,
+  .miniBtn,
+  .copyBtn,
+  .actionButton {
+    min-height: 32px !important;
+    height: auto !important;
+    padding: 8px 12px !important;
+    font-size: 10px !important;
+    letter-spacing: 1.5px !important;
+  }
+
+  .proofConsole {
+    margin-top: 10px !important;
+  }
+
+  .proofLine {
+    grid-template-columns: 110px minmax(0, 1fr) !important;
+    min-height: 34px !important;
+  }
+
+  .proofLine code,
+  .keyReveal code,
+  .proofDetailTable code {
+    font-size: 10px !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+  }
+}
+
+@media (min-width: 1181px) and (max-width: 1500px) {
+  .shell {
+    width: min(86vw, 1240px) !important;
+    max-width: 86vw !important;
+  }
+
+  .homeGrid,
+  .mintStack {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .progressCard h2,
+  .progressHead h2,
+  .homeGrid .progressHead h2 {
+    font-size: clamp(20px, 2vw, 28px) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  html,
+  body,
+  #root {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  .shell {
+    width: calc(100vw - 14px) !important;
+    max-width: calc(100vw - 14px) !important;
+    margin: 6px auto 14px !important;
+    border-width: 2px !important;
+  }
+
+  .topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto auto auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px 8px !important;
+    gap: 8px !important;
+    overflow: hidden !important;
+  }
+
+  .topbar > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    grid-column: 1 !important;
+  }
+
+  .brand {
+    justify-content: center !important;
+    min-width: 0 !important;
+  }
+
+  .brandIcon,
+  .brandIcon img {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .brandIcon,
+  .brandIcon img {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .brandText h1 {
+    font-size: 13px !important;
+    letter-spacing: 4px !important;
+  }
+
+  .brandText span {
+    font-size: 9px !important;
+    letter-spacing: 3px !important;
+  }
+
+  .topbar nav {
+    display: grid !important;
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .topbar nav button,
+  .connect {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 31px !important;
+    min-height: 31px !important;
+    padding: 0 5px !important;
+    font-size: 8.5px !important;
+    letter-spacing: 1.8px !important;
+    overflow: hidden !important;
+    text-overflow: clip !important;
+  }
+
+  .walletSlot {
+    grid-column: 1 !important;
+    grid-row: 3 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .walletMenu {
+    width: min(270px, calc(100vw - 32px)) !important;
+    right: 0 !important;
+    top: calc(100% + 8px) !important;
+  }
+
+  .page {
+    padding: 8px 9px 12px !important;
+    gap: 9px !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .status,
+  .statStrip,
+  .page > section,
+  .page > article,
+  .page > div {
+    max-width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .statStrip {
+    margin: 9px 9px 0 !important;
+  }
+
+  .statStrip .stat {
+    min-height: 58px !important;
+    padding: 10px 11px !important;
+  }
+
+  .progressHead {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 8px !important;
+  }
+
+  .progressCard h2,
+  .progressHead h2 {
+    font-size: clamp(20px, 6.8vw, 28px) !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .miniGrid.three {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .heroMini,
+  .progressCard,
+  .mintPanel,
+  .signatureInfo,
+  .article,
+  .proofIntro,
+  .proofListCard,
+  .proofDetailCard,
+  .keyspaceBlock,
+  .keyspaceHero,
+  .vaultPanel,
+  .card {
+    padding: 11px 12px !important;
+  }
+
+  .heroMini h1,
+  .proofIntro h1,
+  .article h1 {
+    font-size: clamp(28px, 10vw, 42px) !important;
+  }
+
+  .proofLine {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
