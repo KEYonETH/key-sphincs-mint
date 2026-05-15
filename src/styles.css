@@ -8169,6 +8169,116 @@ body::after {
   }
 }
 
+/* Cream terminal theme pass: dark cream world, light cream frames. */
+:root {
+  --cream-bg-deep: #c6aa75;
+  --cream-bg-deeper: #af8f58;
+  --cream-frame: #fff2cf;
+  --cream-frame-strong: #fff8e7;
+  --cream-panel: #fbf1dd;
+  --cream-panel-soft: #fff7e8;
+  --gold: #b98205;
+  --gold-dark: #735008;
+  --line: #fff2cf;
+  --panel: #fbf1dd;
+  --panel-soft: #fff7e8;
+  --paper: #fbf1dd;
+}
+
+html,
+body,
+#root {
+  background: #b89458 !important;
+}
+
+.shell {
+  border-color: var(--cream-frame-strong) !important;
+  background:
+    linear-gradient(180deg, rgba(198,170,117,0.96), rgba(180,146,83,0.96)) !important;
+  box-shadow:
+    0 34px 88px rgba(77, 48, 6, 0.28),
+    0 10px 0 rgba(92, 57, 6, 0.22),
+    0 0 0 1px rgba(255,255,255,0.8),
+    inset 0 2px 0 rgba(255,250,235,0.92),
+    inset 0 0 0 3px rgba(255,242,207,0.52),
+    inset -12px -18px 30px rgba(92,57,6,0.1) !important;
+}
+
+.shell::before {
+  background:
+    linear-gradient(115deg, rgba(255,250,232,0.38), transparent 22% 72%, rgba(102,64,6,0.12)),
+    linear-gradient(90deg, rgba(255,242,207,0.38), transparent 18% 82%, rgba(255,248,231,0.24)) !important;
+}
+
+.topbar,
+.status,
+.statStrip,
+.page > section,
+.card,
+.metric,
+.stat,
+.progressCard,
+.mintPanel,
+.keyspaceHero,
+.keyspaceBlock,
+.keyspaceWarning,
+.flowCard,
+.rankCard,
+.infoCard,
+.tableLite,
+.proofDetailTable,
+.resultStrip,
+.actionBox,
+.liveListings,
+.keyspaceActions .actionStatusGrid .metric,
+.walletMenu {
+  border-color: var(--cream-frame) !important;
+  background:
+    linear-gradient(180deg, rgba(255,250,239,0.92), rgba(251,241,221,0.9)) !important;
+  box-shadow:
+    0 14px 28px rgba(74, 47, 8, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.92),
+    inset 0 0 0 1px rgba(255,242,207,0.34) !important;
+}
+
+.page {
+  background:
+    linear-gradient(180deg, rgba(190,158,97,0.62), rgba(174,141,82,0.62)) !important;
+}
+
+nav,
+nav button,
+.connect,
+.primary,
+.ghost,
+.outline,
+.miniBtn,
+input,
+select,
+textarea,
+.heroTagline span,
+.windowGrid div,
+.keybondGrid div {
+  border-color: var(--cream-frame) !important;
+}
+
+nav button,
+.connect,
+input,
+select,
+textarea {
+  background: rgba(255, 248, 231, 0.72) !important;
+}
+
+.primary {
+  border-color: #fff3cb !important;
+  background:
+    linear-gradient(180deg, #fff2b6 0%, #d8aa38 48%, #9d6f0f 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    0 6px 12px rgba(83, 53, 7, 0.16) !important;
+}
+
 @media (max-width: 720px) {
   .keycardPreviewGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
