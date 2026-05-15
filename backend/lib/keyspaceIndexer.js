@@ -207,15 +207,7 @@ export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }
   <path d="M561 326 L571 336 L561 346 L551 336 Z" fill="${style.accent}"/>
   <line x1="602" y1="336" x2="836" y2="336" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
 
-  <g transform="translate(302 466)" stroke="${style.deep}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M42 0 L82 58 L42 118 L2 58 Z" fill="${style.glow}"/>
-    <path d="M42 118 L42 194"/>
-    <path d="M42 152 L76 152"/>
-    <path d="M42 180 L64 180"/>
-    <path d="M18 58 L42 22 L66 58 L42 94 Z" fill="${style.accent}" stroke="${style.accent}" stroke-width="5"/>
-  </g>
-
-  <text x="632" y="545" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="86" font-weight="500" letter-spacing="1" fill="${style.deep}">${displayName}</text>
+  <text x="561" y="548" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="92" font-weight="500" letter-spacing="1" fill="${style.deep}">${displayName}</text>
   <text x="561" y="622" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="28" font-weight="700" letter-spacing="8" fill="${style.accent}">SPHINCS ORIGIN IDENTITY</text>
   <line x1="286" y1="702" x2="520" y2="702" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
   <path d="M561 692 L571 702 L561 712 L551 702 Z" fill="${style.accent}"/>

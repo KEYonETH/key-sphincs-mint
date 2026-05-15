@@ -633,7 +633,6 @@ function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, clas
       <div className="cardTop">KEYSPACE IDENTITY</div>
       <div className="cardRule"><span /><i /><span /></div>
       <div className="cardIdentity">
-        <img src="/key-logo.png" alt="" />
         <b>{name}</b>
       </div>
       <div className="cardSub">SPHINCS ORIGIN IDENTITY</div>
