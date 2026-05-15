@@ -8981,3 +8981,192 @@ body::after {
     justify-self: start !important;
   }
 }
+
+/* Final compact QA: narrower shell, tighter mint progress, clearer proof framing. */
+@media (min-width: 1181px) {
+  .shell {
+    width: min(1720px, calc(100vw - 96px)) !important;
+  }
+}
+
+.page {
+  padding-left: clamp(18px, 2.6vw, 46px) !important;
+  padding-right: clamp(18px, 2.6vw, 46px) !important;
+}
+
+.homeGrid {
+  align-items: start !important;
+}
+
+.homeGrid .progressCard {
+  align-self: start !important;
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 18px 22px !important;
+}
+
+.homeGrid .progressHead {
+  margin-bottom: 12px !important;
+}
+
+.homeGrid .progressHead h2 {
+  margin: 10px 0 8px !important;
+  font-size: clamp(28px, 2.65vw, 44px) !important;
+}
+
+.homeGrid .progressCard .bar {
+  margin: 10px 0 12px !important;
+}
+
+.homeGrid .progressCard .miniGrid.three {
+  margin-top: 12px !important;
+  padding-top: 0 !important;
+  gap: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 7px !important;
+  overflow: hidden !important;
+  background: rgba(255, 253, 247, 0.86) !important;
+}
+
+.homeGrid .progressCard .miniGrid.three .metric {
+  min-height: 70px !important;
+  padding: 12px 14px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.homeGrid .progressCard .miniGrid.three .metric:nth-child(1) {
+  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 248, 231, 0.96)) !important;
+}
+
+.homeGrid .progressCard .miniGrid.three .metric:nth-child(2) {
+  background: linear-gradient(180deg, rgba(255, 250, 238, 0.98), rgba(252, 241, 211, 0.96)) !important;
+}
+
+.homeGrid .progressCard .miniGrid.three .metric:nth-child(3) {
+  border-right: 0 !important;
+  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 245, 219, 0.96)) !important;
+}
+
+.homeGrid .progressCard .miniGrid.three .metric small {
+  letter-spacing: 2.8px !important;
+}
+
+.homeGrid .progressCard .miniGrid.three .metric strong {
+  margin-top: 6px !important;
+  font-size: clamp(18px, 1.55vw, 25px) !important;
+}
+
+.proofStats {
+  gap: 0 !important;
+  border: 2px solid var(--gold) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: rgba(255, 253, 247, 0.92) !important;
+}
+
+.proofStats .metric {
+  min-height: 86px !important;
+  padding: 18px 22px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.proofStats .metric:nth-child(1) {
+  background: linear-gradient(180deg, #fffdf7, #fff8e8) !important;
+}
+
+.proofStats .metric:nth-child(2) {
+  background: linear-gradient(180deg, #fffaf0, #fff3d9) !important;
+}
+
+.proofStats .metric:nth-child(3) {
+  background: linear-gradient(180deg, #fffdf7, #fff6df) !important;
+}
+
+.proofStats .metric:nth-child(4) {
+  border-right: 0 !important;
+  background: linear-gradient(180deg, #fff9ed, #fff1d3) !important;
+}
+
+.proofGrid {
+  grid-template-columns: minmax(330px, 0.42fr) minmax(0, 1fr) !important;
+}
+
+.proofListCard,
+.proofDetailCard {
+  border-width: 2px !important;
+  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 250, 240, 0.96)) !important;
+}
+
+.proofListCard::after,
+.proofDetailCard::after {
+  content: "" !important;
+  display: block !important;
+  height: 1px !important;
+  margin-top: 14px !important;
+  background: linear-gradient(90deg, transparent, rgba(201, 144, 6, 0.42), transparent) !important;
+}
+
+.proofList {
+  border: 1px solid #dec47d !important;
+  background: linear-gradient(180deg, rgba(255, 251, 241, 0.96), rgba(255, 245, 225, 0.72)) !important;
+}
+
+.proofItem {
+  border: 2px solid #c99006 !important;
+  background: linear-gradient(135deg, #fffdf7 0%, #fff4d4 100%) !important;
+}
+
+.proofDetailTable {
+  border: 2px solid #d1a340 !important;
+}
+
+.proofDetailTable div:nth-child(4n + 1) {
+  background: #fffdf7 !important;
+}
+
+.proofDetailTable div:nth-child(4n + 2) {
+  background: #fff8e8 !important;
+}
+
+.proofDetailTable div:nth-child(4n + 3) {
+  background: #fffaf0 !important;
+}
+
+.proofDetailTable div:nth-child(4n + 4) {
+  background: #fff3d9 !important;
+}
+
+@media (max-width: 1180px) {
+  .proofGrid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .homeGrid .progressCard .miniGrid.three,
+  .proofStats {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .homeGrid .progressCard .miniGrid.three .metric,
+  .proofStats .metric {
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
+
+  .homeGrid .progressCard .miniGrid.three .metric:last-child,
+  .proofStats .metric:last-child {
+    border-bottom: 0 !important;
+  }
+}
