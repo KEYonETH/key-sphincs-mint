@@ -3650,7 +3650,7 @@ footer {
   padding: 2px;
   border: 1px solid var(--line);
   border-radius: 2px;
-  background: #f2ead8;
+  background: #f2f7ff;
 }
 
 .bar i {
@@ -4214,7 +4214,7 @@ nav button.active::after {
   height: 12px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #f2ead7;
+  background: #f2f7ff;
   overflow: hidden;
 }
 
@@ -4478,7 +4478,7 @@ body,
 #root {
   background:
     radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.96) 0, rgba(242, 247, 255, 0.56) 30%, transparent 54%),
-    linear-gradient(90deg, #f1e7cf 0, #ffffff 13%, #ffffff 87%, #f1e7cf 100%) !important;
+    linear-gradient(90deg, #ffffff 0, #ffffff 13%, #ffffff 87%, #ffffff 100%) !important;
   color: #17130f !important;
 }
 
@@ -4513,7 +4513,7 @@ body {
   border: 2px solid var(--gold);
   border-radius: 5px;
   overflow: hidden;
-  background: linear-gradient(145deg, #fffef8, #f4ead0);
+  background: linear-gradient(145deg, #ffffff, #f2f7ff);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.85) inset;
 }
 
@@ -5297,7 +5297,7 @@ body {
 
 .bar {
   height: 11px !important;
-  background: #f2ead8 !important;
+  background: #f2f7ff !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 999px !important;
 }
@@ -5391,7 +5391,7 @@ body {
 
 .buttonStack button:disabled {
   color: var(--gold-dark) !important;
-  background: #f4ead6 !important;
+  background: #f2f7ff !important;
   opacity: 0.62 !important;
 }
 
@@ -5695,7 +5695,7 @@ button:disabled {
 
 /* Final compact ivory/gold interface pass */
 :root {
-  --page-bg: #f8f1df;
+  --page-bg: #ffffff;
   --panel: #ffffff;
   --panel-soft: #f2f7ff;
   --gold: #5477ff;
@@ -5927,7 +5927,7 @@ nav {
   align-content: start !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: linear-gradient(180deg, #ffffff, #fff3d4) !important;
+  background: linear-gradient(180deg, #ffffff, #f2f7ff) !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.78) !important;
 }
 
@@ -6530,7 +6530,7 @@ nav {
 }
 
 .simIdentityCard.blocked {
-  background: linear-gradient(180deg, #ffffff, #fff0df) !important;
+  background: linear-gradient(180deg, #ffffff, #f2f7ff) !important;
 }
 
 .simIdentityCard p,
@@ -6559,7 +6559,7 @@ nav button:last-child {
 }
 
 nav button.on {
-  background: linear-gradient(180deg, #ffffff, #f3e4bb) !important;
+  background: linear-gradient(180deg, #ffffff, #eaf2ff) !important;
   box-shadow: inset 0 -2px 0 var(--gold) !important;
   color: #000 !important;
 }
@@ -7634,7 +7634,7 @@ nav button.on::after {
   border: 2px solid var(--gold) !important;
   box-shadow:
     0 18px 46px rgba(84, 119, 255, 0.14),
-    0 0 0 1px rgba(255, 246, 215, 0.78) inset,
+    0 0 0 1px rgba(183, 199, 255, 0.78) inset,
     0 0 32px rgba(84, 119, 255, 0.18) !important;
 }
 
@@ -7710,7 +7710,7 @@ nav,
 .buttonStack button:last-child,
 .heroActions .primary {
   background:
-    linear-gradient(110deg, rgba(255, 255, 255, 0.82), rgba(252, 229, 151, 0.85) 35%, #5477ff 70%, #dbe6ff),
+    linear-gradient(110deg, rgba(255, 255, 255, 0.82), rgba(183, 199, 255, 0.85) 35%, #5477ff 70%, #dbe6ff),
     #e0bd4e !important;
   color: #080705 !important;
 }
@@ -7751,7 +7751,7 @@ nav,
 .proofItem:hover,
 .proofItem.selected {
   background:
-    linear-gradient(120deg, #ffffff, #fff1c8 56%, #ffffff),
+    linear-gradient(120deg, #ffffff, #eaf2ff 56%, #ffffff),
     #f2f7ff !important;
   box-shadow:
     inset 5px 0 0 var(--gold),
@@ -8051,7 +8051,7 @@ nav button,
 
 .walletMenu button:hover {
   border-color: var(--gold) !important;
-  background: #fff2cf !important;
+  background: #eaf2ff !important;
 }
 
 .walletMenu img {
@@ -8180,7 +8180,7 @@ body::after {
   --card-accent: #d69b12;
   --card-deep: #3a2814;
   --card-soft: #f2f7ff;
-  --card-glow: #fff1ba;
+  --card-glow: #dbe6ff;
   --card-shadow: rgba(76, 52, 8, 0.24);
   container-type: inline-size !important;
   position: relative !important;
@@ -8236,7 +8236,7 @@ body::after {
 .webKeyCard.genesis {
   --card-accent: #df6f91;
   --card-deep: #64223a;
-  --card-soft: #fff2f6;
+  --card-soft: #f2f7ff;
   --card-glow: #ffe5ee;
   --card-shadow: rgba(100, 34, 58, 0.22);
 }
@@ -8578,7 +8578,7 @@ body::after {
   border: 4px solid #c68a00 !important;
   border-radius: 12px !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255, 255, 255, 0.98) 54%, rgba(255,248,230,0.98) 100%) !important;
+    linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255, 255, 255, 0.98) 54%, rgba(242, 247, 255, 0.98) 100%) !important;
   box-shadow:
     0 34px 90px rgba(61, 38, 0, 0.16),
     0 10px 0 rgba(132, 84, 0, 0.18),
@@ -8851,7 +8851,7 @@ body::after {
   background: #ffffff !important;
   box-shadow:
     0 22px 44px rgba(80, 52, 4, 0.22),
-    0 0 0 1px rgba(255, 244, 206, 0.9) inset !important;
+    0 0 0 1px rgba(183, 199, 255, 0.9) inset !important;
 }
 
 .status,
@@ -9081,11 +9081,11 @@ body::after {
 }
 
 .proofStats .metric:nth-child(2) {
-  background: linear-gradient(180deg, #ffffff, #fff3d9) !important;
+  background: linear-gradient(180deg, #ffffff, #f2f7ff) !important;
 }
 
 .proofStats .metric:nth-child(3) {
-  background: linear-gradient(180deg, #ffffff, #fff6df) !important;
+  background: linear-gradient(180deg, #ffffff, #f2f7ff) !important;
 }
 
 .proofStats .metric:nth-child(4) {
@@ -9139,7 +9139,7 @@ body::after {
 }
 
 .proofDetailTable div:nth-child(4n + 4) {
-  background: #fff3d9 !important;
+  background: #f2f7ff !important;
 }
 
 @media (max-width: 1180px) {
@@ -10434,7 +10434,7 @@ button,
   }
 }
 
-/* White + KEY yellow marketplace pass. */
+/* White + blue marketplace pass. */
 :root {
   color-scheme: light !important;
   --bg: #ffffff !important;
@@ -11457,7 +11457,7 @@ footer {
   }
 }
 
-/* Final blue purge: remove remaining yellow/cream leaks and refit KEY cards. */
+/* Final blue purge: remove remaining yellow or cream leaks and refit KEY cards. */
 :root {
   --gold: #5477ff !important;
   --gold-dark: #2546d8 !important;
@@ -11750,7 +11750,7 @@ textarea,
   background: #f2f7ff !important;
 }
 
-/* Final absolute blue/white pass. Keep this at EOF so no legacy yellow/cream theme leaks through. */
+/* Final absolute blue/white pass. Keep this at EOF so no legacy yellow or cream theme leaks through. */
 :root {
   --line: #5477ff !important;
   --line-soft: #b7c7ff !important;
@@ -12479,5 +12479,954 @@ button:hover:not(:disabled) {
 @media (max-width: 620px) {
   .topbar nav {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+/* Theme switch + final card/gallery cleanup. This block intentionally wins over all older passes. */
+:root,
+body[data-theme="light"] {
+  --ui-bg: #ffffff;
+  --ui-surface: #ffffff;
+  --ui-soft: #f2f7ff;
+  --ui-soft-2: #eaf2ff;
+  --ui-ink: #07111f;
+  --ui-muted: #34496f;
+  --ui-line: #5477ff;
+  --ui-line-soft: #b7c7ff;
+  --ui-line-strong: #2546d8;
+}
+
+body[data-theme="dark"] {
+  --ui-bg: #061020;
+  --ui-surface: #0b1730;
+  --ui-soft: #101f3d;
+  --ui-soft-2: #152a52;
+  --ui-ink: #f7fbff;
+  --ui-muted: #b7c7ee;
+  --ui-line: #6e8cff;
+  --ui-line-soft: #314d9f;
+  --ui-line-strong: #91a8ff;
+}
+
+html,
+body,
+#root {
+  background: var(--ui-bg) !important;
+  color: var(--ui-ink) !important;
+}
+
+body,
+.shell,
+.topbar,
+.status,
+.statStrip,
+.page,
+.page > section,
+.page > article,
+.card,
+.heroMini,
+.mintPanel,
+.progressCard,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.vaultPanel,
+.signatureInfo,
+.article,
+.keyspaceHero,
+.keyspaceBlock,
+.marketHero,
+.marketCollection,
+.marketStatusPanel,
+.keyspaceActions,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.liveListings,
+footer {
+  background: var(--ui-surface) !important;
+  border-color: var(--ui-line) !important;
+  color: var(--ui-ink) !important;
+  box-shadow: none !important;
+}
+
+.stat,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.actionBox,
+.simIdentityCard,
+.selectedHead,
+.proofItem,
+.proofStats,
+.proofStats .metric,
+.progressStats,
+.progressStats .metric,
+.collectionStats,
+.collectionStats .metric,
+.marketStatusPanel .metric,
+.actionStatusGrid .metric,
+.proofDetailTable,
+.proofDetailTable div,
+.tableLite,
+.tableLite div,
+.identityRows,
+.actionHint,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span,
+input,
+select,
+textarea {
+  background: var(--ui-soft) !important;
+  border-color: var(--ui-line-soft) !important;
+  color: var(--ui-ink) !important;
+  box-shadow: none !important;
+}
+
+.proofDetailTable div:nth-child(odd),
+.proofDetailTable div:nth-child(even),
+.proofDetailTable div:nth-child(4n + 1),
+.proofDetailTable div:nth-child(4n + 2),
+.proofDetailTable div:nth-child(4n + 3),
+.proofDetailTable div:nth-child(4n + 4),
+.tableLite div:nth-child(odd),
+.tableLite div:nth-child(even),
+.tableLite div:nth-child(4n + 1),
+.tableLite div:nth-child(4n + 2),
+.tableLite div:nth-child(4n + 3),
+.tableLite div:nth-child(4n + 4) {
+  background: var(--ui-soft) !important;
+  border-color: var(--ui-line-soft) !important;
+}
+
+.cardTitle,
+.eyebrow,
+.previewBadge,
+.status,
+.brandName,
+.brandSub,
+.marketNote,
+.keyspaceWarning,
+.originLine,
+.keyspaceRatio,
+.stat small,
+.metric small,
+.proofDetailTable small,
+.tableLite small,
+.actionStatusGrid .metric small {
+  color: var(--ui-line-strong) !important;
+}
+
+.brandName {
+  color: #5d7cff !important;
+  font-family: "IBM Plex Mono", "Courier New", monospace !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.32em !important;
+  text-shadow: 1px 1px 0 #1a2c86, 2px 2px 0 rgba(45, 62, 169, 0.34) !important;
+}
+
+body[data-theme="dark"] .brandName {
+  color: #91a8ff !important;
+  text-shadow: 1px 1px 0 #18255a, 2px 2px 0 rgba(145, 168, 255, 0.24) !important;
+}
+
+.walletSlot {
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+}
+
+.themeToggle,
+.connect,
+.topbar nav button,
+button,
+.miniBtn,
+.primary,
+.outline,
+.ghost,
+.walletMenu button,
+.marketFilters button,
+.marketNftInfo button {
+  background: var(--ui-surface) !important;
+  border-color: var(--ui-line) !important;
+  color: var(--ui-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.themeToggle {
+  min-width: 0 !important;
+  width: 62px !important;
+  min-height: 44px !important;
+  padding: 0 6px !important;
+  font-size: 10px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.topbar nav button.on,
+.topbar nav button:hover,
+.connect:hover,
+.themeToggle:hover,
+.primary,
+.heroActions button:first-child,
+.marketFilters button.on,
+.marketNftInfo button:not(:disabled) {
+  background: var(--ui-line) !important;
+  border-color: var(--ui-line-strong) !important;
+  color: #ffffff !important;
+}
+
+.topbar nav button.on::after,
+.cardTitle::after,
+.eyebrow::after,
+.status span,
+.bar i {
+  background: var(--ui-line) !important;
+  border-color: var(--ui-line) !important;
+}
+
+.bar {
+  background: var(--ui-soft-2) !important;
+  border-color: var(--ui-line-soft) !important;
+}
+
+.previewBadge,
+.pill,
+.progressPercent {
+  background: var(--ui-soft) !important;
+  border-color: var(--ui-line) !important;
+  color: var(--ui-line-strong) !important;
+}
+
+.keycardPreviewGrid .listingCard,
+.keycardPreviewGrid .listingCard.keycardOnly,
+.listingCard.keycardOnly,
+.marketplaceGrid .marketNftCard,
+.marketNftCard,
+.marketNftArt {
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.keycardPreviewGrid .listingCard.keycardOnly,
+.listingCard.keycardOnly {
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+}
+
+.marketNftCard {
+  padding: 0 !important;
+  gap: 8px !important;
+  overflow: visible !important;
+}
+
+.marketNftArt {
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: visible !important;
+}
+
+.marketNftInfo {
+  background: var(--ui-soft) !important;
+  border: 1px solid var(--ui-line-soft) !important;
+  color: var(--ui-ink) !important;
+}
+
+.webKeyCard {
+  --rank-glow: #5477ff;
+  --rank-deep: #2546d8;
+  padding: 10px !important;
+  border: 8px solid var(--rank-glow) !important;
+  outline: 2px solid color-mix(in srgb, var(--rank-glow), #ffffff 35%) !important;
+  outline-offset: -15px !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.98), rgba(217,226,242,0.92) 36%, rgba(255,255,255,0.98) 58%, rgba(183,196,216,0.92)) !important;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.9) inset,
+    0 0 20px color-mix(in srgb, var(--rank-glow), transparent 28%),
+    0 0 38px color-mix(in srgb, var(--rank-glow), transparent 70%) !important;
+  overflow: visible !important;
+}
+
+.webKeyCard.normal {
+  --rank-glow: #9aa8bb !important;
+  --rank-deep: #46546a !important;
+}
+
+.webKeyCard.clean {
+  --rank-glow: #27c878 !important;
+  --rank-deep: #0b6f3c !important;
+}
+
+.webKeyCard.golden {
+  --rank-glow: #37bdf8 !important;
+  --rank-deep: #075f98 !important;
+}
+
+.webKeyCard.quantum {
+  --rank-glow: #6f73ff !important;
+  --rank-deep: #3039c6 !important;
+}
+
+.webKeyCard.genesis {
+  --rank-glow: #ff6fb4 !important;
+  --rank-deep: #a92568 !important;
+}
+
+.webKeyCardInner {
+  border: 2px solid color-mix(in srgb, var(--rank-glow), #ffffff 18%) !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.96), transparent 25%),
+    linear-gradient(135deg, rgba(255,255,255,0.98), rgba(218,228,244,0.86) 40%, rgba(255,255,255,0.96) 62%, rgba(191,205,224,0.88)) !important;
+  box-shadow: inset 0 0 22px color-mix(in srgb, var(--rank-glow), transparent 82%) !important;
+}
+
+body[data-theme="dark"] .webKeyCard {
+  background:
+    linear-gradient(135deg, rgba(34,46,70,0.98), rgba(12,23,45,0.94) 36%, rgba(41,57,88,0.98) 58%, rgba(8,16,32,0.94)) !important;
+}
+
+body[data-theme="dark"] .webKeyCardInner {
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.16), transparent 25%),
+    linear-gradient(135deg, rgba(20,35,64,0.98), rgba(10,20,40,0.9) 42%, rgba(26,44,76,0.98)) !important;
+}
+
+body[data-theme="dark"] .cardIdentity b,
+body[data-theme="dark"] .cardDetails b {
+  color: #f7fbff !important;
+}
+
+@media (max-width: 1180px) {
+  .walletSlot {
+    grid-template-columns: 74px minmax(0, 1fr) !important;
+  }
+
+  .themeToggle {
+    width: 74px !important;
+  }
+}
+
+/* Final blue/white UI lock. Keep at EOF: it removes the last warm surfaces, fixes nav sizing,
+   and leaves KEY identity cards as the only framed art in the preview grids. */
+:root,
+body[data-theme="light"] {
+  --ui-bg: #ffffff;
+  --ui-surface: #ffffff;
+  --ui-soft: #eef5ff;
+  --ui-soft-2: #f7fbff;
+  --ui-ink: #07111f;
+  --ui-muted: #33476b;
+  --ui-line: #5477ff;
+  --ui-line-soft: #b7c7ff;
+  --ui-line-strong: #2147df;
+}
+
+body[data-theme="dark"] {
+  --ui-bg: #061020;
+  --ui-surface: #0a1530;
+  --ui-soft: #101f3d;
+  --ui-soft-2: #152b55;
+  --ui-ink: #f7fbff;
+  --ui-muted: #b7c7ee;
+  --ui-line: #7f97ff;
+  --ui-line-soft: #314d9f;
+  --ui-line-strong: #a9baff;
+}
+
+html,
+body,
+#root {
+  background: var(--ui-bg) !important;
+  color: var(--ui-ink) !important;
+}
+
+.shell {
+  width: min(1580px, calc(100vw - 48px)) !important;
+  margin: 0 auto !important;
+  padding: 20px 0 22px !important;
+}
+
+.topbar {
+  display: grid !important;
+  grid-template-columns: minmax(230px, 0.18fr) minmax(680px, 1fr) minmax(210px, 0.18fr) !important;
+  grid-template-areas: "brand nav wallet" !important;
+  align-items: center !important;
+  gap: 18px !important;
+  width: 100% !important;
+  padding: 14px 0 !important;
+  margin: 0 0 14px !important;
+  background: var(--ui-surface) !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.brand {
+  grid-area: brand !important;
+  min-width: 0 !important;
+}
+
+.brandIcon {
+  width: 46px !important;
+  height: 56px !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.brandIcon img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  background: transparent !important;
+}
+
+.brandName {
+  color: #5d7cff !important;
+  font-family: Impact, "Arial Black", "IBM Plex Mono", monospace !important;
+  font-size: clamp(20px, 1.45vw, 30px) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.34em !important;
+  line-height: 1 !important;
+  text-shadow:
+    1px 1px 0 #172c90,
+    2px 2px 0 rgba(30, 55, 168, 0.34) !important;
+}
+
+.brandSub {
+  color: var(--ui-muted) !important;
+  font-size: 13px !important;
+}
+
+.topbar nav {
+  grid-area: nav !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(82px, 1fr)) !important;
+  height: 48px !important;
+  border: 2px solid var(--ui-line) !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  background: var(--ui-surface) !important;
+  box-shadow: none !important;
+}
+
+.topbar nav button,
+.connect,
+.themeToggle,
+button,
+.primary,
+.outline,
+.ghost,
+.miniBtn,
+.copyBtn,
+.refreshBtn,
+.actionMini,
+.stepButtons button,
+.mintActions button,
+.toolbar button,
+.pager button,
+.marketFilters button,
+.marketNftInfo button,
+.walletMenu button {
+  border: 2px solid var(--ui-line) !important;
+  border-radius: 0 !important;
+  background: var(--ui-surface) !important;
+  color: var(--ui-ink) !important;
+  box-shadow: none !important;
+}
+
+.topbar nav button {
+  min-width: 0 !important;
+  height: 100% !important;
+  padding: 0 8px !important;
+  border-width: 0 1px 0 0 !important;
+  border-color: var(--ui-line-soft) !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+}
+
+.topbar nav button:last-child {
+  border-right: 0 !important;
+}
+
+.topbar nav button.on,
+.topbar nav button:hover,
+.themeToggle:hover,
+.connect:hover,
+.primary,
+.heroActions button:first-child,
+.marketFilters button.on,
+.marketNftInfo button:not(:disabled) {
+  background: var(--ui-line) !important;
+  border-color: var(--ui-line) !important;
+  color: #ffffff !important;
+}
+
+.topbar nav button.on::after {
+  display: none !important;
+}
+
+.walletSlot {
+  grid-area: wallet !important;
+  display: grid !important;
+  grid-template-columns: 58px minmax(126px, 1fr) !important;
+  gap: 8px !important;
+  align-items: stretch !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.themeToggle,
+.connect {
+  min-height: 48px !important;
+  height: 48px !important;
+  padding: 0 10px !important;
+  min-width: 0 !important;
+  font-size: 12px !important;
+  letter-spacing: 0.1em !important;
+}
+
+.themeToggle {
+  width: 58px !important;
+}
+
+.connect {
+  width: 100% !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.walletMenu {
+  z-index: 9999 !important;
+  top: calc(100% + 8px) !important;
+  right: 0 !important;
+  background: var(--ui-surface) !important;
+  border: 2px solid var(--ui-line) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 18px 50px rgba(28, 61, 160, 0.18) !important;
+}
+
+.walletMenu button {
+  background: var(--ui-surface) !important;
+  border: 1px solid var(--ui-line-soft) !important;
+}
+
+.status,
+.statStrip,
+.page > section,
+.page > article,
+.card,
+.heroMini,
+.mintPanel,
+.progressCard,
+.signatureInfo,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.vaultPanel,
+.article,
+.keyspaceHero,
+.keyspaceBlock,
+.marketHero,
+.marketCollection,
+.marketStatusPanel,
+.keyspaceActions,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.liveListings,
+footer {
+  background: var(--ui-surface) !important;
+  border: 2px solid var(--ui-line) !important;
+  border-radius: 0 !important;
+  color: var(--ui-ink) !important;
+  box-shadow: none !important;
+}
+
+.stat,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.actionBox,
+.simIdentityCard,
+.selectedHead,
+.proofItem,
+.proofStats,
+.proofStats .metric,
+.progressStats,
+.progressStats .metric,
+.collectionStats,
+.collectionStats .metric,
+.marketStatusPanel .metric,
+.actionStatusGrid .metric,
+.proofDetailTable,
+.proofDetailTable div,
+.tableLite,
+.tableLite div,
+.identityRows,
+.actionHint,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span,
+.field,
+input,
+select,
+textarea {
+  background: var(--ui-soft) !important;
+  border-color: var(--ui-line-soft) !important;
+  color: var(--ui-ink) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.proofStats,
+.progressStats,
+.collectionStats,
+.actionStatusGrid {
+  border: 2px solid var(--ui-line) !important;
+  background: var(--ui-surface) !important;
+}
+
+.proofStats .metric:nth-child(odd),
+.progressStats .metric:nth-child(odd),
+.collectionStats .metric:nth-child(odd),
+.actionStatusGrid .metric:nth-child(odd),
+.proofDetailTable div:nth-child(odd),
+.tableLite div:nth-child(odd) {
+  background: var(--ui-soft-2) !important;
+}
+
+.proofStats .metric:nth-child(even),
+.progressStats .metric:nth-child(even),
+.collectionStats .metric:nth-child(even),
+.actionStatusGrid .metric:nth-child(even),
+.proofDetailTable div:nth-child(even),
+.tableLite div:nth-child(even) {
+  background: var(--ui-soft) !important;
+}
+
+.cardTitle,
+.eyebrow,
+.previewBadge,
+.status,
+.brandSub,
+.marketNote,
+.keyspaceWarning,
+.originLine,
+.keyspaceRatio,
+.stat small,
+.metric small,
+.proofDetailTable small,
+.tableLite small,
+.actionStatusGrid .metric small {
+  color: var(--ui-line-strong) !important;
+}
+
+.cardTitle::after,
+.eyebrow::after,
+.status span,
+.bar i {
+  background: var(--ui-line) !important;
+  border-color: var(--ui-line) !important;
+}
+
+.bar {
+  background: var(--ui-soft-2) !important;
+  border-color: var(--ui-line-soft) !important;
+}
+
+.heroMini h1,
+.contentPage h1,
+.keyspaceHero h1,
+.marketHero h1 {
+  font-size: clamp(42px, 4.2vw, 78px) !important;
+  line-height: 0.98 !important;
+}
+
+.heroMini p,
+.contentPage p,
+.keyspaceHero p,
+.marketHero p,
+.proofIntro p {
+  color: var(--ui-muted) !important;
+}
+
+.progressHead h2,
+.mintProgressTitle {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.keycardPreviewGrid,
+.marketplaceGrid {
+  align-items: start !important;
+  gap: 18px !important;
+}
+
+.keycardPreviewGrid .listingCard,
+.keycardPreviewGrid .listingCard.keycardOnly,
+.listingCard.keycardOnly,
+.marketplaceGrid .marketNftCard,
+.marketNftCard,
+.marketNftArt {
+  border: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+.keycardPreviewGrid .listingCard.keycardOnly,
+.listingCard.keycardOnly,
+.marketNftArt {
+  display: grid !important;
+  place-items: center !important;
+}
+
+.marketNftCard {
+  gap: 10px !important;
+}
+
+.marketNftInfo {
+  background: var(--ui-soft) !important;
+  border: 1px solid var(--ui-line-soft) !important;
+  border-radius: 0 !important;
+  color: var(--ui-ink) !important;
+  padding: 12px !important;
+}
+
+.webKeyCard {
+  --rank-glow: #5477ff;
+  --rank-deep: #2546d8;
+  container-type: inline-size !important;
+  width: min(100%, 280px) !important;
+  aspect-ratio: 3 / 4.18 !important;
+  padding: 12px !important;
+  border: 10px solid var(--rank-glow) !important;
+  outline: 2px solid color-mix(in srgb, var(--rank-glow), #ffffff 20%) !important;
+  outline-offset: -18px !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.99), rgba(221,232,248,0.95) 36%, rgba(255,255,255,0.99) 58%, rgba(188,203,224,0.95)) !important;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.92) inset,
+    0 0 18px color-mix(in srgb, var(--rank-glow), transparent 20%),
+    0 0 34px color-mix(in srgb, var(--rank-glow), transparent 68%) !important;
+  overflow: hidden !important;
+}
+
+.webKeyCard.normal {
+  --rank-glow: #9aa8bb !important;
+  --rank-deep: #46546a !important;
+}
+
+.webKeyCard.clean {
+  --rank-glow: #25c77a !important;
+  --rank-deep: #0b6f3c !important;
+}
+
+.webKeyCard.golden {
+  --rank-glow: #37bdf8 !important;
+  --rank-deep: #075f98 !important;
+}
+
+.webKeyCard.quantum {
+  --rank-glow: #6f73ff !important;
+  --rank-deep: #3039c6 !important;
+}
+
+.webKeyCard.genesis {
+  --rank-glow: #ff6fb4 !important;
+  --rank-deep: #a92568 !important;
+}
+
+.webKeyCardInner {
+  height: 100% !important;
+  display: grid !important;
+  grid-template-rows: auto 1fr auto 14px auto 1fr auto !important;
+  align-items: center !important;
+  gap: 0 !important;
+  padding: 11% 9% 8% !important;
+  border: 3px solid color-mix(in srgb, var(--rank-glow), #ffffff 14%) !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.96), transparent 25%),
+    linear-gradient(135deg, rgba(255,255,255,0.98), rgba(219,230,246,0.88) 42%, rgba(255,255,255,0.96) 62%, rgba(192,207,228,0.9)) !important;
+  box-shadow: inset 0 0 24px color-mix(in srgb, var(--rank-glow), transparent 80%) !important;
+}
+
+.cardTop,
+.cardSub,
+.cardFooter,
+.cardDetails span {
+  color: var(--rank-deep) !important;
+  font-family: "IBM Plex Mono", "Courier New", monospace !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.26em !important;
+  line-height: 1.18 !important;
+}
+
+.cardTop {
+  align-self: start !important;
+  text-align: center !important;
+  font-size: clamp(7px, 3.3cqw, 12px) !important;
+}
+
+.cardIdentity {
+  min-height: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  padding-top: 3% !important;
+}
+
+.cardIdentity b {
+  max-width: 100% !important;
+  color: var(--ui-ink) !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: clamp(22px, 13.6cqw, 46px) !important;
+  font-weight: 700 !important;
+  line-height: 0.96 !important;
+  letter-spacing: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  text-shadow: none !important;
+}
+
+.cardSub {
+  text-align: center !important;
+  font-size: clamp(6px, 2.4cqw, 10px) !important;
+}
+
+.cardDetails {
+  display: grid !important;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr) !important;
+  gap: 0 !important;
+  border: 2px solid var(--rank-glow) !important;
+  border-radius: 0 !important;
+  padding: 7% 6% !important;
+  background: rgba(255, 255, 255, 0.36) !important;
+}
+
+.cardDetails span,
+.cardDetails b {
+  min-width: 0 !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--rank-glow), transparent 42%) !important;
+  padding: 4.2% 0 !important;
+  font-size: clamp(5.8px, 2.4cqw, 9.5px) !important;
+  line-height: 1.05 !important;
+}
+
+.cardDetails span:nth-last-child(2),
+.cardDetails b:last-child {
+  border-bottom: 0 !important;
+}
+
+.cardDetails b {
+  color: var(--ui-ink) !important;
+  font-family: "IBM Plex Mono", "Courier New", monospace !important;
+  font-weight: 900 !important;
+  text-align: right !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.cardFooter {
+  justify-self: center !important;
+  border: 2px solid var(--rank-glow) !important;
+  border-radius: 0 !important;
+  padding: 4% 8% !important;
+  text-align: center !important;
+  font-size: clamp(5.8px, 2.35cqw, 9.5px) !important;
+  background: rgba(255, 255, 255, 0.35) !important;
+}
+
+body[data-theme="dark"] .webKeyCard {
+  background:
+    linear-gradient(135deg, rgba(34,46,70,0.98), rgba(12,23,45,0.94) 36%, rgba(41,57,88,0.98) 58%, rgba(8,16,32,0.94)) !important;
+}
+
+body[data-theme="dark"] .webKeyCardInner {
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.16), transparent 25%),
+    linear-gradient(135deg, rgba(20,35,64,0.98), rgba(10,20,40,0.9) 42%, rgba(26,44,76,0.98)) !important;
+}
+
+body[data-theme="dark"] .cardIdentity b,
+body[data-theme="dark"] .cardDetails b {
+  color: #f7fbff !important;
+}
+
+@media (max-width: 1180px) {
+  .shell {
+    width: min(100vw - 28px, 980px) !important;
+  }
+
+  .topbar {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "brand"
+      "nav"
+      "wallet" !important;
+  }
+
+  .topbar nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    height: auto !important;
+  }
+
+  .topbar nav button {
+    min-height: 42px !important;
+  }
+
+  .walletSlot {
+    justify-self: stretch !important;
+    grid-template-columns: 76px minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .shell {
+    width: calc(100vw - 18px) !important;
+  }
+
+  .topbar nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .walletSlot {
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+  }
+
+  .heroMini h1,
+  .contentPage h1,
+  .keyspaceHero h1,
+  .marketHero h1 {
+    font-size: clamp(34px, 12vw, 52px) !important;
   }
 }

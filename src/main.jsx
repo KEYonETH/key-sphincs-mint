@@ -224,7 +224,7 @@ function useRoute() {
   return [route, go];
 }
 
-function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWalletMenu }) {
+function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWalletMenu, theme, toggleTheme }) {
   const nav = ROUTES;
   const walletLabel = wallet ? short(wallet) : 'connect';
   return <header className="topbar">
@@ -234,6 +234,7 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{NAV_LABELS[n] || n}</button>)}</nav>
     <div className="walletSlot">
+      <button className="themeToggle" onClick={toggleTheme} aria-label="Toggle color theme">{theme === 'dark' ? 'light' : 'dark'}</button>
       <button className="connect" onClick={() => {
         if (!wallet && walletProviders.length > 1) setWalletMenu((open) => !open);
         else connect(walletProviders[0]);
@@ -1272,6 +1273,14 @@ function App() {
   const [walletMenu, setWalletMenu] = useState(false);
   const [selectedWalletProvider, setSelectedWalletProvider] = useState(null);
   const [data, setData] = useState(FALLBACK);
+  const [theme, setTheme] = useState(() => localStorage.getItem('keyTheme') || 'light');
+
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    localStorage.setItem('keyTheme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
 
   async function refresh() {
     try {
@@ -1326,7 +1335,7 @@ function App() {
     return <Home go={go} data={data} />;
   }, [route, wallet, data]);
 
-  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} walletProviders={walletProviders} walletMenu={walletMenu} setWalletMenu={setWalletMenu} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
+  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} walletProviders={walletProviders} walletMenu={walletMenu} setWalletMenu={setWalletMenu} theme={theme} toggleTheme={toggleTheme} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);
