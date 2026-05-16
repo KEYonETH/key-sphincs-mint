@@ -11,7 +11,7 @@
   --silver: #d8d8d1;
   --silver-dim: #9c9c96;
   --ok: #b7c7ad;
-  --warn: #d8c28a;
+  --warn: #b7c7ff;
   --danger: #e6a1a1;
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -3352,15 +3352,15 @@ footer {
 
 /* Ivory mint terminal: compact, simple, gold-framed */
 :root {
-  --paper: #f8f3e7;
-  --panel: #fffbf1;
-  --panel-soft: #fffdf7;
-  --gold: #c79a2c;
-  --gold-dark: #8a6514;
+  --paper: #ffffff;
+  --panel: #f2f7ff;
+  --panel-soft: #ffffff;
+  --gold: #5477ff;
+  --gold-dark: #2546d8;
   --ink: #17130f;
   --muted: #6d665a;
   --line: #ddcfab;
-  --line-strong: #c79a2c;
+  --line-strong: #5477ff;
   --white: #ffffff;
   --shadow: 0 18px 60px rgba(94, 70, 16, 0.12);
 }
@@ -3369,9 +3369,9 @@ body {
   color: var(--ink);
   background:
     radial-gradient(ellipse at 50% -10%, rgba(255,255,255,0.95), transparent 28%),
-    radial-gradient(ellipse at 18% 48%, rgba(199,154,44,0.08), transparent 30%),
-    radial-gradient(ellipse at 88% 52%, rgba(199,154,44,0.07), transparent 30%),
-    linear-gradient(180deg, #fffdf7 0%, #f8f3e7 100%);
+    radial-gradient(ellipse at 18% 48%, rgba(84,119,255,0.08), transparent 30%),
+    radial-gradient(ellipse at 88% 52%, rgba(84,119,255,0.07), transparent 30%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
 }
 
 body::before,
@@ -3413,7 +3413,7 @@ body::after {
   height: 44px;
   border: 2px solid var(--line-strong);
   border-radius: 5px;
-  background: #fffaf0;
+  background: #ffffff;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.82);
 }
 
@@ -3458,7 +3458,7 @@ nav button:first-child {
 
 nav button.on {
   color: var(--ink);
-  background: linear-gradient(180deg, rgba(199,154,44,0.16), rgba(255,255,255,0));
+  background: linear-gradient(180deg, rgba(84,119,255,0.16), rgba(255,255,255,0));
 }
 
 nav button.on::after {
@@ -3487,7 +3487,7 @@ nav button.on::after {
 }
 
 .primary {
-  color: #fffdf7;
+  color: #ffffff;
   background: linear-gradient(180deg, #d5aa3c, #ad7d17);
   border-color: var(--gold-dark);
 }
@@ -3642,7 +3642,7 @@ footer {
 .pill {
   color: var(--gold-dark);
   border: 1px solid var(--line);
-  background: #fffaf0;
+  background: #ffffff;
 }
 
 .bar {
@@ -3760,7 +3760,7 @@ footer {
 
 .notice {
   border: 1px solid var(--line);
-  background: #fff7e4;
+  background: #f2f7ff;
   color: var(--gold-dark);
   border-radius: 4px;
 }
@@ -3907,7 +3907,7 @@ footer {
 
 .proofItem.selected {
   border-color: var(--gold);
-  background: #fff7e4;
+  background: #f2f7ff;
 }
 
 .selectedHead h2 {
@@ -3970,15 +3970,15 @@ footer {
 /* Compact ivory/gold production pass. Keep this last so older theme blocks cannot leak through. */
 :root {
   color-scheme: light;
-  --bg: #f8f3e7;
-  --panel: #fffdf7;
-  --panel-soft: #fffbf1;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel-soft: #f2f7ff;
   --ink: #17130f;
   --muted: #6d665a;
   --line: #ddcfab;
-  --line-strong: #c79a2c;
-  --gold: #c79a2c;
-  --gold-dark: #8a6514;
+  --line-strong: #5477ff;
+  --gold: #5477ff;
+  --gold-dark: #2546d8;
   --success: #668a4a;
 }
 
@@ -3988,7 +3988,7 @@ body,
   min-height: 100%;
   background:
     radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.9), transparent 34%),
-    linear-gradient(90deg, rgba(199, 154, 44, 0.08), transparent 15%, transparent 85%, rgba(199, 154, 44, 0.08)),
+    linear-gradient(90deg, rgba(84, 119, 255, 0.08), transparent 15%, transparent 85%, rgba(84, 119, 255, 0.08)),
     var(--bg) !important;
   color: var(--ink);
 }
@@ -4020,7 +4020,7 @@ body::after,
   padding: 0;
   border: 2px solid var(--gold);
   border-radius: 8px;
-  background: rgba(255, 253, 247, 0.98);
+  background: rgba(255, 255, 255, 0.98);
   box-shadow:
     0 24px 60px rgba(138, 101, 20, 0.14),
     0 0 0 1px rgba(255, 255, 255, 0.8) inset;
@@ -4033,7 +4033,7 @@ body::after,
   gap: 14px;
   padding: 14px 20px;
   border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #fffdf7, #fffbf1);
+  background: linear-gradient(180deg, #ffffff, #f2f7ff);
 }
 
 .brand {
@@ -4045,7 +4045,7 @@ body::after,
   height: 38px;
   border: 2px solid var(--gold);
   border-radius: 5px;
-  background: #fffdf7;
+  background: #ffffff;
   box-shadow: inset 0 0 0 1px #f0e5c6;
 }
 
@@ -4070,7 +4070,7 @@ nav {
   min-height: 38px;
   border: 2px solid var(--line);
   border-radius: 5px;
-  background: #fffdf7;
+  background: #ffffff;
 }
 
 nav button,
@@ -4087,13 +4087,13 @@ nav button:hover,
 .connect:hover,
 button:hover {
   border-color: var(--gold);
-  background: #fff7e4;
+  background: #f2f7ff;
   transform: translateY(-1px);
 }
 
 nav button.active {
   color: var(--ink);
-  background: linear-gradient(180deg, #fff7e4, #fffdf7);
+  background: linear-gradient(180deg, #f2f7ff, #ffffff);
   box-shadow: inset 0 -2px 0 var(--gold);
 }
 
@@ -4107,7 +4107,7 @@ nav button.active::after {
 .connect {
   min-height: 38px;
   border: 2px solid var(--line);
-  background: #fffdf7;
+  background: #ffffff;
 }
 
 .status {
@@ -4115,7 +4115,7 @@ nav button.active::after {
   padding: 0 20px;
   border-top: 0;
   border-bottom: 1px solid var(--line);
-  background: #fffbf1;
+  background: #f2f7ff;
   color: var(--muted);
   font-size: 11px;
   letter-spacing: 0.12em;
@@ -4154,7 +4154,7 @@ nav button.active::after {
 .statStrip {
   border: 2px solid var(--line-strong);
   border-radius: 6px;
-  background: rgba(255, 253, 247, 0.9);
+  background: rgba(255, 255, 255, 0.9);
   box-shadow: 0 10px 26px rgba(138, 101, 20, 0.08);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
@@ -4205,7 +4205,7 @@ nav button.active::after {
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fff7e4;
+  background: #f2f7ff;
   color: var(--gold-dark);
   font-size: 11px;
 }
@@ -4272,7 +4272,7 @@ nav button.active::after {
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fffdf7;
+  background: #ffffff;
 }
 
 .mintFacts b {
@@ -4311,7 +4311,7 @@ nav button.active::after {
 .buttonStack button:last-child,
 .heroActions .primary {
   color: #17130f;
-  background: linear-gradient(180deg, #fffdf7, #d7bd72 52%, #c79a2c);
+  background: linear-gradient(180deg, #ffffff, #8ea5ff 52%, #5477ff);
   border-color: var(--gold-dark);
 }
 
@@ -4354,7 +4354,7 @@ nav button.active::after {
 
 .keyReveal div {
   padding: 9px 11px;
-  background: #fffdf7;
+  background: #ffffff;
   border: 1px solid var(--line);
 }
 
@@ -4477,8 +4477,8 @@ html,
 body,
 #root {
   background:
-    radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.96) 0, rgba(255, 250, 238, 0.56) 30%, transparent 54%),
-    linear-gradient(90deg, #f1e7cf 0, #fffdf7 13%, #fffdf7 87%, #f1e7cf 100%) !important;
+    radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.96) 0, rgba(242, 247, 255, 0.56) 30%, transparent 54%),
+    linear-gradient(90deg, #f1e7cf 0, #ffffff 13%, #ffffff 87%, #f1e7cf 100%) !important;
   color: #17130f !important;
 }
 
@@ -4491,10 +4491,10 @@ body {
   margin: 14px auto 18px;
   border: 3px solid var(--gold);
   border-radius: 7px;
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 251, 241, 0.99));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 255, 0.99));
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.95) inset,
-    0 0 0 7px rgba(199, 154, 44, 0.11),
+    0 0 0 7px rgba(84, 119, 255, 0.11),
     0 20px 46px rgba(73, 54, 14, 0.13);
   overflow: hidden;
 }
@@ -4549,7 +4549,7 @@ nav button,
 nav button.on,
 nav button.active {
   color: var(--ink);
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(221, 207, 171, 0.42));
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(183, 199, 255, 0.42));
 }
 
 nav button.on::after,
@@ -4592,7 +4592,7 @@ nav button.active::after {
   border: 2px solid var(--gold);
   border-radius: 5px;
   background:
-    linear-gradient(180deg, rgba(255, 253, 247, 0.97), rgba(255, 251, 241, 0.98));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.97), rgba(242, 247, 255, 0.98));
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.86) inset,
     0 10px 24px rgba(95, 69, 13, 0.08);
@@ -4632,8 +4632,8 @@ nav button.active::after {
 }
 
 .barFill {
-  background: linear-gradient(90deg, #8a6514, #d7bd72, #fff8dd);
-  box-shadow: 0 0 12px rgba(199, 154, 44, 0.38);
+  background: linear-gradient(90deg, #2546d8, #8ea5ff, #ffffff);
+  box-shadow: 0 0 12px rgba(84, 119, 255, 0.22);
 }
 
 .miniGrid.three {
@@ -4723,7 +4723,7 @@ nav button.active::after {
 .heroActions button:hover,
 .tableLite a:hover {
   border-color: var(--gold);
-  box-shadow: 0 0 0 3px rgba(199, 154, 44, 0.1);
+  box-shadow: 0 0 0 3px rgba(84, 119, 255, 0.1);
 }
 
 .buttonStack button:disabled,
@@ -4749,7 +4749,7 @@ button:disabled {
 .buttonStack button.primary,
 .heroActions .primary {
   color: #17130f !important;
-  background: linear-gradient(180deg, #fffaf0 0, #ead58a 45%, #c79a2c 100%) !important;
+  background: linear-gradient(180deg, #ffffff 0, #c8d6ff 45%, #5477ff 100%) !important;
   border-color: var(--gold-dark) !important;
 }
 
@@ -4794,7 +4794,7 @@ button:disabled {
   padding: 7px 9px;
   border-color: var(--line-strong);
   border-radius: 5px;
-  background: #fffdf7;
+  background: #ffffff;
   max-height: 96px;
   overflow: auto;
 }
@@ -4962,7 +4962,7 @@ button:disabled {
   min-height: 38px;
   padding: 8px 10px;
   border-color: var(--line);
-  background: #fffdf7;
+  background: #ffffff;
 }
 
 .tableLite b {
@@ -4975,7 +4975,7 @@ button:disabled {
   padding: 0 8px;
   font-size: 11px;
   color: var(--ink);
-  background: #fffdf7;
+  background: #ffffff;
 }
 
 .flowLine {
@@ -5047,14 +5047,14 @@ footer {
 
 /* Final precision pass: compact ivory/gold interface */
 :root {
-  --paper: #fffdf7;
-  --panel: #fffbf1;
+  --paper: #ffffff;
+  --panel: #f2f7ff;
   --ink: #17130f;
   --muted: #6d665a;
-  --gold: #c99616;
-  --gold-dark: #8a6514;
+  --gold: #5477ff;
+  --gold-dark: #2546d8;
   --line: #ddcfab;
-  --line-strong: #c99616;
+  --line-strong: #5477ff;
 }
 
 html,
@@ -5066,7 +5066,7 @@ body,
 body {
   background:
     radial-gradient(circle at 50% 0%, rgba(215, 170, 65, 0.16), transparent 31%),
-    linear-gradient(90deg, rgba(199, 154, 44, 0.12), transparent 12%, transparent 88%, rgba(199, 154, 44, 0.12)),
+    linear-gradient(90deg, rgba(84, 119, 255, 0.12), transparent 12%, transparent 88%, rgba(84, 119, 255, 0.12)),
     var(--paper) !important;
   color: var(--ink) !important;
 }
@@ -5075,7 +5075,7 @@ body {
   width: min(1040px, calc(100vw - 170px)) !important;
   margin: 12px auto 18px !important;
   overflow: hidden;
-  background: rgba(255, 253, 247, 0.95) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   border: 1px solid var(--gold) !important;
   border-top-width: 2px !important;
   border-radius: 8px !important;
@@ -5125,7 +5125,7 @@ body {
 .topbar nav {
   min-height: 36px !important;
   overflow: hidden;
-  background: rgba(255, 250, 240, 0.58) !important;
+  background: rgba(242, 247, 255, 0.58) !important;
   border: 1px solid var(--gold) !important;
   border-radius: 5px !important;
 }
@@ -5146,7 +5146,7 @@ body {
 }
 
 .topbar nav button.on {
-  background: linear-gradient(180deg, rgba(199, 154, 44, 0.14), rgba(255, 253, 247, 0.3)) !important;
+  background: linear-gradient(180deg, rgba(84, 119, 255, 0.14), rgba(242, 247, 255, 0.3)) !important;
 }
 
 .connect {
@@ -5184,7 +5184,7 @@ body {
 .proofDetailCard,
 .article,
 .statStrip {
-  background: rgba(255, 253, 247, 0.74) !important;
+  background: rgba(255, 255, 255, 0.74) !important;
   border: 1px solid var(--gold) !important;
   border-radius: 6px !important;
   box-shadow: none !important;
@@ -5303,7 +5303,7 @@ body {
 }
 
 .bar i {
-  background: linear-gradient(90deg, #c99616, #f4d36f) !important;
+  background: linear-gradient(90deg, #5477ff, #9fb2ff) !important;
   border-radius: inherit !important;
   transition: width 0.45s ease !important;
 }
@@ -5398,7 +5398,7 @@ body {
 .buttonStack button.primary:not(:disabled),
 .buttonStack button:last-child:not(:disabled) {
   color: var(--ink) !important;
-  background: linear-gradient(180deg, #fff2a8, #c99616) !important;
+  background: linear-gradient(180deg, #eaf2ff, #5477ff) !important;
 }
 
 .notice {
@@ -5696,15 +5696,15 @@ button:disabled {
 /* Final compact ivory/gold interface pass */
 :root {
   --page-bg: #f8f1df;
-  --panel: #fffdf7;
-  --panel-soft: #fff8e8;
-  --gold: #c7961c;
-  --gold-dark: #805b08;
-  --gold-soft: #ead9ad;
+  --panel: #ffffff;
+  --panel-soft: #f2f7ff;
+  --gold: #5477ff;
+  --gold-dark: #2546d8;
+  --gold-soft: #dbe6ff;
   --ink: #11100d;
   --muted: #6c6254;
   --line: #dec99a;
-  --line-strong: #c7961c;
+  --line-strong: #5477ff;
   --success: #6f9854;
 }
 
@@ -5716,8 +5716,8 @@ body,
 
 body {
   background:
-    radial-gradient(circle at 50% -12%, rgba(199, 150, 28, 0.13), transparent 36%),
-    linear-gradient(90deg, #efe4cc 0%, #fffdf7 16%, #fffdf7 84%, #efe4cc 100%) !important;
+    radial-gradient(circle at 50% -12%, rgba(84, 119, 255, 0.10), transparent 36%),
+    linear-gradient(90deg, #ffffff 0%, #ffffff 16%, #ffffff 84%, #ffffff 100%) !important;
   color: var(--ink) !important;
   font-size: 14px !important;
 }
@@ -5734,7 +5734,7 @@ body::after,
   overflow: hidden !important;
   border: 1px solid var(--gold) !important;
   border-radius: 8px !important;
-  background: rgba(255, 253, 247, 0.93) !important;
+  background: rgba(255, 255, 255, 0.93) !important;
   box-shadow: 0 12px 34px rgba(85, 62, 10, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.72) !important;
 }
 
@@ -5795,7 +5795,7 @@ nav {
   overflow: hidden !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 5px !important;
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.96), rgba(252, 244, 226, 0.86)) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(242, 247, 255, 0.86)) !important;
 }
 
 .keyspaceTeaser {
@@ -5805,7 +5805,7 @@ nav {
   padding: 12px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 5px !important;
-  background: rgba(255, 248, 232, 0.7) !important;
+  background: rgba(242, 247, 255, 0.7) !important;
 }
 
 .keyspaceTeaser b {
@@ -5851,7 +5851,7 @@ nav {
   padding: 22px 26px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: rgba(255, 253, 247, 0.78) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65) !important;
 }
 
@@ -5868,7 +5868,7 @@ nav {
   padding: 0 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: var(--gold-dark) !important;
   font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace !important;
   font-size: 10px !important;
@@ -5927,7 +5927,7 @@ nav {
   align-content: start !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: linear-gradient(180deg, #fffdf7, #fff3d4) !important;
+  background: linear-gradient(180deg, #ffffff, #fff3d4) !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.78) !important;
 }
 
@@ -6015,7 +6015,7 @@ nav {
 .originFlow {
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: #704f07 !important;
 }
 
@@ -6032,7 +6032,7 @@ nav {
   padding: 10px 12px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: #704f07 !important;
   font-size: 12px !important;
   line-height: 1.35 !important;
@@ -6044,7 +6044,7 @@ nav {
   padding: 16px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: rgba(255, 253, 247, 0.72) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65) !important;
 }
 
@@ -6125,7 +6125,7 @@ nav {
   padding: 9px 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: #704f07 !important;
   font-size: 12px !important;
   line-height: 1.35 !important;
@@ -6260,7 +6260,7 @@ nav {
   padding: 4px 8px !important;
   border: 1px solid var(--line) !important;
   border-radius: 999px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: var(--gold-dark) !important;
   font-size: 10px !important;
   font-style: normal !important;
@@ -6353,7 +6353,7 @@ nav {
   padding: 0 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 4px !important;
-  background: #fffaf0 !important;
+  background: #ffffff !important;
   color: #000 !important;
   font: 700 12px "IBM Plex Mono", monospace !important;
 }
@@ -6364,7 +6364,7 @@ nav {
   padding: 8px !important;
   border: 1px solid var(--line) !important;
   border-radius: 4px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
 }
 
 .actionHint span {
@@ -6394,7 +6394,7 @@ nav {
   padding: 7px 8px !important;
   border: 1px solid var(--line) !important;
   border-radius: 4px !important;
-  background: #fffaf0 !important;
+  background: #ffffff !important;
 }
 
 .liveListings span {
@@ -6483,7 +6483,7 @@ nav {
   min-height: 40px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 5px !important;
-  background: #fffdf7 !important;
+  background: #ffffff !important;
   color: #11100d !important;
 }
 
@@ -6530,7 +6530,7 @@ nav {
 }
 
 .simIdentityCard.blocked {
-  background: linear-gradient(180deg, #fffdf7, #fff0df) !important;
+  background: linear-gradient(180deg, #ffffff, #fff0df) !important;
 }
 
 .simIdentityCard p,
@@ -6539,7 +6539,7 @@ nav {
   padding: 9px 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: #704f07 !important;
   font-size: 12px !important;
   line-height: 1.35 !important;
@@ -6559,28 +6559,28 @@ nav button:last-child {
 }
 
 nav button.on {
-  background: linear-gradient(180deg, #fffaf0, #f3e4bb) !important;
+  background: linear-gradient(180deg, #ffffff, #f3e4bb) !important;
   box-shadow: inset 0 -2px 0 var(--gold) !important;
   color: #000 !important;
 }
 
 nav button:hover {
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
 }
 
 .connect {
   height: 40px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 5px !important;
-  background: #fffdf7 !important;
+  background: #ffffff !important;
   color: #0f0d09 !important;
   font-size: 12px !important;
   letter-spacing: 1px !important;
 }
 
 .connect:hover {
-  background: #fff4d8 !important;
-  box-shadow: 0 0 0 2px rgba(199, 150, 28, 0.14) !important;
+  background: #f2f7ff !important;
+  box-shadow: 0 0 0 2px rgba(84, 119, 255, 0.14) !important;
 }
 
 .status {
@@ -6614,7 +6614,7 @@ nav button:hover {
 .tiersCard {
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: rgba(255, 253, 247, 0.76) !important;
+  background: rgba(255, 255, 255, 0.76) !important;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.65) !important;
 }
 
@@ -6639,7 +6639,7 @@ nav button:hover {
   overflow: hidden !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: rgba(255, 253, 247, 0.78) !important;
+  background: rgba(255, 255, 255, 0.78) !important;
 }
 
 .statStrip .stat {
@@ -6736,15 +6736,15 @@ nav button:hover {
 }
 
 .bar i {
-  background: linear-gradient(90deg, #c7971c, #f0d276) !important;
-  box-shadow: 0 0 14px rgba(199, 150, 28, 0.25) !important;
+  background: linear-gradient(90deg, #5477ff, #9fb2ff) !important;
+  box-shadow: 0 0 14px rgba(84, 119, 255, 0.25) !important;
 }
 
 .pill {
   min-width: 68px !important;
   min-height: 34px !important;
   border: 1px solid var(--line) !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
   color: var(--gold-dark) !important;
   font-size: 10px !important;
 }
@@ -6838,7 +6838,7 @@ nav button:hover {
   padding: 0 12px !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 5px !important;
-  background: #fffdf7 !important;
+  background: #ffffff !important;
   color: #16120d !important;
   font-size: 12px !important;
   letter-spacing: 0.2px !important;
@@ -6867,7 +6867,7 @@ nav button:hover {
 
 .buttonStack button.primary,
 .buttonStack button:last-child {
-  background: linear-gradient(180deg, #fff8cf 0%, #d1a32d 54%, #b47f0e 100%) !important;
+  background: linear-gradient(180deg, #eef4ff 0%, #6f8cff 54%, #2546d8 100%) !important;
   color: #100d09 !important;
   font-weight: 800 !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85) !important;
@@ -6879,7 +6879,7 @@ nav button:hover {
   padding: 8px 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fff8e9 !important;
+  background: #f2f7ff !important;
   color: #8a6208 !important;
   font-size: 12px !important;
 }
@@ -6889,7 +6889,7 @@ nav button:hover {
   overflow: hidden !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: rgba(255, 253, 247, 0.72) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
 }
 
 .consoleHead {
@@ -7045,7 +7045,7 @@ nav button:hover {
   overflow: hidden !important;
   border: 1px solid var(--line-strong) !important;
   border-radius: 6px !important;
-  background: rgba(255, 253, 247, 0.72) !important;
+  background: rgba(255, 255, 255, 0.72) !important;
 }
 
 .proofStats .metric {
@@ -7078,7 +7078,7 @@ nav button:hover {
   padding: 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: rgba(255, 253, 247, 0.55) !important;
+  background: rgba(255, 255, 255, 0.55) !important;
 }
 
 .proofItem.on {
@@ -7091,7 +7091,7 @@ nav button:hover {
   padding: 12px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: rgba(255, 253, 247, 0.45) !important;
+  background: rgba(255, 255, 255, 0.45) !important;
 }
 
 .selectedHead h2 {
@@ -7182,7 +7182,7 @@ nav button:hover {
   min-height: 25px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fffaf0 !important;
+  background: #ffffff !important;
   color: #11100d !important;
   font-size: 10px !important;
 }
@@ -7192,7 +7192,7 @@ footer {
   margin: 0 22px 16px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: rgba(255, 253, 247, 0.52) !important;
+  background: rgba(255, 255, 255, 0.52) !important;
   color: #5e5446 !important;
   font-size: 10px !important;
 }
@@ -7633,9 +7633,9 @@ nav button.on::after {
   width: min(1820px, calc(100vw - 56px)) !important;
   border: 2px solid var(--gold) !important;
   box-shadow:
-    0 18px 46px rgba(91, 62, 8, 0.14),
+    0 18px 46px rgba(84, 119, 255, 0.14),
     0 0 0 1px rgba(255, 246, 215, 0.78) inset,
-    0 0 32px rgba(199, 150, 28, 0.18) !important;
+    0 0 32px rgba(84, 119, 255, 0.18) !important;
 }
 
 .topbar,
@@ -7662,7 +7662,7 @@ nav button.on::after {
   border-width: 2px !important;
   border-color: var(--gold) !important;
   box-shadow:
-    0 0 0 1px rgba(255, 249, 229, 0.8) inset,
+    0 0 0 1px rgba(183, 199, 255, 0.8) inset,
     0 8px 22px rgba(132, 92, 9, 0.07) !important;
 }
 
@@ -7684,7 +7684,7 @@ nav,
   color: #0f0d09 !important;
   text-shadow: none !important;
   box-shadow:
-    0 0 0 1px rgba(255, 249, 229, 0.8) inset,
+    0 0 0 1px rgba(183, 199, 255, 0.8) inset,
     0 6px 14px rgba(128, 91, 8, 0.1) !important;
 }
 
@@ -7702,15 +7702,15 @@ nav,
 .buttonStack .outline,
 .heroActions .ghost {
   background:
-    linear-gradient(110deg, rgba(255, 255, 255, 0.68) 0%, rgba(255, 249, 230, 0.28) 23%, rgba(243, 213, 135, 0.38) 45%, rgba(255, 253, 247, 0.86) 68%, rgba(244, 220, 154, 0.32) 100%),
-    #fffdf7 !important;
+    linear-gradient(110deg, rgba(255, 255, 255, 0.68) 0%, rgba(242, 247, 255, 0.28) 23%, rgba(183, 199, 255, 0.38) 45%, rgba(255, 255, 255, 0.86) 68%, rgba(183, 199, 255, 0.32) 100%),
+    #ffffff !important;
 }
 
 .primary,
 .buttonStack button:last-child,
 .heroActions .primary {
   background:
-    linear-gradient(110deg, rgba(255, 255, 255, 0.82), rgba(252, 229, 151, 0.85) 35%, #c7961c 70%, #f6dfa0),
+    linear-gradient(110deg, rgba(255, 255, 255, 0.82), rgba(252, 229, 151, 0.85) 35%, #5477ff 70%, #dbe6ff),
     #e0bd4e !important;
   color: #080705 !important;
 }
@@ -7727,8 +7727,8 @@ nav,
 .buttonStack .outline:focus,
 .buttonStack .outline:active {
   background:
-    linear-gradient(110deg, rgba(255, 255, 255, 0.86) 0%, rgba(255, 247, 219, 0.72) 35%, rgba(229, 190, 82, 0.52) 62%, rgba(255, 253, 247, 0.92) 100%),
-    #fffdf7 !important;
+    linear-gradient(110deg, rgba(255, 255, 255, 0.86) 0%, rgba(242, 247, 255, 0.72) 35%, rgba(84, 119, 255, 0.52) 62%, rgba(255, 255, 255, 0.92) 100%),
+    #ffffff !important;
   color: #0f0d09 !important;
   transform: translateY(-1px) !important;
 }
@@ -7741,8 +7741,8 @@ nav,
 .proofItem {
   border: 2px solid var(--gold) !important;
   background:
-    linear-gradient(120deg, rgba(255, 253, 247, 0.96), rgba(255, 247, 224, 0.82)),
-    #fffdf7 !important;
+    linear-gradient(120deg, rgba(255, 255, 255, 0.96), rgba(242, 247, 255, 0.82)),
+    #ffffff !important;
   color: #11100d !important;
   opacity: 1 !important;
 }
@@ -7751,11 +7751,11 @@ nav,
 .proofItem:hover,
 .proofItem.selected {
   background:
-    linear-gradient(120deg, #fffdf7, #fff1c8 56%, #fffaf0),
-    #fff8e8 !important;
+    linear-gradient(120deg, #ffffff, #fff1c8 56%, #ffffff),
+    #f2f7ff !important;
   box-shadow:
     inset 5px 0 0 var(--gold),
-    0 0 0 1px rgba(255, 249, 229, 0.92) inset,
+    0 0 0 1px rgba(183, 199, 255, 0.92) inset,
     0 8px 20px rgba(128, 91, 8, 0.12) !important;
 }
 
@@ -7771,13 +7771,13 @@ nav,
 
 .proofItem small,
 .proofItem code {
-  background: rgba(255, 250, 240, 0.86) !important;
+  background: rgba(242, 247, 255, 0.86) !important;
   border-color: var(--line) !important;
 }
 
 .selectedHead,
 .proofDetailTable div {
-  background: rgba(255, 253, 247, 0.92) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
 }
 
 .proofDetailTable code {
@@ -7791,7 +7791,7 @@ nav,
   inset: 10px 28px auto 28px;
   height: 2px;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(255, 236, 171, 0.85), rgba(199, 150, 28, 0.75), transparent);
+  background: linear-gradient(90deg, transparent, rgba(183, 199, 255, 0.85), rgba(84, 119, 255, 0.75), transparent);
   opacity: 0.75;
 }
 
@@ -8029,8 +8029,8 @@ nav button,
   padding: 8px !important;
   border: 2px solid var(--gold) !important;
   border-radius: 6px !important;
-  background: rgba(255, 253, 247, 0.98) !important;
-  box-shadow: 0 14px 28px rgba(91, 62, 8, 0.16), inset 0 0 0 1px rgba(255, 249, 229, 0.8) !important;
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 14px 28px rgba(84, 119, 255, 0.16), inset 0 0 0 1px rgba(183, 199, 255, 0.8) !important;
 }
 
 .walletMenu button {
@@ -8042,7 +8042,7 @@ nav button,
   padding: 0 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 5px !important;
-  background: #fffaf0 !important;
+  background: #ffffff !important;
   color: #0f0d09 !important;
   font-size: 12px !important;
   font-weight: 800 !important;
@@ -8076,7 +8076,7 @@ nav button,
   height: 24px !important;
   border: 1px solid var(--line) !important;
   border-radius: 999px !important;
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
 }
 
 .walletName {
@@ -8179,7 +8179,7 @@ body::after {
 .webKeyCard {
   --card-accent: #d69b12;
   --card-deep: #3a2814;
-  --card-soft: #fff8df;
+  --card-soft: #f2f7ff;
   --card-glow: #fff1ba;
   --card-shadow: rgba(76, 52, 8, 0.24);
   container-type: inline-size !important;
@@ -8189,7 +8189,7 @@ body::after {
   padding: clamp(8px, 4cqw, 15px) !important;
   border-radius: 7.4% / 5.9% !important;
   background:
-    linear-gradient(132deg, #fff9d9 0%, var(--card-accent) 18%, #fff7c8 35%, var(--card-accent) 56%, var(--card-deep) 100%) !important;
+    linear-gradient(132deg, #f2f7ff 0%, var(--card-accent) 18%, #eaf2ff 35%, var(--card-accent) 56%, var(--card-deep) 100%) !important;
   box-shadow:
     0 16px 26px var(--card-shadow),
     inset 3px 3px 0 rgba(255,255,255,0.72),
@@ -8254,7 +8254,7 @@ body::after {
   background:
     radial-gradient(circle at 50% 24%, var(--card-glow), transparent 40%),
     linear-gradient(145deg, rgba(255,255,255,0.78), transparent 24%),
-    linear-gradient(180deg, var(--card-soft), #fffaf0 50%, #f7edde) !important;
+    linear-gradient(180deg, var(--card-soft), #ffffff 50%, #eef4ff) !important;
   box-shadow:
     inset 0 0 0 1px var(--card-accent),
     inset 0 0 0 7px rgba(255,255,255,0.46),
@@ -8418,8 +8418,8 @@ body::after {
 
 .shell {
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,251,241,0.96)) !important;
-  border: 3px solid #c99006 !important;
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(242, 247, 255, 0.96)) !important;
+  border: 3px solid #5477ff !important;
   border-radius: 10px !important;
   box-shadow:
     0 28px 70px rgba(76, 52, 8, 0.14),
@@ -8578,7 +8578,7 @@ body::after {
   border: 4px solid #c68a00 !important;
   border-radius: 12px !important;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255,253,247,0.98) 54%, rgba(255,248,230,0.98) 100%) !important;
+    linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(255, 255, 255, 0.98) 54%, rgba(255,248,230,0.98) 100%) !important;
   box-shadow:
     0 34px 90px rgba(61, 38, 0, 0.16),
     0 10px 0 rgba(132, 84, 0, 0.18),
@@ -8626,7 +8626,7 @@ body::after {
 .keyspaceActions .actionStatusGrid .metric {
   min-height: 112px !important;
   padding: 18px 18px !important;
-  border: 2px solid #c99006 !important;
+  border: 2px solid #5477ff !important;
   border-radius: 8px !important;
   background:
     linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,249,233,0.9)) !important;
@@ -8651,7 +8651,7 @@ body::after {
 
 .actionBox,
 .liveListings {
-  border: 2px solid #d1a340 !important;
+  border: 2px solid #5477ff !important;
   border-radius: 8px !important;
   background: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,249,234,0.72)) !important;
   box-shadow:
@@ -8848,7 +8848,7 @@ body::after {
   right: 0 !important;
   width: min(280px, calc(100vw - 44px)) !important;
   overflow: visible !important;
-  background: #fffdf7 !important;
+  background: #ffffff !important;
   box-shadow:
     0 22px 44px rgba(80, 52, 4, 0.22),
     0 0 0 1px rgba(255, 244, 206, 0.9) inset !important;
@@ -8889,7 +8889,7 @@ body::after {
   padding: 10px !important;
   border: 1px solid var(--line) !important;
   border-radius: 8px !important;
-  background: rgba(255, 250, 238, 0.62) !important;
+  background: rgba(242, 247, 255, 0.62) !important;
 }
 
 .proofItem {
@@ -8920,7 +8920,7 @@ body::after {
   padding: 14px 16px !important;
   border: 1px solid var(--line) !important;
   border-radius: 8px !important;
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 248, 231, 0.92)) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 255, 0.92)) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
 }
 
@@ -8929,7 +8929,7 @@ body::after {
   border: 1px solid var(--line) !important;
   border-radius: 8px !important;
   overflow: hidden !important;
-  background: rgba(255, 253, 247, 0.82) !important;
+  background: rgba(255, 255, 255, 0.82) !important;
 }
 
 .proofDetailTable div {
@@ -8937,11 +8937,11 @@ body::after {
   padding: 10px 12px !important;
   border: 0 !important;
   border-bottom: 1px solid var(--line) !important;
-  background: rgba(255, 253, 247, 0.92) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
 }
 
 .proofDetailTable div:nth-child(even) {
-  background: rgba(255, 249, 235, 0.92) !important;
+  background: rgba(242, 247, 255, 0.92) !important;
 }
 
 .proofDetailTable div:last-child {
@@ -9025,7 +9025,7 @@ body::after {
   border: 1px solid var(--line) !important;
   border-radius: 7px !important;
   overflow: hidden !important;
-  background: rgba(255, 253, 247, 0.86) !important;
+  background: rgba(255, 255, 255, 0.86) !important;
 }
 
 .homeGrid .progressCard .miniGrid.three .metric {
@@ -9038,16 +9038,16 @@ body::after {
 }
 
 .homeGrid .progressCard .miniGrid.three .metric:nth-child(1) {
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 248, 231, 0.96)) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 255, 0.96)) !important;
 }
 
 .homeGrid .progressCard .miniGrid.three .metric:nth-child(2) {
-  background: linear-gradient(180deg, rgba(255, 250, 238, 0.98), rgba(252, 241, 211, 0.96)) !important;
+  background: linear-gradient(180deg, rgba(242, 247, 255, 0.98), rgba(242, 247, 255, 0.96)) !important;
 }
 
 .homeGrid .progressCard .miniGrid.three .metric:nth-child(3) {
   border-right: 0 !important;
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 245, 219, 0.96)) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 255, 0.96)) !important;
 }
 
 .homeGrid .progressCard .miniGrid.three .metric small {
@@ -9064,7 +9064,7 @@ body::after {
   border: 2px solid var(--gold) !important;
   border-radius: 8px !important;
   overflow: hidden !important;
-  background: rgba(255, 253, 247, 0.92) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
 }
 
 .proofStats .metric {
@@ -9077,20 +9077,20 @@ body::after {
 }
 
 .proofStats .metric:nth-child(1) {
-  background: linear-gradient(180deg, #fffdf7, #fff8e8) !important;
+  background: linear-gradient(180deg, #ffffff, #f2f7ff) !important;
 }
 
 .proofStats .metric:nth-child(2) {
-  background: linear-gradient(180deg, #fffaf0, #fff3d9) !important;
+  background: linear-gradient(180deg, #ffffff, #fff3d9) !important;
 }
 
 .proofStats .metric:nth-child(3) {
-  background: linear-gradient(180deg, #fffdf7, #fff6df) !important;
+  background: linear-gradient(180deg, #ffffff, #fff6df) !important;
 }
 
 .proofStats .metric:nth-child(4) {
   border-right: 0 !important;
-  background: linear-gradient(180deg, #fff9ed, #fff1d3) !important;
+  background: linear-gradient(180deg, #ffffff, #f2f7ff) !important;
 }
 
 .proofGrid {
@@ -9100,7 +9100,7 @@ body::after {
 .proofListCard,
 .proofDetailCard {
   border-width: 2px !important;
-  background: linear-gradient(180deg, rgba(255, 253, 247, 0.98), rgba(255, 250, 240, 0.96)) !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(242, 247, 255, 0.96)) !important;
 }
 
 .proofListCard::after,
@@ -9109,33 +9109,33 @@ body::after {
   display: block !important;
   height: 1px !important;
   margin-top: 14px !important;
-  background: linear-gradient(90deg, transparent, rgba(201, 144, 6, 0.42), transparent) !important;
+  background: linear-gradient(90deg, transparent, rgba(84, 119, 255, 0.42), transparent) !important;
 }
 
 .proofList {
-  border: 1px solid #dec47d !important;
-  background: linear-gradient(180deg, rgba(255, 251, 241, 0.96), rgba(255, 245, 225, 0.72)) !important;
+  border: 1px solid #b7c7ff !important;
+  background: linear-gradient(180deg, rgba(242, 247, 255, 0.96), rgba(242, 247, 255, 0.72)) !important;
 }
 
 .proofItem {
-  border: 2px solid #c99006 !important;
-  background: linear-gradient(135deg, #fffdf7 0%, #fff4d4 100%) !important;
+  border: 2px solid #5477ff !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f2f7ff 100%) !important;
 }
 
 .proofDetailTable {
-  border: 2px solid #d1a340 !important;
+  border: 2px solid #5477ff !important;
 }
 
 .proofDetailTable div:nth-child(4n + 1) {
-  background: #fffdf7 !important;
+  background: #ffffff !important;
 }
 
 .proofDetailTable div:nth-child(4n + 2) {
-  background: #fff8e8 !important;
+  background: #f2f7ff !important;
 }
 
 .proofDetailTable div:nth-child(4n + 3) {
-  background: #fffaf0 !important;
+  background: #ffffff !important;
 }
 
 .proofDetailTable div:nth-child(4n + 4) {
@@ -10145,9 +10145,9 @@ footer {
 
 .topbar {
   border: 0 !important;
-  border-bottom: 2px solid #c99006 !important;
+  border-bottom: 2px solid #5477ff !important;
   border-radius: 0 !important;
-  background: #fffdf7 !important;
+  background: #ffffff !important;
   box-shadow: none !important;
 }
 
@@ -10156,7 +10156,7 @@ footer {
   border-left: 0 !important;
   border-right: 0 !important;
   border-radius: 0 !important;
-  background: #fffaf0 !important;
+  background: #ffffff !important;
 }
 
 .page {
@@ -10297,8 +10297,8 @@ button,
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   gap: 0 !important;
-  border: 2px solid #c99006 !important;
-  background: #fffaf0 !important;
+  border: 2px solid #5477ff !important;
+  background: #ffffff !important;
 }
 
 .marketStatusPanel .metric {
@@ -10319,8 +10319,8 @@ button,
 
 .listingCard.keycardOnly {
   padding: clamp(7px, 0.8vw, 12px) !important;
-  border: 1px solid rgba(201, 144, 6, 0.3) !important;
-  background: #fffdf7 !important;
+  border: 1px solid rgba(84, 119, 255, 0.3) !important;
+  background: #ffffff !important;
   overflow: visible !important;
 }
 
@@ -10443,12 +10443,12 @@ button,
   --ink: #050505 !important;
   --muted: #6d6659 !important;
   --faint: #918875 !important;
-  --line: #f2b400 !important;
-  --line-soft: rgba(242, 180, 0, 0.28) !important;
-  --silver: #f2b400 !important;
-  --silver-dim: #c88e00 !important;
+  --line: #5477ff !important;
+  --line-soft: rgba(183, 199, 255, 0.55) !important;
+  --silver: #5477ff !important;
+  --silver-dim: #5477ff !important;
   --ok: #5f8f48 !important;
-  --warn: #f2b400 !important;
+  --warn: #5477ff !important;
   --danger: #c44d4d !important;
   --shadow: none !important;
 }
@@ -10685,8 +10685,8 @@ button,
 .primary,
 .heroActions button:first-child,
 .marketNftInfo button:not(:disabled) {
-  background: #f2b400 !important;
-  border-color: #9d6b00 !important;
+  background: #5477ff !important;
+  border-color: #2546d8 !important;
   color: #050505 !important;
 }
 
@@ -10716,7 +10716,7 @@ button:disabled,
 }
 
 .bar i {
-  background: #f2b400 !important;
+  background: #5477ff !important;
 }
 
 .statStrip {
@@ -10777,7 +10777,7 @@ button:disabled,
 .webKeyCard.clean,
 .webKeyCard.quantum,
 .webKeyCard.genesis {
-  --card-accent: #f2b400 !important;
+  --card-accent: #5477ff !important;
   --card-deep: #1d1607 !important;
   --card-soft: #ffffff !important;
   --card-glow: #ffffff !important;
@@ -10905,8 +10905,8 @@ button:disabled,
 }
 
 .marketFilters button.on {
-  background: #f2b400 !important;
-  border-color: #9d6b00 !important;
+  background: #5477ff !important;
+  border-color: #2546d8 !important;
 }
 
 .marketplaceGrid {
@@ -11325,8 +11325,8 @@ footer {
 }
 
 .webKeyCard.golden {
-  --rank-glow: #e5b744;
-  --rank-deep: #9c7114;
+  --rank-glow: #39bdf8;
+  --rank-deep: #096da8;
 }
 
 .webKeyCard.quantum {
@@ -12059,5 +12059,425 @@ button,
 
   .walletSlot {
     width: 100% !important;
+  }
+}
+
+/* Blue authority layer: this is the real theme contract for every page. */
+:root {
+  --ink: #07111f !important;
+  --muted: #435675 !important;
+  --paper: #ffffff !important;
+  --paper-2: #f2f7ff !important;
+  --paper-3: #eaf2ff !important;
+  --panel: #ffffff !important;
+  --panel-soft: #f2f7ff !important;
+  --line: #5477ff !important;
+  --line-soft: #b7c7ff !important;
+  --line-strong: #2546d8 !important;
+  --gold: #5477ff !important;
+  --gold-dark: #2546d8 !important;
+  --gold-soft: #dbe6ff !important;
+  --warn: #5477ff !important;
+}
+
+html,
+body,
+#root {
+  background: #ffffff !important;
+  color: #07111f !important;
+}
+
+.shell,
+.topbar,
+.status,
+.statStrip,
+.page,
+.page > section,
+.page > article,
+.card,
+.heroMini,
+.mintPanel,
+.progressCard,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.vaultPanel,
+.signatureInfo,
+.article,
+.keyspaceHero,
+.keyspaceBlock,
+.marketHero,
+.marketCollection,
+.marketStatusPanel,
+.keyspaceActions,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.liveListings,
+footer {
+  background: #ffffff !important;
+  border-color: #5477ff !important;
+  color: #07111f !important;
+  box-shadow: none !important;
+}
+
+.stat,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.actionBox,
+.simIdentityCard,
+.selectedHead,
+.proofItem,
+.proofStats .metric,
+.progressStats .metric,
+.collectionStats .metric,
+.marketStatusPanel .metric,
+.actionStatusGrid .metric,
+.proofDetailTable div,
+.tableLite div,
+.identityRows,
+.actionHint,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span,
+.marketNftInfo,
+.marketNftCard,
+.marketNftArt,
+input,
+select,
+textarea {
+  background: #f2f7ff !important;
+  border-color: #b7c7ff !important;
+  color: #07111f !important;
+  box-shadow: none !important;
+}
+
+.keyspaceActions .actionStatusGrid .metric,
+.keyspaceActions .actionBox,
+.keyspaceActions .liveListings,
+.homeGrid .progressCard .miniGrid.three .metric,
+.progressCard .miniGrid.three .metric,
+.progressStats .metric,
+.proofDetailTable div:nth-child(odd),
+.proofDetailTable div:nth-child(even),
+.proofDetailTable div:nth-child(4n + 1),
+.proofDetailTable div:nth-child(4n + 2),
+.proofDetailTable div:nth-child(4n + 3),
+.proofDetailTable div:nth-child(4n + 4),
+.tableLite div:nth-child(odd),
+.tableLite div:nth-child(even) {
+  background: #f2f7ff !important;
+  border-color: #b7c7ff !important;
+  box-shadow: none !important;
+}
+
+.proofDetailTable div:nth-child(4n + 1),
+.proofDetailTable div:nth-child(4n + 2),
+.tableLite div:nth-child(4n + 1),
+.tableLite div:nth-child(4n + 2) {
+  background: #ffffff !important;
+}
+
+.cardTitle,
+.eyebrow,
+.previewBadge,
+.status,
+.brandName,
+.brandSub,
+.marketNote,
+.keyspaceWarning,
+.originLine,
+.keyspaceRatio,
+.stat small,
+.metric small,
+.proofDetailTable small,
+.tableLite small,
+.actionStatusGrid .metric small {
+  color: #123a91 !important;
+}
+
+.topbar {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) clamp(118px, 10vw, 160px) !important;
+  grid-template-areas:
+    "brand brand"
+    "nav wallet" !important;
+  gap: 14px 20px !important;
+  align-items: end !important;
+  padding: 18px 28px !important;
+  overflow: visible !important;
+}
+
+.brand {
+  grid-area: brand !important;
+  min-width: 0 !important;
+}
+
+.topbar nav {
+  grid-area: nav !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  overflow: visible !important;
+}
+
+.walletSlot {
+  grid-area: wallet !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  justify-self: stretch !important;
+}
+
+.topbar nav button,
+.connect,
+button,
+.miniBtn,
+.primary,
+.outline,
+.ghost,
+.walletMenu button,
+.marketFilters button,
+.marketNftInfo button {
+  background: #ffffff !important;
+  border-color: #5477ff !important;
+  color: #061226 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+}
+
+.topbar nav button {
+  font-size: clamp(9px, 0.72vw, 12px) !important;
+  letter-spacing: 0.04em !important;
+  padding: 10px 4px !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.connect {
+  width: 100% !important;
+  padding: 10px 6px !important;
+  font-size: clamp(9px, 0.72vw, 12px) !important;
+  letter-spacing: 0.08em !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.topbar nav button.on,
+.topbar nav button:hover,
+.connect:hover,
+.primary,
+.heroActions button:first-child,
+.marketFilters button.on,
+.marketNftInfo button:not(:disabled) {
+  background: #5477ff !important;
+  border-color: #2546d8 !important;
+  color: #ffffff !important;
+}
+
+.outline:hover,
+.ghost:hover,
+.miniBtn:hover,
+button:hover:not(:disabled) {
+  border-color: #2546d8 !important;
+}
+
+.topbar nav button.on::after,
+.cardTitle::after,
+.eyebrow::after,
+.status span,
+.bar i {
+  background: #5477ff !important;
+  border-color: #5477ff !important;
+}
+
+.bar {
+  background: #eaf2ff !important;
+  border-color: #b7c7ff !important;
+}
+
+.previewBadge,
+.pill,
+.progressPercent {
+  background: #f2f7ff !important;
+  border-color: #5477ff !important;
+  color: #2546d8 !important;
+}
+
+.keyspaceHero h1,
+.marketHero h1 {
+  font-size: clamp(30px, 3.4vw, 48px) !important;
+  line-height: 1 !important;
+}
+
+.heroMini h1,
+.proofIntro h1,
+.article h1 {
+  font-size: clamp(28px, 3vw, 42px) !important;
+  line-height: 1.04 !important;
+}
+
+.progressHead h2 {
+  font-size: clamp(24px, 2.3vw, 38px) !important;
+}
+
+.webKeyCard {
+  --rank-glow: #5477ff;
+  --rank-deep: #2546d8;
+  padding: 8px !important;
+  border: 5px solid var(--rank-glow) !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.96), rgba(222,230,244,0.94) 38%, rgba(255,255,255,0.98) 58%, rgba(194,205,222,0.92)) !important;
+  box-shadow:
+    0 0 0 2px #ffffff inset,
+    0 0 0 1px var(--rank-glow),
+    0 0 18px color-mix(in srgb, var(--rank-glow), transparent 30%),
+    0 0 34px color-mix(in srgb, var(--rank-glow), transparent 70%) !important;
+  overflow: visible !important;
+}
+
+.webKeyCard.normal {
+  --rank-glow: #8fa0b8 !important;
+  --rank-deep: #425068 !important;
+}
+
+.webKeyCard.clean {
+  --rank-glow: #27c878 !important;
+  --rank-deep: #0e7440 !important;
+}
+
+.webKeyCard.golden {
+  --rank-glow: #37bdf8 !important;
+  --rank-deep: #075f98 !important;
+}
+
+.webKeyCard.quantum {
+  --rank-glow: #6f73ff !important;
+  --rank-deep: #3039c6 !important;
+}
+
+.webKeyCard.genesis {
+  --rank-glow: #ff6fb4 !important;
+  --rank-deep: #a92568 !important;
+}
+
+.webKeyCard::before,
+.cardRule,
+.cardRule span,
+.cardRule i {
+  display: none !important;
+}
+
+.webKeyCardInner {
+  display: flex !important;
+  flex-direction: column !important;
+  border: 2px solid color-mix(in srgb, var(--rank-glow), #ffffff 15%) !important;
+  border-radius: 0 !important;
+  padding: 8% 6% 6.4% !important;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(255,255,255,0.96), transparent 25%),
+    linear-gradient(135deg, rgba(255,255,255,0.98), rgba(218,228,244,0.86) 40%, rgba(255,255,255,0.96) 62%, rgba(191,205,224,0.86)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.9),
+    inset 0 0 22px color-mix(in srgb, var(--rank-glow), transparent 82%) !important;
+}
+
+.cardTop {
+  font-size: clamp(5px, 1.55cqw, 8px) !important;
+  letter-spacing: clamp(0.42px, 0.62cqw, 1.6px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardIdentity {
+  margin: 16% 0 5% !important;
+  min-height: 15% !important;
+  overflow: visible !important;
+}
+
+.cardIdentity b,
+.keycardPreviewGrid .cardIdentity b,
+.marketplaceGrid .cardIdentity b {
+  color: #061226 !important;
+  font-size: clamp(13px, calc(70cqw / var(--name-chars, 9)), 27px) !important;
+  line-height: 1 !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+}
+
+.heroWebCard .cardIdentity b {
+  font-size: clamp(27px, calc(90cqw / var(--name-chars, 9)), 50px) !important;
+}
+
+.cardSub {
+  margin-bottom: 8.5% !important;
+  font-size: clamp(4.8px, 1.1cqw, 6.1px) !important;
+  letter-spacing: clamp(0.28px, 0.38cqw, 1px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardDetails {
+  margin-top: auto !important;
+  min-height: 32% !important;
+  padding: 5% !important;
+  border: 1px solid color-mix(in srgb, var(--rank-glow), #ffffff 16%) !important;
+  background: rgba(245,249,255,0.78) !important;
+  box-shadow: none !important;
+}
+
+.cardDetails span {
+  font-size: clamp(4.8px, 1.12cqw, 6.2px) !important;
+  letter-spacing: clamp(0.14px, 0.2cqw, 0.65px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardDetails b {
+  font-size: clamp(4.8px, calc(27cqw / var(--value-chars, 12)), 6.5px) !important;
+  color: #061226 !important;
+}
+
+.cardFooter {
+  margin-top: 6% !important;
+  padding: 2.6% 5% !important;
+  border: 1px solid var(--rank-glow) !important;
+  background: rgba(245,249,255,0.9) !important;
+  color: var(--rank-deep) !important;
+  font-size: clamp(4.8px, 1.12cqw, 6.2px) !important;
+  letter-spacing: clamp(0.18px, 0.26cqw, 0.75px) !important;
+  box-shadow: none !important;
+}
+
+.listingCard.keycardOnly,
+.keycardPreviewGrid .listingCard,
+.marketNftArt {
+  overflow: visible !important;
+  background: #ffffff !important;
+  border-color: #b7c7ff !important;
+}
+
+@media (max-width: 1180px) {
+  .topbar {
+    grid-template-columns: 1fr !important;
+    grid-template-areas:
+      "brand"
+      "nav"
+      "wallet" !important;
+  }
+
+  .topbar nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .topbar nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
