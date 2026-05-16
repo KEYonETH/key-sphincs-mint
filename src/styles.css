@@ -10433,3 +10433,640 @@ button,
     width: min(100%, 250px) !important;
   }
 }
+
+/* White + KEY yellow marketplace pass. */
+:root {
+  color-scheme: light !important;
+  --bg: #ffffff !important;
+  --panel: #ffffff !important;
+  --panel-2: #ffffff !important;
+  --ink: #050505 !important;
+  --muted: #6d6659 !important;
+  --faint: #918875 !important;
+  --line: #f2b400 !important;
+  --line-soft: rgba(242, 180, 0, 0.28) !important;
+  --silver: #f2b400 !important;
+  --silver-dim: #c88e00 !important;
+  --ok: #5f8f48 !important;
+  --warn: #f2b400 !important;
+  --danger: #c44d4d !important;
+  --shadow: none !important;
+}
+
+html,
+body,
+#root,
+.shell,
+.topbar,
+.status,
+.page,
+.page > section,
+.page > article,
+.card,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.keyspaceBlock,
+.keyspaceHero,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.actionBox,
+.liveListings,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.mintPanel,
+.progressCard,
+.heroMini,
+.signatureInfo,
+.vaultPanel,
+.tableLite,
+.proofConsole,
+.proofDetailTable,
+.proofDetailTable div,
+.proofItem,
+.selectedHead,
+.simIdentityCard,
+.walletMenu,
+.walletMenu button,
+input,
+select,
+textarea {
+  background: #ffffff !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+
+.shell {
+  width: 100% !important;
+  max-width: none !important;
+  border: 0 !important;
+  padding: 0 0 18px !important;
+}
+
+.topbar,
+.status,
+.statStrip,
+.page,
+footer {
+  width: min(80vw, 1536px) !important;
+  max-width: 80vw !important;
+}
+
+.page {
+  gap: 10px !important;
+}
+
+.topbar {
+  margin-bottom: 0 !important;
+  border-bottom: 2px solid var(--line) !important;
+}
+
+.status {
+  border-bottom: 1px solid var(--line-soft) !important;
+}
+
+.statStrip,
+.page > section,
+.page > article,
+.card,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.keyspaceBlock,
+.keyspaceHero,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.actionBox,
+.liveListings,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.mintPanel,
+.progressCard,
+.heroMini,
+.signatureInfo,
+.vaultPanel,
+.tableLite,
+.proofConsole,
+.proofDetailTable,
+.proofDetailTable div,
+.proofItem,
+.selectedHead,
+.simIdentityCard,
+.walletMenu,
+.walletMenu button,
+input,
+select,
+textarea,
+button,
+.connect,
+.miniBtn,
+.primary,
+.outline,
+.ghost,
+.previewBadge,
+.bar,
+.bar i,
+.pill,
+.progressPercent,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span,
+.marketStatusPanel,
+.marketCollectionHead,
+.marketToolbar,
+.marketNftCard,
+.marketNftArt,
+.marketNftInfo,
+.collectionStats {
+  border-radius: 0 !important;
+}
+
+.statStrip,
+.page > section,
+.page > article,
+.card,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.keyspaceBlock,
+.keyspaceHero,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.actionBox,
+.liveListings,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.mintPanel,
+.progressCard,
+.heroMini,
+.signatureInfo,
+.vaultPanel,
+.tableLite,
+.proofConsole,
+.selectedHead,
+.simIdentityCard,
+.walletMenu,
+.walletMenu button,
+input,
+select,
+textarea {
+  border-color: var(--line) !important;
+}
+
+.page > section,
+.page > article,
+.card,
+.keyspaceBlock,
+.keyspaceHero,
+.proofIntro,
+.mintPanel,
+.progressCard,
+.vaultPanel,
+.signatureInfo,
+.heroMini {
+  padding: 14px 16px !important;
+}
+
+.sectionHead,
+.compactHead,
+.marketCollectionHead {
+  margin-bottom: 10px !important;
+}
+
+h1,
+h2,
+h3,
+.heroMini h1,
+.proofIntro h1,
+.article h1,
+.keyspaceHero h1,
+.marketHero h1 {
+  letter-spacing: 0 !important;
+}
+
+.keyspaceHero h1,
+.marketHero h1 {
+  font-size: clamp(40px, 5vw, 76px) !important;
+}
+
+.heroMini h1,
+.proofIntro h1 {
+  font-size: clamp(34px, 4vw, 58px) !important;
+}
+
+button,
+.connect,
+.miniBtn,
+.primary,
+.outline,
+.ghost,
+.walletMenu button {
+  border-color: var(--line) !important;
+  color: #050505 !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.primary,
+.heroActions button:first-child,
+.marketNftInfo button:not(:disabled) {
+  background: #f2b400 !important;
+  border-color: #9d6b00 !important;
+  color: #050505 !important;
+}
+
+button:disabled,
+.marketNftInfo button:disabled {
+  background: #ffffff !important;
+  color: #8a7f68 !important;
+  opacity: 1 !important;
+}
+
+.brandIcon,
+.brandIcon img,
+.walletIcon,
+.walletIcon img {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.brandIcon img {
+  filter: none !important;
+}
+
+.bar {
+  background: #ffffff !important;
+  border: 1px solid var(--line-soft) !important;
+}
+
+.bar i {
+  background: #f2b400 !important;
+}
+
+.statStrip {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.statStrip .metric,
+.progressStats .metric,
+.proofStats .metric,
+.marketStatusPanel .metric,
+.collectionStats .metric,
+.actionStatusGrid .metric {
+  background: #ffffff !important;
+}
+
+.progressCard {
+  min-height: 0 !important;
+}
+
+.progressCard h2 {
+  font-size: clamp(30px, 3.1vw, 54px) !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.progressStats {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  border: 1px solid var(--line-soft) !important;
+  background: #ffffff !important;
+}
+
+.progressStats .metric {
+  border: 0 !important;
+  border-right: 1px solid var(--line-soft) !important;
+  padding: 12px !important;
+}
+
+.progressStats .metric:last-child {
+  border-right: 0 !important;
+}
+
+.keycardPreviewGrid {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+.listingCard.keycardOnly {
+  padding: 8px !important;
+  border: 1px solid var(--line-soft) !important;
+  background: #ffffff !important;
+}
+
+.webKeyCard,
+.webKeyCard.normal,
+.webKeyCard.clean,
+.webKeyCard.quantum,
+.webKeyCard.genesis {
+  --card-accent: #f2b400 !important;
+  --card-deep: #1d1607 !important;
+  --card-soft: #ffffff !important;
+  --card-glow: #ffffff !important;
+  --card-shadow: transparent !important;
+  padding: 8px !important;
+  border: 1px solid var(--card-accent) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.webKeyCard::before {
+  display: none !important;
+}
+
+.webKeyCardInner {
+  padding: 7% 6% 6% !important;
+  border: 1px solid var(--card-accent) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  grid-template-rows: auto auto minmax(19%, 0.8fr) auto auto minmax(34%, 1.35fr) auto !important;
+  row-gap: 2.2% !important;
+}
+
+.cardTop {
+  font-size: clamp(7px, 3.1cqw, 13px) !important;
+  letter-spacing: clamp(1px, 1.55cqw, 4px) !important;
+}
+
+.cardIdentity b {
+  color: #1d1607 !important;
+  font-size: clamp(15px, calc(92cqw / var(--name-chars, 9)), 36px) !important;
+}
+
+.heroWebCard .cardIdentity b {
+  font-size: clamp(28px, calc(96cqw / var(--name-chars, 9)), 58px) !important;
+}
+
+.cardSub {
+  font-size: clamp(6px, 2cqw, 9px) !important;
+  letter-spacing: clamp(0.7px, 1.1cqw, 3px) !important;
+}
+
+.cardDetails {
+  border: 1px solid var(--card-accent) !important;
+  padding: 5% !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr) !important;
+}
+
+.cardDetails span {
+  font-size: clamp(5.8px, 1.75cqw, 8px) !important;
+  letter-spacing: clamp(0.3px, 0.45cqw, 1.4px) !important;
+}
+
+.cardDetails b {
+  color: #050505 !important;
+  font-size: clamp(6px, calc(39cqw / var(--value-chars, 12)), 8.7px) !important;
+  white-space: nowrap !important;
+}
+
+.cardFooter {
+  margin-top: 1% !important;
+  border: 1px solid var(--card-accent) !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  font-size: clamp(5.8px, 1.85cqw, 8px) !important;
+  letter-spacing: clamp(0.4px, 0.48cqw, 1.4px) !important;
+}
+
+.marketCollection {
+  padding: 14px !important;
+}
+
+.marketCollectionHead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.45fr) !important;
+  gap: 12px !important;
+  align-items: end !important;
+}
+
+.collectionStats,
+.marketStatusPanel {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  border: 1px solid var(--line) !important;
+}
+
+.collectionStats .metric,
+.marketStatusPanel .metric {
+  border: 0 !important;
+  border-right: 1px solid var(--line-soft) !important;
+  padding: 10px !important;
+}
+
+.collectionStats .metric:last-child,
+.marketStatusPanel .metric:last-child {
+  border-right: 0 !important;
+}
+
+.marketToolbar {
+  display: grid !important;
+  grid-template-columns: minmax(240px, 0.42fr) minmax(0, 1fr) !important;
+  gap: 10px !important;
+  margin: 10px 0 12px !important;
+}
+
+.marketSearch {
+  display: grid !important;
+  gap: 5px !important;
+}
+
+.marketFilters {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  align-self: end !important;
+}
+
+.marketFilters button {
+  height: 38px !important;
+  font-size: 10px !important;
+  letter-spacing: 1px !important;
+}
+
+.marketFilters button.on {
+  background: #f2b400 !important;
+  border-color: #9d6b00 !important;
+}
+
+.marketplaceGrid {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+
+.marketNftCard {
+  display: grid !important;
+  grid-template-rows: auto 1fr !important;
+  border: 1px solid var(--line) !important;
+  background: #ffffff !important;
+  min-width: 0 !important;
+}
+
+.marketNftArt {
+  padding: 8px !important;
+  border-bottom: 1px solid var(--line-soft) !important;
+  display: grid !important;
+  place-items: center !important;
+  min-width: 0 !important;
+}
+
+.marketNftArt .webKeyCard {
+  width: min(100%, 172px) !important;
+}
+
+.marketNftInfo {
+  display: grid !important;
+  gap: 7px !important;
+  padding: 9px !important;
+}
+
+.marketNftInfo > div {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 8px !important;
+  min-width: 0 !important;
+}
+
+.marketNftInfo b {
+  font-size: 14px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+.marketNftInfo span,
+.marketNftInfo small {
+  color: var(--muted) !important;
+  font-size: 11px !important;
+}
+
+.marketNftInfo strong {
+  font-size: 12px !important;
+  white-space: nowrap !important;
+}
+
+.marketNftInfo button {
+  height: 34px !important;
+  font-size: 10px !important;
+  letter-spacing: 1px !important;
+}
+
+.actionStatusGrid {
+  gap: 10px !important;
+}
+
+.actionStatusGrid .metric {
+  border: 1px solid var(--line) !important;
+  padding: 12px !important;
+}
+
+.actionColumns {
+  gap: 10px !important;
+}
+
+.actionBox {
+  padding: 14px !important;
+}
+
+@media (min-width: 1181px) {
+  .topbar {
+    grid-template-columns: minmax(0, 1fr) 104px !important;
+    padding: 12px 0 12px !important;
+  }
+
+  .topbar nav {
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    height: 30px !important;
+  }
+
+  .walletSlot {
+    width: 104px !important;
+  }
+
+  .topbar nav button,
+  .connect {
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 4px !important;
+    font-size: 8.5px !important;
+    letter-spacing: 0.8px !important;
+  }
+}
+
+@media (max-width: 1180px) {
+  .topbar,
+  .status,
+  .statStrip,
+  .page,
+  footer {
+    width: calc(100vw - 16px) !important;
+    max-width: calc(100vw - 16px) !important;
+  }
+
+  .statStrip,
+  .keycardPreviewGrid,
+  .marketplaceGrid,
+  .marketCollectionHead,
+  .marketToolbar,
+  .actionColumns {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .collectionStats,
+  .marketStatusPanel,
+  .progressStats,
+  .marketFilters {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar,
+  .status,
+  .statStrip,
+  .page,
+  footer {
+    width: calc(100vw - 8px) !important;
+    max-width: calc(100vw - 8px) !important;
+  }
+
+  .page > section,
+  .page > article,
+  .card,
+  .keyspaceBlock,
+  .keyspaceHero,
+  .proofIntro,
+  .mintPanel,
+  .progressCard {
+    padding: 10px !important;
+  }
+
+  .collectionStats,
+  .marketStatusPanel,
+  .progressStats,
+  .marketFilters {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}

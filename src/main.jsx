@@ -677,11 +677,11 @@ const KEYSPACE_BASE_RANK_RULES = [
 ];
 
 const KEYSPACE_LISTINGS = [
-  { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1' },
-  { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404' },
-  { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421' },
-  { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206' },
-  { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107' }
+  { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1', price: 'Auction', owner: 'Origin preview' },
+  { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404', price: '0.11 ETH', owner: 'Preview seller' },
+  { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421', price: '0.04 ETH', owner: 'Preview seller' },
+  { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206', price: '0.012 ETH', owner: 'Preview seller' },
+  { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107', price: '0.006 ETH', owner: 'Preview seller' }
 ];
 
 function keyspaceRankRules(tiers = []) {
@@ -1092,8 +1092,16 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
 
 function Marketplace({ wallet, connect, data }) {
   const [status, setStatus] = useState(KEYSPACE_STATIC_STATUS);
+  const [search, setSearch] = useState('');
+  const [rankFilter, setRankFilter] = useState('All');
   const rankRules = keyspaceRankRules(data.tiers || FALLBACK.tiers);
   const marketOpen = Boolean(status.marketplaceLive);
+  const normalizedSearch = search.trim().toLowerCase();
+  const visibleListings = KEYSPACE_LISTINGS.filter((card) => {
+    const matchesRank = rankFilter === 'All' || card.rank === rankFilter;
+    const matchesSearch = !normalizedSearch || card.name.toLowerCase().includes(normalizedSearch) || card.origin.toLowerCase().includes(normalizedSearch);
+    return matchesRank && matchesSearch;
+  });
 
   useEffect(() => {
     let alive = true;
@@ -1113,7 +1121,7 @@ function Marketplace({ wallet, connect, data }) {
       <div>
         <span className="previewBadge">KEYSPACE MARKET</span>
         <h1>Marketplace</h1>
-        <p>Trade .key identities with ETH after KEYSPACE opens. Each identity carries its Origin Rank and locked KeyBond rights with the NFT.</p>
+        <p>Browse .key identity listings. Trading opens only after KEYSPACE is live; this page is prepared for ETH-native ERC721 identity sales.</p>
       </div>
       <div className="marketStatusPanel">
         <Metric label="market" value={marketOpen ? 'open' : 'locked'} note="ETH-native primary market" />
@@ -1122,17 +1130,38 @@ function Marketplace({ wallet, connect, data }) {
       </div>
     </section>
 
-    <section className="keyspaceBlock">
-      <div className="sectionHead">
-        <h2>Identity Listings Preview</h2>
-        <p>Preview only. Marketplace trading, auctions, melt/redeem, and live listings are not open yet.</p>
+    <section className="keyspaceBlock marketCollection">
+      <div className="marketCollectionHead">
+        <div>
+          <h2>KEYSPACE Identities</h2>
+          <p>Preview collection for Origin Rank .key identities backed by KEY.</p>
+        </div>
+        <div className="collectionStats">
+          <Metric label="items" value="21,000 max" />
+          <Metric label="currency" value="ETH" />
+          <Metric label="status" value={marketOpen ? 'live' : 'preview'} />
+        </div>
       </div>
-      <div className="listingGrid keycardPreviewGrid marketPageCards">
-        {KEYSPACE_LISTINGS.map((card) => <div className="listingCard keycardOnly" key={card.name}>
-          <KeyIdentityCard {...card} />
-        </div>)}
+
+      <div className="marketToolbar">
+        <label className="marketSearch"><span>Search</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search names or rank" /></label>
+        <div className="marketFilters">
+          {['All', 'Genesis', 'Quantum', 'Golden', 'Clean', 'Normal'].map((rankName) => <button key={rankName} className={rankFilter === rankName ? 'on' : ''} onClick={() => setRankFilter(rankName)}>{rankName}</button>)}
+        </div>
       </div>
-      <p className="marketNote">Buying a .key identity transfers the ERC721 identity. Its KeyBond remains locked inside the identity and follows the buyer.</p>
+
+      <div className="marketplaceGrid">
+        {visibleListings.map((card) => <article className="marketNftCard" key={card.name}>
+          <div className="marketNftArt"><KeyIdentityCard {...card} /></div>
+          <div className="marketNftInfo">
+            <div><b>{card.name}</b><span>{card.origin}</span></div>
+            <div><small>Price</small><strong>{card.price}</strong></div>
+            <div><small>KeyBond</small><strong>{card.keyBond}</strong></div>
+            <button disabled={!marketOpen}>{marketOpen ? 'Buy now' : 'Preview only'}</button>
+          </div>
+        </article>)}
+      </div>
+      <p className="marketNote">Marketplace preview only. Buying will transfer the ERC721 identity after KEYSPACE opens; the locked KeyBond remains inside the identity and follows the buyer.</p>
     </section>
 
     <KeyspaceActions
