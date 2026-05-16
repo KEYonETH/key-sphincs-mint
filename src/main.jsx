@@ -229,7 +229,7 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
   const walletLabel = wallet ? short(wallet) : 'connect';
   return <header className="topbar">
     <div className="brand" onClick={() => go('home')}>
-      <div className="brandIcon"><img src="/key-logo.svg" alt="KEY" /></div>
+      <div className="brandIcon"><img src="/key-logo.png" alt="KEY" /></div>
       <div><div className="brandName">KEY</div><div className="brandSub">SPHINCS Signature Mint</div></div>
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{NAV_LABELS[n] || n}</button>)}</nav>
@@ -640,12 +640,10 @@ function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, clas
   return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`} style={{ '--name-chars': nameChars, '--value-chars': valueChars }}>
     <div className="webKeyCardInner">
       <div className="cardTop">KEYSPACE IDENTITY</div>
-      <div className="cardRule"><span /><i /><span /></div>
       <div className="cardIdentity">
         <b>{name}</b>
       </div>
       <div className="cardSub">SPHINCS ORIGIN IDENTITY</div>
-      <div className="cardRule mid"><span /><i /><span /></div>
       <div className="cardDetails">
         <span>ORIGIN</span><b>{origin}</b>
         <span>KEYBOND</span><b>{keyBond}</b>
