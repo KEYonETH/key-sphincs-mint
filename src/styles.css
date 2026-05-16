@@ -11456,3 +11456,608 @@ footer {
     height: 40px !important;
   }
 }
+
+/* Final blue purge: remove remaining yellow/cream leaks and refit KEY cards. */
+:root {
+  --gold: #5477ff !important;
+  --gold-dark: #2546d8 !important;
+  --gold-soft: #dbe6ff !important;
+  --paper: #ffffff !important;
+  --paper-2: #f2f7ff !important;
+  --paper-3: #eaf2ff !important;
+  --panel-soft: #f2f7ff !important;
+  --blue-key: #5477ff !important;
+  --blue-key-dark: #2546d8 !important;
+  --blue-key-soft: #eaf2ff !important;
+}
+
+body,
+.shell,
+.page,
+.topbar,
+.status,
+.statStrip,
+.page > section,
+.page > article,
+.card,
+.keyspaceHero,
+.keyspaceBlock,
+.marketCollection,
+.proofIntro,
+.mintPanel,
+.progressCard,
+.vaultPanel,
+.signatureInfo,
+.heroMini,
+.article,
+.proofListCard,
+.proofDetailCard,
+.keyspaceActions,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.liveListings {
+  background: #ffffff !important;
+  border-color: var(--blue-key) !important;
+}
+
+.metric,
+.stat,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.actionBox,
+.simIdentityCard,
+.selectedHead,
+.proofItem,
+.proofDetailTable div,
+.tableLite div,
+.walletMenu,
+.walletMenu button,
+.identityRows,
+.actionHint,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span,
+.marketNftInfo,
+.progressStats,
+.collectionStats,
+.marketStatusPanel {
+  background: var(--blue-key-soft) !important;
+  border-color: rgba(84, 119, 255, 0.52) !important;
+}
+
+.topbar nav,
+.topbar nav button,
+.connect,
+button,
+.miniBtn,
+.primary,
+.outline,
+.ghost,
+input,
+select,
+textarea,
+.previewBadge,
+.pill,
+.progressPercent {
+  border-color: var(--blue-key) !important;
+  color: #061226 !important;
+  background: #ffffff !important;
+}
+
+.topbar nav button.on,
+.topbar nav button:hover,
+.connect:hover,
+.primary,
+.heroActions button:first-child,
+.marketFilters button.on,
+.marketNftInfo button:not(:disabled) {
+  background: var(--blue-key) !important;
+  border-color: var(--blue-key-dark) !important;
+  color: #ffffff !important;
+}
+
+.topbar nav button.on::after,
+.cardTitle::after,
+.eyebrow::after,
+.status span,
+.bar i {
+  background: var(--blue-key) !important;
+  border-color: var(--blue-key) !important;
+}
+
+.cardTitle,
+.eyebrow,
+.previewBadge,
+.status,
+.brandName,
+.brandSub,
+.marketNote,
+.keyspaceWarning,
+.originLine,
+.keyspaceRatio {
+  color: #173366 !important;
+}
+
+.keyspaceHero h1,
+.marketHero h1 {
+  font-size: clamp(34px, 4.2vw, 58px) !important;
+  line-height: 0.98 !important;
+}
+
+.heroMini h1,
+.proofIntro h1,
+.article h1 {
+  font-size: clamp(30px, 3.6vw, 48px) !important;
+  line-height: 1.05 !important;
+}
+
+.keyspaceHero h2 {
+  font-size: clamp(22px, 2.55vw, 34px) !important;
+  line-height: 1.08 !important;
+}
+
+.keyspaceHero p,
+.heroMini p,
+.marketHero p {
+  font-size: 13px !important;
+}
+
+.topbar nav {
+  overflow: visible !important;
+}
+
+.topbar nav button {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.webKeyCard {
+  border: 4px solid var(--rank-glow) !important;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #dfe7f4 34%, #ffffff 54%, #cbd6e6 76%, #f8fbff 100%) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.95) inset,
+    0 0 16px color-mix(in srgb, var(--rank-glow), transparent 34%),
+    0 0 28px color-mix(in srgb, var(--rank-glow), transparent 70%) !important;
+}
+
+.webKeyCard.normal {
+  --rank-glow: #9aa8bb !important;
+  --rank-deep: #45546b !important;
+}
+
+.webKeyCard.clean {
+  --rank-glow: #27c878 !important;
+  --rank-deep: #0f7340 !important;
+}
+
+.webKeyCard.golden {
+  --rank-glow: #39bdf8 !important;
+  --rank-deep: #096da8 !important;
+}
+
+.webKeyCard.quantum {
+  --rank-glow: #6f73ff !important;
+  --rank-deep: #3039c6 !important;
+}
+
+.webKeyCard.genesis {
+  --rank-glow: #ff6fb4 !important;
+  --rank-deep: #b7226b !important;
+}
+
+.webKeyCardInner {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  gap: 0 !important;
+  padding: 7.8% 6.2% 6.4% !important;
+  border: 2px solid color-mix(in srgb, var(--rank-glow), #ffffff 14%) !important;
+  background:
+    radial-gradient(circle at 24% 10%, rgba(255,255,255,0.95), transparent 22%),
+    linear-gradient(135deg, rgba(255,255,255,0.95), rgba(218,228,243,0.84) 42%, rgba(255,255,255,0.96) 62%, rgba(194,207,225,0.8)) !important;
+  box-shadow: inset 0 0 18px color-mix(in srgb, var(--rank-glow), transparent 82%) !important;
+}
+
+.cardTop {
+  flex: 0 0 auto !important;
+  width: 100% !important;
+  margin: 0 !important;
+  font-size: clamp(6px, 2cqw, 9px) !important;
+  letter-spacing: clamp(0.6px, 0.85cqw, 2.2px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardIdentity {
+  flex: 0 0 auto !important;
+  min-height: 18% !important;
+  margin: 15% 0 4% !important;
+  overflow: visible !important;
+}
+
+.cardIdentity b {
+  font-size: clamp(17px, calc(94cqw / var(--name-chars, 9)), 36px) !important;
+  line-height: 0.95 !important;
+  color: #061226 !important;
+  text-shadow: none !important;
+}
+
+.keycardPreviewGrid .cardIdentity b,
+.marketplaceGrid .cardIdentity b {
+  font-size: clamp(17px, calc(88cqw / var(--name-chars, 9)), 32px) !important;
+}
+
+.heroWebCard .cardIdentity b {
+  font-size: clamp(28px, calc(96cqw / var(--name-chars, 9)), 54px) !important;
+}
+
+.cardSub {
+  flex: 0 0 auto !important;
+  margin: 0 0 9% !important;
+  font-size: clamp(5.5px, 1.45cqw, 7px) !important;
+  letter-spacing: clamp(0.4px, 0.55cqw, 1.5px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardDetails {
+  flex: 0 0 auto !important;
+  margin-top: auto !important;
+  min-height: 34% !important;
+  padding: 5.5% !important;
+  border: 1px solid var(--rank-glow) !important;
+  background: rgba(245, 249, 255, 0.82) !important;
+  box-shadow: none !important;
+}
+
+.cardDetails span {
+  font-size: clamp(5.5px, 1.45cqw, 7.1px) !important;
+  letter-spacing: clamp(0.2px, 0.28cqw, 0.9px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardDetails b {
+  font-size: clamp(5.8px, calc(34cqw / var(--value-chars, 12)), 7.8px) !important;
+  color: #061226 !important;
+}
+
+.cardFooter {
+  flex: 0 0 auto !important;
+  margin-top: 7% !important;
+  padding: 3% 5% !important;
+  border: 1px solid var(--rank-glow) !important;
+  background: rgba(245, 249, 255, 0.9) !important;
+  color: var(--rank-deep) !important;
+  font-size: clamp(5.5px, 1.45cqw, 7px) !important;
+  letter-spacing: clamp(0.3px, 0.4cqw, 1px) !important;
+}
+
+.listingCard.keycardOnly,
+.marketNftArt {
+  border-color: rgba(84, 119, 255, 0.34) !important;
+  background: #ffffff !important;
+}
+
+.keyspaceActions .metric,
+.actionStatusGrid .metric,
+.actionBox,
+.liveListings {
+  border-color: var(--blue-key) !important;
+  background: #f2f7ff !important;
+}
+
+/* Final absolute blue/white pass. Keep this at EOF so no legacy yellow/cream theme leaks through. */
+:root {
+  --line: #5477ff !important;
+  --line-soft: #b7c7ff !important;
+  --blue-panel: #f2f7ff !important;
+}
+
+html,
+body,
+#root,
+.shell,
+.topbar,
+.status,
+.page,
+.page > section,
+.page > article,
+.card,
+.keyspaceBlock,
+.keyspaceHero,
+.marketHero,
+.marketCollection,
+.proofIntro,
+.mintPanel,
+.progressCard,
+.vaultPanel,
+.signatureInfo,
+.heroMini,
+.article {
+  background: #ffffff !important;
+}
+
+.topbar,
+.status,
+.page,
+.page > section,
+.page > article,
+.card,
+.keyspaceBlock,
+.keyspaceHero,
+.marketHero,
+.marketCollection,
+.proofIntro,
+.mintPanel,
+.progressCard,
+.vaultPanel,
+.signatureInfo,
+.heroMini,
+.article,
+.statStrip,
+.proofStats,
+.progressStats,
+.collectionStats,
+.marketStatusPanel,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.actionBox,
+.liveListings,
+.tableLite,
+.proofConsole,
+.proofDetailTable,
+input,
+select,
+textarea {
+  border-color: var(--line) !important;
+}
+
+.metric,
+.stat,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.selectedHead,
+.proofItem,
+.proofDetailTable div,
+.tableLite div,
+.walletMenu,
+.walletMenu button,
+.identityRows,
+.actionHint,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span,
+.marketNftInfo,
+.progressStats .metric,
+.collectionStats .metric,
+.marketStatusPanel .metric,
+.actionStatusGrid .metric {
+  background: var(--blue-panel) !important;
+  border-color: var(--line-soft) !important;
+}
+
+.topbar {
+  grid-template-columns: minmax(170px, 260px) minmax(0, 1fr) minmax(112px, 160px) !important;
+  column-gap: 18px !important;
+  align-items: end !important;
+}
+
+.topbar nav {
+  display: grid !important;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  overflow: visible !important;
+  min-width: 0 !important;
+}
+
+.topbar nav button,
+.connect,
+button,
+.miniBtn,
+.primary,
+.outline,
+.ghost {
+  border-color: var(--line) !important;
+  color: #061226 !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  min-width: 0 !important;
+}
+
+.topbar nav button {
+  white-space: nowrap !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  font-size: clamp(10px, 0.78vw, 13px) !important;
+  letter-spacing: 0.08em !important;
+  padding-inline: 6px !important;
+}
+
+.connect {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding-inline: 8px !important;
+  font-size: clamp(10px, 0.78vw, 13px) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.topbar nav button.on,
+.topbar nav button:hover,
+.connect:hover,
+.primary,
+.heroActions button:first-child,
+.marketFilters button.on,
+.marketNftInfo button:not(:disabled) {
+  background: #5477ff !important;
+  border-color: #2546d8 !important;
+  color: #ffffff !important;
+}
+
+.topbar nav button.on::after,
+.cardTitle::after,
+.eyebrow::after,
+.status span,
+.bar i {
+  background: #5477ff !important;
+  border-color: #5477ff !important;
+}
+
+.brandIcon,
+.brandIcon img {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.keyspaceHero h1,
+.marketHero h1 {
+  font-size: clamp(30px, 3.55vw, 50px) !important;
+  line-height: 1 !important;
+}
+
+.heroMini h1,
+.proofIntro h1,
+.article h1 {
+  font-size: clamp(28px, 3.1vw, 42px) !important;
+  line-height: 1.05 !important;
+}
+
+.progressHead h2 {
+  font-size: clamp(26px, 2.6vw, 42px) !important;
+  line-height: 1.05 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+.webKeyCard {
+  border: 4px solid var(--rank-glow) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.95) inset,
+    0 0 12px color-mix(in srgb, var(--rank-glow), transparent 30%),
+    0 0 26px color-mix(in srgb, var(--rank-glow), transparent 66%) !important;
+}
+
+.webKeyCard.normal {
+  --rank-glow: #9aa8bb !important;
+  --rank-deep: #4a5668 !important;
+}
+
+.webKeyCard.clean {
+  --rank-glow: #27c878 !important;
+  --rank-deep: #0f6e3e !important;
+}
+
+.webKeyCard.golden {
+  --rank-glow: #39bdf8 !important;
+  --rank-deep: #096da8 !important;
+}
+
+.webKeyCard.quantum {
+  --rank-glow: #6f73ff !important;
+  --rank-deep: #3039c6 !important;
+}
+
+.webKeyCard.genesis {
+  --rank-glow: #ff6fb4 !important;
+  --rank-deep: #aa2869 !important;
+}
+
+.webKeyCardInner {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 7.4% 6% 6.2% !important;
+  background:
+    radial-gradient(circle at 22% 8%, rgba(255,255,255,0.96), transparent 24%),
+    linear-gradient(135deg, rgba(255,255,255,0.95), rgba(221,231,246,0.8) 38%, rgba(255,255,255,0.96) 60%, rgba(197,211,231,0.82)) !important;
+  border: 2px solid color-mix(in srgb, var(--rank-glow), #ffffff 14%) !important;
+  box-shadow: inset 0 0 18px color-mix(in srgb, var(--rank-glow), transparent 84%) !important;
+}
+
+.cardTop {
+  font-size: clamp(5.6px, 1.75cqw, 8.4px) !important;
+  letter-spacing: clamp(0.5px, 0.72cqw, 1.8px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardIdentity {
+  margin: 15% 0 4.5% !important;
+  min-height: 15% !important;
+  overflow: visible !important;
+}
+
+.cardIdentity b,
+.keycardPreviewGrid .cardIdentity b,
+.marketplaceGrid .cardIdentity b {
+  font-size: clamp(14px, calc(78cqw / var(--name-chars, 9)), 29px) !important;
+  line-height: 1 !important;
+  color: #061226 !important;
+  text-shadow: none !important;
+}
+
+.heroWebCard .cardIdentity b {
+  font-size: clamp(28px, calc(94cqw / var(--name-chars, 9)), 52px) !important;
+}
+
+.cardSub {
+  margin-bottom: 8% !important;
+  font-size: clamp(5px, 1.25cqw, 6.4px) !important;
+  letter-spacing: clamp(0.35px, 0.45cqw, 1.15px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardDetails {
+  margin-top: auto !important;
+  min-height: 32% !important;
+  padding: 5% !important;
+  border: 1px solid var(--rank-glow) !important;
+  background: rgba(246,250,255,0.78) !important;
+  box-shadow: none !important;
+}
+
+.cardDetails span {
+  font-size: clamp(5px, 1.25cqw, 6.5px) !important;
+  letter-spacing: clamp(0.18px, 0.22cqw, 0.75px) !important;
+  color: var(--rank-deep) !important;
+}
+
+.cardDetails b {
+  font-size: clamp(5.1px, calc(30cqw / var(--value-chars, 12)), 6.9px) !important;
+  color: #061226 !important;
+}
+
+.cardFooter {
+  margin-top: 6.2% !important;
+  padding: 2.8% 5% !important;
+  border: 1px solid var(--rank-glow) !important;
+  background: rgba(246,250,255,0.86) !important;
+  color: var(--rank-deep) !important;
+  font-size: clamp(5px, 1.25cqw, 6.6px) !important;
+  letter-spacing: clamp(0.22px, 0.32cqw, 0.85px) !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 1180px) {
+  .topbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .topbar nav {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .walletSlot {
+    width: 100% !important;
+  }
+}
