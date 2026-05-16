@@ -10107,3 +10107,329 @@ body::after {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 }
+
+/* Full-width square layout pass with compact 80% content rails. */
+html,
+body,
+#root {
+  background: #ffffff !important;
+  overflow-x: hidden !important;
+}
+
+.shell {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 0 18px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.shell::before,
+.shell::after {
+  display: none !important;
+}
+
+.topbar,
+.status,
+.statStrip,
+.page,
+footer {
+  width: min(80vw, 1500px) !important;
+  max-width: 80vw !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.topbar {
+  border: 0 !important;
+  border-bottom: 2px solid #c99006 !important;
+  border-radius: 0 !important;
+  background: #fffdf7 !important;
+  box-shadow: none !important;
+}
+
+.status {
+  margin-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  border-radius: 0 !important;
+  background: #fffaf0 !important;
+}
+
+.page {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.statStrip,
+.page > section,
+.page > article,
+.card,
+.contentPage,
+.metric,
+.infoCard,
+.rankCard,
+.flowCard,
+.listingCard,
+.keyspaceBlock,
+.keyspaceHero,
+.keyspaceWarning,
+.marketNote,
+.originLine,
+.keyspaceRatio,
+.actionBox,
+.liveListings,
+.proofIntro,
+.proofListCard,
+.proofDetailCard,
+.mintPanel,
+.progressCard,
+.heroMini,
+.signatureInfo,
+.vaultPanel,
+.tableLite,
+.proofConsole,
+.proofDetailTable,
+.proofDetailTable div,
+.proofItem,
+.selectedHead,
+.simIdentityCard,
+input,
+select,
+textarea,
+button,
+.connect,
+.miniBtn,
+.primary,
+.outline,
+.ghost,
+.previewBadge,
+.walletMenu,
+.walletMenu button,
+.bar,
+.bar i,
+.pill,
+.progressPercent,
+.windowGrid div,
+.keybondGrid div,
+.heroTagline span {
+  border-radius: 0 !important;
+}
+
+.brandIcon,
+.brandIcon img,
+.walletIcon,
+.walletIcon img {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+@media (min-width: 1181px) {
+  .topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 112px !important;
+    grid-template-rows: auto auto !important;
+    gap: 10px 14px !important;
+    padding: 12px 0 14px !important;
+  }
+
+  .brand {
+    grid-column: 1 / -1 !important;
+    width: fit-content !important;
+    margin-left: 0 !important;
+  }
+
+  .topbar nav {
+    grid-column: 1 !important;
+    grid-row: 2 !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+    height: 32px !important;
+  }
+
+  .walletSlot {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+    width: 112px !important;
+    justify-self: end !important;
+  }
+
+  .topbar nav button,
+  .connect {
+    height: 32px !important;
+    min-height: 32px !important;
+    padding: 0 6px !important;
+    font-size: 9px !important;
+    letter-spacing: 1.1px !important;
+  }
+}
+
+.marketplacePage {
+  gap: 12px !important;
+}
+
+.marketHero {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.52fr) !important;
+  align-items: end !important;
+}
+
+.marketHero h1 {
+  margin: 10px 0 6px !important;
+  font-size: clamp(40px, 4.6vw, 72px) !important;
+  line-height: 0.92 !important;
+  letter-spacing: 0 !important;
+}
+
+.marketHero p {
+  max-width: 720px !important;
+  margin: 0 !important;
+  color: var(--muted) !important;
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+.marketStatusPanel {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  border: 2px solid #c99006 !important;
+  background: #fffaf0 !important;
+}
+
+.marketStatusPanel .metric {
+  border: 0 !important;
+  border-right: 1px solid var(--line) !important;
+  background: transparent !important;
+}
+
+.marketStatusPanel .metric:last-child {
+  border-right: 0 !important;
+}
+
+.keycardPreviewGrid,
+.marketPageCards {
+  gap: clamp(14px, 1.4vw, 22px) !important;
+  align-items: stretch !important;
+}
+
+.listingCard.keycardOnly {
+  padding: clamp(7px, 0.8vw, 12px) !important;
+  border: 1px solid rgba(201, 144, 6, 0.3) !important;
+  background: #fffdf7 !important;
+  overflow: visible !important;
+}
+
+.keycardPreviewGrid .webKeyCard {
+  width: min(100%, 214px) !important;
+  aspect-ratio: 3 / 4.35 !important;
+  justify-self: center !important;
+}
+
+.webKeyCard,
+.webKeyCard::before,
+.webKeyCardInner,
+.cardDetails,
+.cardFooter {
+  border-radius: 0 !important;
+}
+
+.webKeyCard {
+  box-shadow:
+    10px 12px 0 var(--card-deep),
+    0 18px 26px rgba(55, 37, 0, 0.16) !important;
+}
+
+.webKeyCardInner {
+  padding: 9% 7.5% 7.5% !important;
+}
+
+.keycardPreviewGrid .webKeyCardInner {
+  grid-template-rows: auto auto minmax(15%, 0.8fr) auto auto minmax(39%, 1.5fr) auto !important;
+  row-gap: 2.4% !important;
+}
+
+.keycardPreviewGrid .cardIdentity b {
+  font-size: clamp(22px, calc(82cqw / var(--name-chars, 9)), 39px) !important;
+  line-height: 1 !important;
+}
+
+.keycardPreviewGrid .cardSub {
+  align-self: start !important;
+  margin-top: 0 !important;
+  font-size: clamp(6px, 1.75cqw, 8.4px) !important;
+  line-height: 1.15 !important;
+}
+
+.keycardPreviewGrid .cardDetails {
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr) !important;
+  padding: 5.6% 5.8% !important;
+  align-self: stretch !important;
+}
+
+.keycardPreviewGrid .cardDetails span {
+  font-size: clamp(6.5px, 1.9cqw, 8.5px) !important;
+  letter-spacing: clamp(0.4px, 0.52cqw, 1.9px) !important;
+}
+
+.keycardPreviewGrid .cardDetails b {
+  font-size: clamp(6.8px, calc(43cqw / var(--value-chars, 12)), 9.5px) !important;
+  white-space: nowrap !important;
+}
+
+.keycardPreviewGrid .cardFooter {
+  margin-top: 1.5% !important;
+  font-size: clamp(6.5px, 2cqw, 9px) !important;
+  letter-spacing: clamp(0.4px, 0.52cqw, 1.8px) !important;
+}
+
+@media (max-width: 1180px) {
+  .topbar,
+  .status,
+  .statStrip,
+  .page,
+  footer {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+
+  .marketHero {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .marketStatusPanel {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .marketStatusPanel .metric {
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
+
+  .marketStatusPanel .metric:last-child {
+    border-bottom: 0 !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar,
+  .status,
+  .statStrip,
+  .page,
+  footer {
+    width: calc(100vw - 12px) !important;
+    max-width: calc(100vw - 12px) !important;
+  }
+
+  .keycardPreviewGrid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .keycardPreviewGrid .webKeyCard {
+    width: min(100%, 250px) !important;
+  }
+}

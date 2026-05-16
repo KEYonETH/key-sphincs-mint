@@ -63,7 +63,8 @@ const MARKET_ABI = [
   'function cancelListing(uint256 tokenId) external',
   'function getListing(uint256 tokenId) view returns (address seller,uint256 price)'
 ];
-const ROUTES = ['home', 'mint', 'keyspace', 'proof', 'vault', 'whitepaper'];
+const ROUTES = ['home', 'mint', 'keyspace', 'marketplace', 'proof', 'vault', 'whitepaper'];
+const NAV_LABELS = { marketplace: 'market' };
 const ALLOWED_WALLETS = {
   metamask: 'MetaMask',
   phantom: 'Phantom',
@@ -231,7 +232,7 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
       <div className="brandIcon"><img src="/key-logo.svg" alt="KEY" /></div>
       <div><div className="brandName">KEY</div><div className="brandSub">SPHINCS Signature Mint</div></div>
     </div>
-    <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{n}</button>)}</nav>
+    <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{NAV_LABELS[n] || n}</button>)}</nav>
     <div className="walletSlot">
       <button className="connect" onClick={() => {
         if (!wallet && walletProviders.length > 1) setWalletMenu((open) => !open);
@@ -656,39 +657,49 @@ function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, clas
   </div>;
 }
 
-function Keyspace({ tiers, wallet, connect, data }) {
-  const staticStatus = {
-    live: false,
-    phase: 'preview',
-    keySupply: '21000000',
-    identitySupply: '21000',
-    claimed: 0,
-    marketplaceLive: false,
-    originClaimsOpen: false,
-    contractsLive: false
-  };
-  const rankRules = [
-    { key: 'Normal', title: 'Normal Key', short: 'Normal', reward: 500, min: 7, claim: '7+ letters', bond: '500 KEY', origin: 'Normal Origin' },
-    { key: 'Clean', title: 'Clean Key', short: 'Clean', reward: 750, min: 6, claim: '6+ letters', bond: '750 KEY', origin: 'Clean Origin' },
-    { key: 'Golden', title: 'Golden Key', short: 'Golden', reward: 1500, min: 5, claim: '5+ letters', bond: '1,500 KEY', origin: 'Golden Origin' },
-    { key: 'Quantum', title: 'Quantum Key', short: 'Quantum', reward: 5000, min: 4, claim: '4+ letters', bond: '5,000 KEY', origin: 'Quantum Origin' },
-    { key: 'Genesis', title: 'Genesis Key', short: 'Genesis', reward: 21000, min: 3, claim: '3+ letters', bond: '21,000 KEY', origin: 'Genesis Origin' }
-  ].map((rule) => {
+const KEYSPACE_STATIC_STATUS = {
+  live: false,
+  phase: 'preview',
+  keySupply: '21000000',
+  identitySupply: '21000',
+  claimed: 0,
+  marketplaceLive: false,
+  originClaimsOpen: false,
+  contractsLive: false
+};
+
+const KEYSPACE_BASE_RANK_RULES = [
+  { key: 'Normal', title: 'Normal Key', short: 'Normal', reward: 500, min: 7, claim: '7+ letters', bond: '500 KEY', origin: 'Normal Origin' },
+  { key: 'Clean', title: 'Clean Key', short: 'Clean', reward: 750, min: 6, claim: '6+ letters', bond: '750 KEY', origin: 'Clean Origin' },
+  { key: 'Golden', title: 'Golden Key', short: 'Golden', reward: 1500, min: 5, claim: '5+ letters', bond: '1,500 KEY', origin: 'Golden Origin' },
+  { key: 'Quantum', title: 'Quantum Key', short: 'Quantum', reward: 5000, min: 4, claim: '4+ letters', bond: '5,000 KEY', origin: 'Quantum Origin' },
+  { key: 'Genesis', title: 'Genesis Key', short: 'Genesis', reward: 21000, min: 3, claim: '3+ letters', bond: '21,000 KEY', origin: 'Genesis Origin' }
+];
+
+const KEYSPACE_LISTINGS = [
+  { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1' },
+  { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404' },
+  { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421' },
+  { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206' },
+  { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107' }
+];
+
+function keyspaceRankRules(tiers = []) {
+  return KEYSPACE_BASE_RANK_RULES.map((rule) => {
     const tier = tiers.find((t) => t.name.toLowerCase() === rule.title.toLowerCase());
     return tier ? { ...rule, title: tier.name, reward: tier.reward, bond: `${fmt.format(tier.reward)} KEY` } : rule;
   });
+}
+
+function Keyspace({ tiers, wallet, connect, data }) {
+  const staticStatus = KEYSPACE_STATIC_STATUS;
+  const rankRules = keyspaceRankRules(tiers);
   const flow = [
     ['Mint KEY', 'SPHINCS signature hash reveals your reward tier and Key Rank.'],
     ['Claim identity', 'After mint-out, one Origin Claim unlocks one .key identity.'],
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
-  const listings = [
-    { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1' },
-    { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404' },
-    { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421' },
-    { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206' },
-    { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107' }
-  ];
+  const listings = KEYSPACE_LISTINGS;
   const heroCard = listings[2];
 
   const [rank, setRank] = useState('Normal');
@@ -1079,6 +1090,61 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
   </Card>;
 }
 
+function Marketplace({ wallet, connect, data }) {
+  const [status, setStatus] = useState(KEYSPACE_STATIC_STATUS);
+  const rankRules = keyspaceRankRules(data.tiers || FALLBACK.tiers);
+  const marketOpen = Boolean(status.marketplaceLive);
+
+  useEffect(() => {
+    let alive = true;
+    fetch(`${BACKEND}/api/keyspace/status`)
+      .then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE status unavailable')))
+      .then((json) => {
+        if (alive) setStatus({ ...KEYSPACE_STATIC_STATUS, ...json });
+      })
+      .catch(() => {
+        if (alive) setStatus(KEYSPACE_STATIC_STATUS);
+      });
+    return () => { alive = false; };
+  }, []);
+
+  return <main className="page marketplacePage">
+    <section className="marketHero keyspaceBlock">
+      <div>
+        <span className="previewBadge">KEYSPACE MARKET</span>
+        <h1>Marketplace</h1>
+        <p>Trade .key identities with ETH after KEYSPACE opens. Each identity carries its Origin Rank and locked KeyBond rights with the NFT.</p>
+      </div>
+      <div className="marketStatusPanel">
+        <Metric label="market" value={marketOpen ? 'open' : 'locked'} note="ETH-native primary market" />
+        <Metric label="contracts" value={status.contractsLive ? 'ready' : 'preview'} />
+        <Metric label="claimed" value={fmt.format(Number(status.claimed || 0))} note="indexed identities" />
+      </div>
+    </section>
+
+    <section className="keyspaceBlock">
+      <div className="sectionHead">
+        <h2>Identity Listings Preview</h2>
+        <p>Preview only. Marketplace trading, auctions, melt/redeem, and live listings are not open yet.</p>
+      </div>
+      <div className="listingGrid keycardPreviewGrid marketPageCards">
+        {KEYSPACE_LISTINGS.map((card) => <div className="listingCard keycardOnly" key={card.name}>
+          <KeyIdentityCard {...card} />
+        </div>)}
+      </div>
+      <p className="marketNote">Buying a .key identity transfers the ERC721 identity. Its KeyBond remains locked inside the identity and follows the buyer.</p>
+    </section>
+
+    <KeyspaceActions
+      status={status}
+      wallet={wallet}
+      connect={connect}
+      data={data}
+      rankRules={rankRules}
+    />
+  </main>;
+}
+
 function InfoCard({ title, value }) {
   return <div className="infoCard"><b>{title}</b><span>{value}</span></div>;
 }
@@ -1226,6 +1292,7 @@ function App() {
   const page = useMemo(() => {
     if (route === 'mint') return <Mint wallet={wallet} connect={connect} data={data} refresh={refresh} />;
     if (route === 'keyspace') return <Keyspace tiers={data.tiers} wallet={wallet} connect={connect} data={data} />;
+    if (route === 'marketplace') return <Marketplace wallet={wallet} connect={connect} data={data} />;
     if (route === 'proof') return <Proof data={data} />;
     if (route === 'vault') return <Vault data={data} />;
     if (route === 'whitepaper') return <Whitepaper data={data} />;
