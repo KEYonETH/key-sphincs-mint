@@ -8611,44 +8611,22 @@ body .marketNftArt {
   box-shadow: none !important;
 }
 
-body .marketArtLogo {
-  position: absolute !important;
-  top: 21% !important;
-  left: 50% !important;
-  z-index: 2 !important;
-  width: min(36%, 66px) !important;
-  height: auto !important;
-  transform: translateX(-50%) !important;
-  color: #ffffff !important;
-  fill: none !important;
-  stroke: currentColor !important;
-  stroke-linecap: round !important;
-  stroke-linejoin: round !important;
-  stroke-width: 18 !important;
-  filter: none !important;
-  opacity: 0.98 !important;
-  pointer-events: none !important;
-}
-
-body .keyMark path {
-  fill: none !important;
-  vector-effect: none !important;
-}
-
 body .marketArtName {
   position: absolute !important;
   left: 10px !important;
   right: 10px !important;
-  bottom: 22% !important;
+  top: 58% !important;
+  bottom: auto !important;
   z-index: 2 !important;
   color: #ffffff !important;
   font-family: var(--font-sans) !important;
-  font-size: clamp(16px, calc(25px - (var(--name-chars, 8) * 0.48px)), 24px) !important;
+  font-size: clamp(16px, calc(31px - (var(--name-chars, 8) * 0.8px)), 28px) !important;
   font-weight: 900 !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
   text-align: center !important;
   text-shadow: none !important;
+  transform: translateY(-50%) !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
@@ -8681,24 +8659,9 @@ body .cardIdentity {
   display: grid !important;
   place-items: center !important;
   align-content: center !important;
-  gap: 18px !important;
+  gap: 0 !important;
   padding: 30px 20px !important;
   text-align: center !important;
-}
-
-body .cardIdentityLogo {
-  display: block !important;
-  width: min(34%, 112px) !important;
-  max-height: 42% !important;
-  object-fit: contain !important;
-  color: #ffffff !important;
-  fill: none !important;
-  stroke: currentColor !important;
-  stroke-linecap: round !important;
-  stroke-linejoin: round !important;
-  stroke-width: 18 !important;
-  filter: none !important;
-  opacity: 0.98 !important;
 }
 
 body .cardIdentity b {
@@ -8708,11 +8671,7 @@ body .cardIdentity b {
 }
 
 body .nftModalArt .cardIdentity {
-  gap: 28px !important;
-}
-
-body .nftModalArt .cardIdentityLogo {
-  width: min(28%, 170px) !important;
+  gap: 0 !important;
 }
 
 @media (max-width: 1180px) {
@@ -8727,11 +8686,7 @@ body .nftModalArt .cardIdentityLogo {
     gap: 12px !important;
   }
 
-  body .marketArtLogo {
-    width: min(34%, 54px) !important;
-  }
-
   body .marketArtName {
-    font-size: clamp(14px, calc(22px - (var(--name-chars, 8) * 0.42px)), 20px) !important;
+    font-size: clamp(14px, calc(27px - (var(--name-chars, 8) * 0.72px)), 24px) !important;
   }
 }

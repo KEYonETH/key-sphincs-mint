@@ -672,20 +672,11 @@ function DetailRow({ label, value, onCopy }) {
   </div>;
 }
 
-function KeyMark({ className = '' }) {
-  return <svg className={`keyMark ${className}`} viewBox="0 0 512 512" aria-hidden="true" focusable="false">
-    <path d="M256 18c-8 0-14 4-19 13L157 170c-5 9-5 18 0 27l78 137v133c0 15 10 26 24 26h22c14 0 24-11 24-26v-66h43c11 0 19-8 19-19v-38c0-11-8-19-19-19h-43v-32h52c11 0 19-8 19-19v-38c0-11-8-19-19-19h-52l50-88c5-9 5-18 0-27L275 31c-5-9-11-13-19-13Z" />
-    <path d="M256 80 328 205 256 252 184 205 256 80Z" />
-    <path d="M194 238 256 292 318 238 285 344 256 392 227 344 194 238Z" />
-  </svg>;
-}
-
 function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, price, className = '' }) {
   const nameChars = Math.max(6, String(name).length);
   return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`} style={{ '--name-chars': nameChars }}>
     <div className="webKeyCardInner">
       <div className="cardIdentity">
-        <KeyMark className="cardIdentityLogo" />
         <b title={name}>{name}</b>
       </div>
     </div>
@@ -1256,7 +1247,6 @@ function Marketplace({ wallet, connect, data }) {
           }}
         >
           <div className="marketNftArt">
-            <KeyMark className="marketArtLogo" />
             <b className="marketArtName" title={card.name}>{card.name}</b>
           </div>
           <div className="marketNftInfo">
