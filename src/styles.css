@@ -8323,6 +8323,48 @@ body .contractLinks a code {
   text-overflow: ellipsis;
 }
 
+body .whitepaperFlow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 30px;
+}
+
+body .whitepaperFlow div {
+  min-height: 150px;
+  padding: 16px;
+  border: 3px solid #060912;
+  background: #eef4ff;
+}
+
+body .whitepaperFlow span {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 14px;
+  place-items: center;
+  border: 3px solid #060912;
+  background: #5877ff;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-weight: 900;
+}
+
+body .whitepaperFlow b {
+  display: block;
+  margin-bottom: 8px;
+  color: #060912;
+  font-size: 18px;
+}
+
+body .whitepaperFlow p {
+  margin: 0;
+  color: #5d6678;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 body .marketNftInfo button {
   width: 100%;
   margin-top: 8px;
@@ -8436,6 +8478,10 @@ body .progressCard .progressHead .pill {
 }
 
 @media (max-width: 1180px) {
+  body .whitepaperFlow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   body .contractLinks > div {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -8447,6 +8493,7 @@ body .progressCard .progressHead .pill {
 
 @media (max-width: 760px) {
   body .claimGuide,
+  body .whitepaperFlow,
   body .contractLinks > div {
     grid-template-columns: 1fr;
   }

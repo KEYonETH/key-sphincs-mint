@@ -12,12 +12,12 @@ function backendUrl() {
 }
 
 const BACKEND = backendUrl();
-const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || '0x856e53bcB3D4e085a266132144Fc2ca93f32B28d';
-const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2';
-const TREASURY_VAULT = import.meta.env.VITE_TREASURY_VAULT_ADDRESS || '0x218ab46071297110e4e0e95F30B54516ca8D6dad';
-const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741';
-const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0xEEceD724B8fA375D0E8C0c4A7f327f7e11Ecd715';
-const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c';
+const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || '0x9dE2f35afeB2f836025826c4D15e5692c8C1FD08';
+const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0xbbE32a85C1d9B11D21fAF631DE18Fb59ef7CfD13';
+const TREASURY_VAULT = import.meta.env.VITE_TREASURY_VAULT_ADDRESS || '0xEBC07979432D142eEf8d5d881AA54f9170E09946';
+const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0x56A4264fF676f39EE7D19209BA17e351AF8B7e9E';
+const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0x88e350674B2C8c741a4c70614d92dFDffC1c1009';
+const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0x4D64869425197aeD9eEbDf1336468435B1Afa004';
 const X_URL = 'https://x.com/Key_sphincs';
 const ZERO = ethers.ZeroAddress;
 const REQUIRED_MINTS_PER_IDENTITY = 10;
@@ -1294,8 +1294,8 @@ function InfoCard({ title, value }) {
 function ContractLinks({ data, compact = false }) {
   const rows = [
     ['KEY Token', KEY_TOKEN],
-    ['Mint Gate V4', configuredMintGate(data)],
-    ['Treasury Lock', TREASURY_VAULT],
+    ['Mint Gate V5', configuredMintGate(data)],
+    ['Auto LP Vault', TREASURY_VAULT],
     ['Registrar V3', KEY_REGISTRAR],
     ['Identity NFT', KEY_IDENTITY],
     ['Marketplace', KEY_MARKET]
@@ -1334,6 +1334,12 @@ function Tokenomics({ data }) {
 function Whitepaper({ data }) {
   return <main className="page"><Card title="whitepaper" className="article whitepaper">
     <h1>KEY — SPHINCS Signature Mint</h1>
+    <div className="whitepaperFlow" aria-label="KEY mint fee and liquidity flow">
+      <div><span>1</span><b>Mint KEY</b><p>User pays 0.001 ETH and receives deterministic KEY reward.</p></div>
+      <div><span>2</span><b>Auto LP Vault</b><p>Mint fee ETH and the 10M KEY LP reserve are held by the vault.</p></div>
+      <div><span>3</span><b>Mint-Out</b><p>After public mint-out, ETH can be wrapped to WETH and prepared for LP.</p></div>
+      <div><span>4</span><b>KEY/WETH LP</b><p>The vault finalizes the owner-prepared Uniswap v4 liquidity transaction.</p></div>
+    </div>
     <h2>KEY in one sentence</h2>
     <p>KEY is mined by signatures, and ten KEY mints unlock one on-chain KEY Card NFT.</p>
     <h2>Abstract</h2>
@@ -1353,7 +1359,7 @@ proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PR
     <h2>Trust model</h2>
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
     <h2>Mainnet contracts</h2>
-    <ul><li>KEY minting is live through `KEYMintGateV4` with a ten-mint wallet cap.</li><li>Mint fee ETH is sent into `KEYTreasuryLockVault`; it stays locked until the owner unlocks it, then it can be routed manually for Uniswap v4 LP or withdrawn by the owner.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>Old mint gates remain readable as legacy gates so earlier proofs stay counted, but new mints use the active V4 gate.</li></ul>
+    <ul><li>KEY minting is live through `KEYMintGateV5` with a ten-mint wallet cap.</li><li>Mint fee ETH is sent into `KEYAutoLiquidityVault`; the 10M KEY LP reserve is minted directly into the same vault.</li><li>After mint-out, the owner or liquidity manager can finalize the prepared Uniswap v4 KEY/WETH liquidity transaction from the vault.</li><li>The owner keeps emergency unlock authority, so this is operational custody rather than a renounced forever-lock.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>New mints use the active V5 gate and no legacy gates are counted for the clean deployment.</li></ul>
     <ContractLinks data={data} />
     <h2>Remaining public hardening</h2>
     <ul><li>Verify all deployed contract source on Etherscan.</li><li>Publish proof snapshots for independent checking.</li><li>Use multisig custody for owner-controlled settings.</li><li>Run an external audit before scaling traffic.</li></ul>

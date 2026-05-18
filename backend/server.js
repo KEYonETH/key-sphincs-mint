@@ -104,11 +104,18 @@ const treasuryVaultStatsAbi = [
   'function totalMintFeesReceived() view returns (uint256)',
   'function totalDirectEthReceived() view returns (uint256)',
   'function totalEthRouted() view returns (uint256)',
+  'function totalEthFinalizedToLiquidity() view returns (uint256)',
+  'function totalKeyFinalizedToLiquidity() view returns (uint256)',
   'function totalEthWithdrawn() view returns (uint256)',
+  'function totalKeyWithdrawn() view returns (uint256)',
   'function owner() view returns (address)',
   'function mintGate() view returns (address)',
   'function liquidityManager() view returns (address)',
-  'function unlocked() view returns (bool)'
+  'function unlocked() view returns (bool)',
+  'function emergencyUnlocked() view returns (bool)',
+  'function liquidityFinalized() view returns (bool)',
+  'function keyToken() view returns (address)',
+  'function positionManager() view returns (address)'
 ];
 
 const hex32 = z.string().regex(/^0x[0-9a-fA-F]{64}$/);
@@ -342,7 +349,7 @@ async function liveLiquidityStateUncached() {
     fee: CONFIG.uniswapV4Fee || '0',
     tickSpacing: CONFIG.uniswapV4TickSpacing || '200',
     hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
-    custody: 'LP reserve and treasury reserve are held by configured reserve wallets. Mint fee ETH is held in the treasury lock vault until the owner unlocks it for manual LP routing or withdrawal. User-minted KEY stays in user wallets.',
+    custody: 'LP reserve KEY and mint fee ETH are held by KEYAutoLiquidityVault. After mint-out, the owner or liquidity manager can finalize the prepared Uniswap v4 KEY/WETH liquidity transaction. The owner still has emergency unlock authority. User-minted KEY stays in user wallets.',
     addresses: {
       token: CONFIG.keyTokenAddress,
       mintGate: CONFIG.mintGateAddress,
@@ -378,11 +385,22 @@ async function liveLiquidityStateUncached() {
       state.controls.vaultMintGate = await optionalCall(vault, 'mintGate', ethers.ZeroAddress);
       state.controls.liquidityManager = await optionalCall(vault, 'liquidityManager', ethers.ZeroAddress);
       state.controls.vaultUnlocked = await optionalCall(vault, 'unlocked', false);
+      state.controls.vaultEmergencyUnlocked = await optionalCall(vault, 'emergencyUnlocked', state.controls.vaultUnlocked);
+      state.controls.liquidityFinalized = await optionalCall(vault, 'liquidityFinalized', false);
+      state.controls.vaultKeyToken = await optionalCall(vault, 'keyToken', ethers.ZeroAddress);
+      state.controls.positionManager = await optionalCall(vault, 'positionManager', ethers.ZeroAddress);
       state.balances.vaultETH = Number(ethers.formatEther(await chainProvider.getBalance(CONFIG.treasuryVaultAddress)));
       state.balances.totalMintFeesReceivedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalMintFeesReceived', 0n)));
       state.balances.totalDirectEthReceivedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalDirectEthReceived', 0n)));
       state.balances.totalEthRoutedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalEthRouted', 0n)));
+      state.balances.totalEthFinalizedToLiquidityETH = Number(ethers.formatEther(await optionalCall(vault, 'totalEthFinalizedToLiquidity', 0n)));
+      state.balances.totalKeyFinalizedToLiquidityKEY = Number(ethers.formatEther(await optionalCall(vault, 'totalKeyFinalizedToLiquidity', 0n)));
       state.balances.totalEthWithdrawnETH = Number(ethers.formatEther(await optionalCall(vault, 'totalEthWithdrawn', 0n)));
+      state.balances.totalKeyWithdrawnKEY = Number(ethers.formatEther(await optionalCall(vault, 'totalKeyWithdrawn', 0n)));
+      if (CONFIG.keyTokenAddress !== ethers.ZeroAddress) {
+        const token = new ethers.Contract(CONFIG.keyTokenAddress, tokenStatsAbi, chainProvider);
+        state.balances.vaultKEY = Number(ethers.formatEther(await optionalCall(token, 'balanceOf', 0n, CONFIG.treasuryVaultAddress)));
+      }
       const legacyVaultFees = await Promise.all(CONFIG.legacyTreasuryVaultAddresses.map(async (vaultAddress) => {
         const legacyVault = new ethers.Contract(vaultAddress, treasuryVaultStatsAbi, chainProvider);
         return optionalCall(legacyVault, 'totalMintFeesReceived', 0n);
