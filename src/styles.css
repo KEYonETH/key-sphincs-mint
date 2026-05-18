@@ -8323,6 +8323,41 @@ body .contractLinks a code {
   text-overflow: ellipsis;
 }
 
+body .whitepaperCa {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 12px;
+  align-items: stretch;
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 3px solid #060912;
+  background: #eef4ff;
+}
+
+body .whitepaperCa span {
+  display: block;
+  margin-bottom: 8px;
+  color: #2248ef;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+body .whitepaperCa code {
+  display: block;
+  overflow-wrap: anywhere;
+  color: #060912;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 900;
+}
+
+body .whitepaperCa .copyBtn {
+  align-self: center;
+  width: 100%;
+}
+
 body .whitepaperFlow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -8492,6 +8527,7 @@ body .progressCard .progressHead .pill {
 }
 
 @media (max-width: 760px) {
+  body .whitepaperCa,
   body .claimGuide,
   body .whitepaperFlow,
   body .contractLinks > div {

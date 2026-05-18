@@ -111,8 +111,6 @@ const treasuryVaultStatsAbi = [
   'function owner() view returns (address)',
   'function mintGate() view returns (address)',
   'function liquidityManager() view returns (address)',
-  'function unlocked() view returns (bool)',
-  'function emergencyUnlocked() view returns (bool)',
   'function liquidityFinalized() view returns (bool)',
   'function keyToken() view returns (address)',
   'function positionManager() view returns (address)'
@@ -349,7 +347,7 @@ async function liveLiquidityStateUncached() {
     fee: CONFIG.uniswapV4Fee || '0',
     tickSpacing: CONFIG.uniswapV4TickSpacing || '200',
     hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
-    custody: 'LP reserve KEY and mint fee ETH are held by KEYAutoLiquidityVault. After mint-out, the owner or liquidity manager can finalize the prepared Uniswap v4 KEY/WETH liquidity transaction. The owner still has emergency unlock authority. User-minted KEY stays in user wallets.',
+    custody: 'LP reserve KEY and every new mint fee ETH are held by KEYAutoLiquidityVault. After public mint-out, the vault flow prepares the collected ETH and LP reserve KEY for official Uniswap v4 KEY/WETH liquidity. User-minted KEY stays in user wallets, and vault balances are visible on-chain.',
     addresses: {
       token: CONFIG.keyTokenAddress,
       mintGate: CONFIG.mintGateAddress,
@@ -384,8 +382,6 @@ async function liveLiquidityStateUncached() {
       state.controls.vaultOwner = await optionalCall(vault, 'owner', ethers.ZeroAddress);
       state.controls.vaultMintGate = await optionalCall(vault, 'mintGate', ethers.ZeroAddress);
       state.controls.liquidityManager = await optionalCall(vault, 'liquidityManager', ethers.ZeroAddress);
-      state.controls.vaultUnlocked = await optionalCall(vault, 'unlocked', false);
-      state.controls.vaultEmergencyUnlocked = await optionalCall(vault, 'emergencyUnlocked', state.controls.vaultUnlocked);
       state.controls.liquidityFinalized = await optionalCall(vault, 'liquidityFinalized', false);
       state.controls.vaultKeyToken = await optionalCall(vault, 'keyToken', ethers.ZeroAddress);
       state.controls.positionManager = await optionalCall(vault, 'positionManager', ethers.ZeroAddress);

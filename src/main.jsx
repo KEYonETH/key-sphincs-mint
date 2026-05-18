@@ -1332,13 +1332,24 @@ function Tokenomics({ data }) {
 }
 
 function Whitepaper({ data }) {
+  const [copiedCa, setCopiedCa] = useState(false);
+  async function copyKeyTokenCa() {
+    await navigator.clipboard.writeText(KEY_TOKEN);
+    setCopiedCa(true);
+    setTimeout(() => setCopiedCa(false), 1600);
+  }
+
   return <main className="page"><Card title="whitepaper" className="article whitepaper">
     <h1>KEY — SPHINCS Signature Mint</h1>
+    <div className="whitepaperCa">
+      <div><span>KEY TOKEN CA</span><code>{KEY_TOKEN}</code></div>
+      <button className="copyBtn" onClick={copyKeyTokenCa}>{copiedCa ? 'copied' : 'copy ca'}</button>
+    </div>
     <div className="whitepaperFlow" aria-label="KEY mint fee and liquidity flow">
       <div><span>1</span><b>Mint KEY</b><p>User pays 0.001 ETH and receives deterministic KEY reward.</p></div>
-      <div><span>2</span><b>Auto LP Vault</b><p>Mint fee ETH and the 10M KEY LP reserve are held by the vault.</p></div>
-      <div><span>3</span><b>Mint-Out</b><p>After public mint-out, ETH can be wrapped to WETH and prepared for LP.</p></div>
-      <div><span>4</span><b>KEY/WETH LP</b><p>The vault finalizes the owner-prepared Uniswap v4 liquidity transaction.</p></div>
+      <div><span>2</span><b>Auto LP Vault</b><p>Every new mint fee ETH and the 10M KEY LP reserve are held in the vault contract.</p></div>
+      <div><span>3</span><b>Mint-Out</b><p>When the public mint pool is completed, vault balances are prepared for KEY/WETH liquidity.</p></div>
+      <div><span>4</span><b>KEY/WETH LP</b><p>The vault flow adds official Uniswap v4 liquidity using the locked fee ETH and LP KEY reserve.</p></div>
     </div>
     <h2>KEY in one sentence</h2>
     <p>KEY is mined by signatures, and ten KEY mints unlock one on-chain KEY Card NFT.</p>
@@ -1359,7 +1370,7 @@ proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PR
     <h2>Trust model</h2>
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
     <h2>Mainnet contracts</h2>
-    <ul><li>KEY minting is live through `KEYMintGateV5` with a ten-mint wallet cap.</li><li>Mint fee ETH is sent into `KEYAutoLiquidityVault`; the 10M KEY LP reserve is minted directly into the same vault.</li><li>After mint-out, the owner or liquidity manager can finalize the prepared Uniswap v4 KEY/WETH liquidity transaction from the vault.</li><li>The owner keeps emergency unlock authority, so this is operational custody rather than a renounced forever-lock.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>New mints use the active V5 gate and no legacy gates are counted for the clean deployment.</li></ul>
+    <ul><li>KEY token contract: `{KEY_TOKEN}`.</li><li>KEY minting is live through `KEYMintGateV5` with a ten-mint wallet cap.</li><li>All new mint fee ETH is sent into `KEYAutoLiquidityVault` automatically.</li><li>The 10M KEY LP reserve is minted directly into the same vault, so the fee side and token side of the planned liquidity are visible on-chain.</li><li>After public mint-out, the vault flow prepares the collected ETH and LP reserve KEY for official Uniswap v4 KEY/WETH liquidity.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>New mints use the active V5 gate and no legacy gates are counted for the clean deployment.</li></ul>
     <ContractLinks data={data} />
     <h2>Remaining public hardening</h2>
     <ul><li>Verify all deployed contract source on Etherscan.</li><li>Publish proof snapshots for independent checking.</li><li>Use multisig custody for owner-controlled settings.</li><li>Run an external audit before scaling traffic.</li></ul>
