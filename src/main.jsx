@@ -64,7 +64,7 @@ const MARKET_ABI = [
   'function cancelListing(uint256 tokenId) external',
   'function getListing(uint256 tokenId) view returns (address seller,uint256 price)'
 ];
-const ROUTES = ['home', 'mint', 'keyspace', 'marketplace', 'proof', 'vault', 'whitepaper'];
+const ROUTES = ['home', 'mint', 'keyspace', 'marketplace', 'proof', 'whitepaper'];
 const NAV_LABELS = { marketplace: 'market' };
 const ALLOWED_WALLETS = {
   metamask: 'MetaMask',
@@ -1194,70 +1194,31 @@ function Tokenomics({ data }) {
   </Card></main>;
 }
 
-function Vault({ data }) {
-  const liquidity = data.liquidity || {};
-  const addresses = liquidity.addresses || {};
-  const balances = liquidity.balances || {};
-  const controls = liquidity.controls || {};
-  const noPool = !liquidity.poolId || liquidity.poolId === 'TBA' || liquidity.poolId === 'not created';
-  const noLiquidityModule = !liquidity.hookAddress || isZeroAddress(liquidity.hookAddress);
-  const txLink = liquidity.initializeTx ? `https://etherscan.io/tx/${liquidity.initializeTx}` : '';
-  const addressRows = [
-    ['KEY token', addresses.token || import.meta.env.VITE_KEY_TOKEN_ADDRESS || 'TBA'],
-    ['Mint gate', addresses.mintGate || MINT_GATE || 'TBA'],
-    ['Treasury vault', addresses.treasuryVault || import.meta.env.VITE_TREASURY_VAULT_ADDRESS || 'TBA'],
-    ['Uniswap v4 PoolManager', liquidity.poolManager || '0x000000000004444c5dc75cB358380D2e3dE08A90'],
-    ['LP reserve wallet', addresses.lpReserve || import.meta.env.VITE_LP_RESERVE_ADDRESS || 'TBA'],
-    ['Treasury reserve wallet', addresses.treasuryReserve || import.meta.env.VITE_TREASURY_RESERVE_ADDRESS || 'TBA'],
-    ['Contract owner', addresses.contractOwner || import.meta.env.VITE_CONTRACT_OWNER_ADDRESS || 'TBA']
-  ];
-  const value = (n, unit) => Number.isFinite(Number(n)) ? `${fmt.format(Number(n))} ${unit}` : `0 ${unit}`;
-  const etherscan = (v) => ethers.isAddress(v) ? `https://etherscan.io/address/${v}` : '';
-  return <main className="page"><Card title="vault & liquidity" className="article">
-    <h1>Vault</h1>
-    <p>Mint fees are held by the treasury vault. Reserve wallets, pool status, and liquidity actions are published here before trading is enabled.</p>
-    <div className="vaultStatusGrid">
-      <Metric label="official trading" value={noPool ? 'not launched' : 'liquidity pending'} note={noPool ? 'no official KEY pool yet' : 'pool exists, LP has not been added'} />
-      <Metric label="uniswap v4 pool" value={noPool ? 'not created' : 'created'} note={liquidity.poolId || 'pending'} />
-      <Metric label="liquidity module" value={noLiquidityModule ? 'none' : 'configured'} note={noLiquidityModule ? 'standard pool planned first' : short(liquidity.hookAddress)} />
-      <Metric label="vault ETH" value={value(balances.vaultETH, 'ETH')} note="mint fees currently held by vault" />
-    </div>
-    {!noPool && <div className="tableLite addresses poolDetails">
-      <div><b>Pool ID</b><span>{liquidity.poolId}</span></div>
-      <div><b>Pair</b><span>{liquidity.pair || 'KEY/WETH'}</span></div>
-      <div><b>Initial price</b><span>{liquidity.initialPrice || '1 ETH = 500,000 KEY'}</span></div>
-      <div><b>Fee</b><span>{liquidity.fee === '10000' ? '1%' : liquidity.fee || 'TBA'}</span></div>
-      <div><b>Tick spacing</b><span>{liquidity.tickSpacing || '200'}</span></div>
-      {txLink && <div><b>Initialize tx</b><span>{liquidity.initializeTx}</span><a href={txLink} target="_blank" rel="noreferrer">etherscan</a></div>}
-    </div>}
-    <h2>Public addresses</h2>
-    <div className="tableLite addresses">{addressRows.map(([k, v]) => <div key={k}><b>{k}</b><span>{v}</span>{etherscan(v) && <a href={etherscan(v)} target="_blank" rel="noreferrer">etherscan</a>}</div>)}</div>
-    <h2>Control surface</h2>
-    <p>Minted KEY stays inside user wallets and cannot be taken back by the project. The team only controls reserves, vault routing, verifier policy, and when official liquidity is published.</p>
-  </Card></main>;
-}
-
 function Whitepaper({ data }) {
   return <main className="page"><Card title="whitepaper" className="article whitepaper">
     <h1>KEY — SPHINCS Signature Mint</h1>
     <h2>KEY in one sentence</h2>
-    <p>KEY is mined by signatures, not machines.</p>
+    <p>KEY is mined by signatures, and ten KEY mints unlock one on-chain KEY Card NFT.</p>
     <h2>Abstract</h2>
-    <p>KEY is a post-quantum themed ERC20 mint experiment on Ethereum. Instead of browser hash racing or a fixed claim, KEY uses a Proof-of-Signature Hash mechanism: a wallet creates a fresh key context, signs a deterministic message, reveals a reward tier from the resulting signature hash, and mints the approved KEY amount.</p>
+    <p>KEY is a post-quantum themed ERC20 mint and ERC721 identity experiment on Ethereum. Instead of browser hash racing or a fixed claim, KEY uses a Proof-of-Signature Hash mechanism: a wallet creates a fresh key context, signs a deterministic message, reveals a reward tier from the resulting signature hash, and mints the approved KEY amount. After ten valid KEY mints, the wallet can claim one KEY Card NFT and `.key` identity backed by the combined KEY rewards from those ten mints.</p>
     <h2>Why KEY is different</h2>
-    <ul><li>Not browser hash racing.</li><li>Not a fixed token claim.</li><li>Reward is revealed from the signature hash.</li><li>Every mint can produce a proof record.</li><li>Inspired by hash-based signature flow: key → sign → verify.</li></ul>
+    <ul><li>Not browser hash racing.</li><li>Not a fixed token claim.</li><li>Reward is revealed from the signature hash.</li><li>Every mint creates one reusable public proof record.</li><li>Ten mint proofs become one ERC721 KEY Card NFT.</li><li>Inspired by hash-based signature flow: key → sign → verify.</li></ul>
     <h2>Reference, not clone</h2>
     <p>The project is inspired by the SPHINCS-style idea of hash-based post-quantum signatures: key generation, public key derivation, message signing, and verification. KEY does not copy the existing token flow. The mechanism is changed into a tiered mint where the signature hash decides the reward.</p>
     <h2>Mint lifecycle</h2>
     <ol><li>Generate a fresh public key hash.</li><li>Sign the canonical KEY mint message.</li><li>Backend verifies wallet ownership and, in production, verifies the SPHINCS signature through a configured verifier.</li><li>Backend signs an EIP-712 mint attestation.</li><li>Contract verifies attestation, recomputes tier, enforces caps, receives 0.001 ETH, and mints KEY.</li></ol>
+    <h2>KEY Card NFT lifecycle</h2>
+    <ol><li>Mint KEY up to ten times from the same wallet.</li><li>Each mint creates a unique proof ID and reward amount.</li><li>After ten valid minted proofs, approve the combined KEY reward amount as KeyBond.</li><li>Claim one KEY Card NFT and `.key` identity through the KEYSPACE registrar.</li><li>The NFT rank uses the best tier found across the ten mints, while the KeyBond uses the sum of all ten rewards.</li><li>The NFT can be listed and traded on the on-chain KEYSPACE marketplace for ETH.</li></ol>
     <h2>Core formula</h2>
     <pre>{`signatureHash = keccak256(signature)
 rewardHash = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId)
 proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PROOF_V1)`}</pre>
     <h2>Trust model</h2>
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
-    <h2>Mainnet readiness</h2>
-    <ul><li>Switch backend from preview mode to real SPHINCS verifier command mode.</li><li>Verify contract source on Etherscan.</li><li>Use a multisig for treasury and reserve ownership.</li><li>Publish proof snapshots and liquidity actions.</li><li>Audit the mint gate, token, vault, and liquidity route.</li></ul>
+    <h2>Mainnet contracts</h2>
+    <ul><li>KEY minting is live through `KEYMintGateV3` with a ten-mint wallet cap.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>Old mint gates remain readable as legacy gates so earlier proofs stay counted, but new mints use the active V3 gate.</li></ul>
+    <h2>Remaining public hardening</h2>
+    <ul><li>Verify all deployed contract source on Etherscan.</li><li>Publish proof snapshots for independent checking.</li><li>Use multisig custody for owner-controlled settings.</li><li>Run an external audit before scaling traffic.</li></ul>
   </Card></main>;
 }
 
@@ -1324,7 +1285,6 @@ function App() {
     if (route === 'keyspace') return <Keyspace tiers={data.tiers} wallet={wallet} connect={connect} data={data} />;
     if (route === 'marketplace') return <Marketplace wallet={wallet} connect={connect} data={data} />;
     if (route === 'proof') return <Proof data={data} />;
-    if (route === 'vault') return <Vault data={data} />;
     if (route === 'whitepaper') return <Whitepaper data={data} />;
     return <Home go={go} data={data} />;
   }, [route, wallet, data]);
