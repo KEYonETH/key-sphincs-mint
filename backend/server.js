@@ -673,6 +673,14 @@ app.get('/api/keyspace/image/:tokenId.svg', async (req, res) => {
   res.set('Content-Type', 'image/svg+xml; charset=utf-8').send(svg);
 });
 
+app.get('/api/keyspace/image/:tokenId.png', async (req, res) => {
+  const tokenId = keyspaceTokenId(req, res);
+  if (!tokenId) return;
+  const png = await keyspaceIndexer.imagePng(tokenId, { force: req.query.refresh === '1' });
+  res.set('Cache-Control', 'public, max-age=300');
+  res.set('Content-Type', 'image/png').send(png);
+});
+
 app.get('/api/keyspace/image/:tokenId', async (req, res) => {
   const tokenId = keyspaceTokenId(req, res);
   if (!tokenId) return;

@@ -224,7 +224,7 @@ function useRoute() {
   return [route, go];
 }
 
-function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWalletMenu, theme, toggleTheme }) {
+function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWalletMenu }) {
   const nav = ROUTES;
   const walletLabel = wallet ? short(wallet) : 'connect';
   return <header className="topbar">
@@ -234,7 +234,6 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{NAV_LABELS[n] || n}</button>)}</nav>
     <div className="walletSlot">
-      <button className="themeToggle" onClick={toggleTheme} aria-label="Toggle color theme">{theme === 'dark' ? 'light' : 'dark'}</button>
       <button className="connect" onClick={() => {
         if (!wallet && walletProviders.length > 1) setWalletMenu((open) => !open);
         else connect(walletProviders[0]);
@@ -629,29 +628,13 @@ function DetailRow({ label, value, onCopy }) {
   </div>;
 }
 
-function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, className = '' }) {
+function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, price, className = '' }) {
   const nameChars = Math.max(6, String(name).length);
-  const valueChars = Math.max(
-    String(origin).length,
-    String(keyBond).length,
-    String(mintProof).length,
-    String(tokenId).length,
-    8
-  );
-  return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`} style={{ '--name-chars': nameChars, '--value-chars': valueChars }}>
+  return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`} style={{ '--name-chars': nameChars }}>
     <div className="webKeyCardInner">
-      <div className="cardTop">KEYSPACE IDENTITY</div>
       <div className="cardIdentity">
-        <b>{name}</b>
+        <b title={name}>{name}</b>
       </div>
-      <div className="cardSub">SPHINCS ORIGIN IDENTITY</div>
-      <div className="cardDetails">
-        <span>ORIGIN</span><b>{origin}</b>
-        <span>KEYBOND</span><b>{keyBond}</b>
-        <span>MINT PROOF</span><b>{mintProof}</b>
-        <span>TOKEN ID</span><b>{tokenId}</b>
-      </div>
-      <div className="cardFooter">KEY-BACKED IDENTITY</div>
     </div>
   </div>;
 }
@@ -698,14 +681,11 @@ function Keyspace({ tiers, wallet, connect, data }) {
     ['Claim identity', 'After mint-out, one Origin Claim unlocks one .key identity.'],
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
-  const listings = KEYSPACE_LISTINGS;
-  const heroCard = listings[2];
 
   const [rank, setRank] = useState('Normal');
   const [name, setName] = useState('');
   const [preview, setPreview] = useState(null);
   const [keyspaceStatus, setKeyspaceStatus] = useState(staticStatus);
-  const [keyQuote, setKeyQuote] = useState(null);
   const selected = rankRules.find((r) => r.key === rank) || rankRules[0];
   const keySupply = fmt.format(Number(keyspaceStatus.keySupply || staticStatus.keySupply));
   const identitySupply = fmt.format(Number(keyspaceStatus.identitySupply || staticStatus.identitySupply));
@@ -719,14 +699,6 @@ function Keyspace({ tiers, wallet, connect, data }) {
       })
       .catch(() => {
         if (alive) setKeyspaceStatus(staticStatus);
-      });
-    fetch(`${BACKEND}/api/keyspace/quote/500`)
-      .then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE quote unavailable')))
-      .then((quote) => {
-        if (alive) setKeyQuote(quote);
-      })
-      .catch(() => {
-        if (alive) setKeyQuote(null);
       });
     return () => { alive = false; };
   }, []);
@@ -756,19 +728,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
           <span>Your signature decides your rank.</span>
           <span>Your KEY backs the identity.</span>
         </div>
-      </div>
-      <div className="heroIdentityCard">
-        <KeyIdentityCard {...heroCard} className="heroWebCard" />
-        <div className="heroCardFallback">
-          <div className="identityName">alpha.key</div>
-          <div className="identityMeta">Golden Origin</div>
-          <div className="identityRows">
-            <span>KeyBond</span><b>1,500 KEY</b>
-            <span>Example Listing</span><b>0.04 ETH</b>
-            <span>Status</span><b>Not Live</b>
-          </div>
-        </div>
-        <div className="heroStats">
+        <div className="heroStats keyspaceHeroStats">
           <span>{identitySupply} max identities</span>
           <span>10,000,000 KEY public mint</span>
           <span>KEY-backed identity assets</span>
@@ -817,17 +777,6 @@ function Keyspace({ tiers, wallet, connect, data }) {
       <div className="windowGrid">
         {['Genesis: 3+ letters', 'Quantum: 4+ letters', 'Golden: 5+ letters', 'Clean: 6+ letters', 'Normal: 7+ letters'].map((item) => <div key={item}>{item}</div>)}
       </div>
-    </section>
-
-    <section className="keyspaceBlock">
-      <div className="sectionHead">
-        <h2>Market Preview</h2>
-        <p>Example .key identities that can trade with ETH after mint-out.</p>
-      </div>
-      <div className="listingGrid keycardPreviewGrid">{listings.map((card) => <div className="listingCard keycardOnly" key={card.name}>
-        <KeyIdentityCard {...card} />
-      </div>)}</div>
-      <p className="marketNote">.key identities can be listed, bought, and sold with ETH after KEYSPACE goes live. When sold, the KEY KeyBond stays inside the identity and moves to the buyer. OpenSea can show the same ERC721 identity page. {keyQuote?.ethEstimate ? `Reference: 500 KEY KeyBond ≈ ${keyQuote.ethEstimate} ETH.` : ''}</p>
     </section>
 
     <section className="keyspaceBlock keybondBlock">
@@ -1093,7 +1042,7 @@ function Marketplace({ wallet, connect, data }) {
   const [status, setStatus] = useState(KEYSPACE_STATIC_STATUS);
   const [search, setSearch] = useState('');
   const [rankFilter, setRankFilter] = useState('All');
-  const rankRules = keyspaceRankRules(data.tiers || FALLBACK.tiers);
+  const [selectedListing, setSelectedListing] = useState(null);
   const marketOpen = Boolean(status.marketplaceLive);
   const normalizedSearch = search.trim().toLowerCase();
   const visibleListings = KEYSPACE_LISTINGS.filter((card) => {
@@ -1117,29 +1066,22 @@ function Marketplace({ wallet, connect, data }) {
 
   return <main className="page marketplacePage">
     <section className="marketHero keyspaceBlock">
-      <div>
+      <div className="marketHeroCopy">
         <span className="previewBadge">KEYSPACE MARKET</span>
-        <h1>Marketplace</h1>
-        <p>Browse .key identity listings. Trading opens only after KEYSPACE is live; this page is prepared for ETH-native ERC721 identity sales.</p>
+        <h1>MARKETPLACE</h1>
+        <p>Preview the .key identity market. When KEYSPACE opens, listings can scale across the full 21,000 identity supply.</p>
       </div>
-      <div className="marketStatusPanel">
-        <Metric label="market" value={marketOpen ? 'open' : 'locked'} note="ETH-native primary market" />
-        <Metric label="contracts" value={status.contractsLive ? 'ready' : 'preview'} />
-        <Metric label="claimed" value={fmt.format(Number(status.claimed || 0))} note="indexed identities" />
+      <div className="marketHeroStats">
+        <span>{marketOpen ? 'Market open' : 'Market locked'}</span>
+        <span>ETH-native listings</span>
+        <span>{fmt.format(Number(status.claimed || 0))} indexed identities</span>
       </div>
     </section>
 
     <section className="keyspaceBlock marketCollection">
       <div className="marketCollectionHead">
-        <div>
-          <h2>KEYSPACE Identities</h2>
-          <p>Preview collection for Origin Rank .key identities backed by KEY.</p>
-        </div>
-        <div className="collectionStats">
-          <Metric label="items" value="21,000 max" />
-          <Metric label="currency" value="ETH" />
-          <Metric label="status" value={marketOpen ? 'live' : 'preview'} />
-        </div>
+        <h2>Preview Listings</h2>
+        <p>Origin Rank .key identities backed by KEY. Live trading stays locked until KEYSPACE opens.</p>
       </div>
 
       <div className="marketToolbar">
@@ -1150,26 +1092,64 @@ function Marketplace({ wallet, connect, data }) {
       </div>
 
       <div className="marketplaceGrid">
-        {visibleListings.map((card) => <article className="marketNftCard" key={card.name}>
-          <div className="marketNftArt"><KeyIdentityCard {...card} /></div>
+        {visibleListings.map((card) => <article
+          className={`marketNftCard ${card.rank.toLowerCase()}`}
+          key={card.name}
+          style={{ '--name-chars': Math.max(6, card.name.length) }}
+          role="button"
+          tabIndex={0}
+          onClick={() => setSelectedListing(card)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setSelectedListing(card);
+            }
+          }}
+        >
+          <div className="marketNftArt">
+            <b className="marketArtName" title={card.name}>{card.name}</b>
+          </div>
           <div className="marketNftInfo">
-            <div><b>{card.name}</b><span>{card.origin}</span></div>
+            <div><b>{card.name}</b></div>
             <div><small>Price</small><strong>{card.price}</strong></div>
-            <div><small>KeyBond</small><strong>{card.keyBond}</strong></div>
-            <button disabled={!marketOpen}>{marketOpen ? 'Buy now' : 'Preview only'}</button>
           </div>
         </article>)}
       </div>
       <p className="marketNote">Marketplace preview only. Buying will transfer the ERC721 identity after KEYSPACE opens; the locked KeyBond remains inside the identity and follows the buyer.</p>
     </section>
 
-    <KeyspaceActions
-      status={status}
-      wallet={wallet}
-      connect={connect}
-      data={data}
-      rankRules={rankRules}
-    />
+    {selectedListing && <div className="nftModal" role="dialog" aria-modal="true" aria-label={`${selectedListing.name} details`} onClick={() => setSelectedListing(null)}>
+      <div className="nftModalShell" onClick={(e) => e.stopPropagation()}>
+        <button className="nftModalClose" onClick={() => setSelectedListing(null)} aria-label="Close listing detail">x</button>
+        <div className="nftModalArt">
+          <KeyIdentityCard {...selectedListing} className="modalWebCard" />
+        </div>
+        <div className="nftModalPanel">
+          <div className="nftModalTopline">
+            <span>KEYSPACE Identity</span>
+            <span>ERC721</span>
+            <span>Ethereum</span>
+          </div>
+          <h2>{selectedListing.name}</h2>
+          <p>{selectedListing.origin} backed by KEY. Trading stays locked until KEYSPACE opens.</p>
+          <div className="nftBuyBox">
+            <div><small>Buy for</small><strong>{selectedListing.price}</strong></div>
+            <button disabled={!marketOpen}>{marketOpen ? 'Buy now' : 'Preview only'}</button>
+            <button className="ghost" disabled>Make offer</button>
+          </div>
+          <div className="nftDetailTabs"><b>Details</b><span>Activity</span><span>Orders</span></div>
+          <div className="nftTraits">
+            <div><small>Rank</small><b>{selectedListing.rank}</b></div>
+            <div><small>Origin</small><b>{selectedListing.origin}</b></div>
+            <div><small>KeyBond</small><b>{selectedListing.keyBond}</b></div>
+            <div><small>Mint proof</small><b>{selectedListing.mintProof}</b></div>
+            <div><small>Token</small><b>{selectedListing.tokenId}</b></div>
+            <div><small>Status</small><b>{marketOpen ? 'Live' : 'Locked'}</b></div>
+          </div>
+        </div>
+      </div>
+    </div>}
+
   </main>;
 }
 
@@ -1273,14 +1253,11 @@ function App() {
   const [walletMenu, setWalletMenu] = useState(false);
   const [selectedWalletProvider, setSelectedWalletProvider] = useState(null);
   const [data, setData] = useState(FALLBACK);
-  const [theme, setTheme] = useState(() => localStorage.getItem('keyTheme') || 'light');
 
   useEffect(() => {
-    document.body.dataset.theme = theme;
-    localStorage.setItem('keyTheme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme((current) => current === 'dark' ? 'light' : 'dark');
+    document.body.dataset.theme = 'light';
+    localStorage.removeItem('keyTheme');
+  }, []);
 
   async function refresh() {
     try {
@@ -1335,7 +1312,7 @@ function App() {
     return <Home go={go} data={data} />;
   }, [route, wallet, data]);
 
-  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} walletProviders={walletProviders} walletMenu={walletMenu} setWalletMenu={setWalletMenu} theme={theme} toggleTheme={toggleTheme} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
+  return <><div className="shell"><Header route={route} go={go} wallet={wallet} connect={connect} walletProviders={walletProviders} walletMenu={walletMenu} setWalletMenu={setWalletMenu} /><StatusLine mode={data.mode} />{route === 'home' && <TopStats data={data} />}{page}<Footer /></div></>;
 }
 
 createRoot(document.getElementById('root')).render(<App />);

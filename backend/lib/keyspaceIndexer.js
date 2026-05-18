@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { ethers } from 'ethers';
+import sharp from 'sharp';
 import { CONFIG } from './config.js';
 
 const PREVIEW_STATUS = Object.freeze({
@@ -177,67 +178,64 @@ export function renderKeyIdentitySvg({ name, rank, keyBond, mintProof, tokenId }
   const id = escapeXml(formatTokenId(normalizedTokenId));
 
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1122" height="1402" viewBox="0 0 1122 1402" role="img" aria-label="${displayName} KEYSPACE identity">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000" role="img" aria-label="${displayName} KEYSPACE identity">
   <defs>
-    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="plate" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="${style.glow}"/>
-      <stop offset="0.28" stop-color="${style.accent}"/>
-      <stop offset="0.55" stop-color="#fffdf6"/>
+      <stop offset="0.28" stop-color="${style.soft}"/>
+      <stop offset="0.68" stop-color="${style.accent}"/>
       <stop offset="1" stop-color="${style.deep}"/>
     </linearGradient>
-    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="surface" x1="0" y1="0" x2="0.9" y2="1">
       <stop offset="0" stop-color="${style.soft}"/>
-      <stop offset="0.45" stop-color="#fffaf0"/>
-      <stop offset="1" stop-color="#f8efe0"/>
+      <stop offset="0.48" stop-color="#fffdf8"/>
+      <stop offset="1" stop-color="${style.glow}"/>
     </linearGradient>
-    <radialGradient id="halo" cx="50%" cy="30%" r="75%">
-      <stop offset="0" stop-color="${style.glow}" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    <radialGradient id="haloA" cx="26%" cy="18%" r="72%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.82"/>
+      <stop offset="0.44" stop-color="${style.glow}" stop-opacity="0.52"/>
+      <stop offset="1" stop-color="${style.accent}" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="haloB" cx="88%" cy="16%" r="54%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/>
+      <stop offset="1" stop-color="${style.accent}" stop-opacity="0"/>
     </radialGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="${style.deep}" flood-opacity="0.18"/>
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="${style.deep}" flood-opacity="0.22"/>
     </filter>
   </defs>
-  <rect width="1122" height="1402" fill="none"/>
-  <rect x="144" y="84" width="834" height="1234" rx="48" fill="url(#frame)" filter="url(#shadow)"/>
-  <rect x="166" y="106" width="790" height="1190" rx="38" fill="url(#paper)" stroke="#fff9e8" stroke-width="7"/>
-  <rect x="184" y="124" width="754" height="1154" rx="30" fill="none" stroke="${style.accent}" stroke-width="2" opacity="0.78"/>
-  <rect x="184" y="124" width="754" height="1154" rx="30" fill="url(#halo)" opacity="0.75"/>
+  <rect width="1000" height="1000" fill="#fffdf7"/>
+  <rect x="60" y="60" width="880" height="880" rx="56" fill="url(#plate)" filter="url(#shadow)"/>
+  <rect x="86" y="86" width="828" height="828" rx="40" fill="url(#surface)" stroke="#fffdf8" stroke-width="8"/>
+  <rect x="106" y="106" width="788" height="788" rx="30" fill="url(#haloA)" opacity="0.95"/>
+  <rect x="106" y="106" width="788" height="788" rx="30" fill="url(#haloB)" opacity="0.86"/>
+  <rect x="106" y="106" width="788" height="788" rx="30" fill="none" stroke="${style.accent}" stroke-width="3" opacity="0.72"/>
 
-  <text x="561" y="262" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="28" font-weight="700" letter-spacing="10" fill="${style.accent}">KEYSPACE IDENTITY</text>
-  <line x1="286" y1="336" x2="520" y2="336" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
-  <path d="M561 326 L571 336 L561 346 L551 336 Z" fill="${style.accent}"/>
-  <line x1="602" y1="336" x2="836" y2="336" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
+  <text x="500" y="188" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="25" font-weight="700" letter-spacing="9" fill="${style.accent}">KEYSPACE IDENTITY</text>
+  <line x1="202" y1="245" x2="430" y2="245" stroke="${style.accent}" stroke-width="2" opacity="0.38"/>
+  <path d="M500 233 L512 245 L500 257 L488 245 Z" fill="${style.accent}"/>
+  <line x1="570" y1="245" x2="798" y2="245" stroke="${style.accent}" stroke-width="2" opacity="0.38"/>
 
-  <text x="561" y="548" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="${nameSize}" font-weight="500" letter-spacing="1" fill="${style.deep}">${displayName}</text>
-  <text x="561" y="622" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="28" font-weight="700" letter-spacing="8" fill="${style.accent}">SPHINCS ORIGIN IDENTITY</text>
-  <line x1="286" y1="702" x2="520" y2="702" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
-  <path d="M561 692 L571 702 L561 712 L551 702 Z" fill="${style.accent}"/>
-  <line x1="602" y1="702" x2="836" y2="702" stroke="${style.accent}" stroke-width="1.3" opacity="0.35"/>
+  <text x="500" y="420" text-anchor="middle" font-family="Georgia, Times New Roman, serif" font-size="${nameSize}" font-weight="600" fill="${style.deep}">${displayName}</text>
+  <text x="500" y="480" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="23" font-weight="700" letter-spacing="7" fill="${style.accent}">SPHINCS ORIGIN IDENTITY</text>
 
-  <rect x="222" y="774" width="678" height="362" rx="30" fill="#fffdf8" fill-opacity="0.6" stroke="${style.accent}" stroke-width="1.6"/>
-  <g font-family="IBM Plex Mono, Courier New, monospace" font-size="29" fill="#17130d">
-    <text x="272" y="845" letter-spacing="8">ORIGIN</text>
-    <text x="848" y="845" text-anchor="end">${origin}</text>
-    <line x1="260" y1="890" x2="862" y2="890" stroke="${style.accent}" stroke-width="2"/>
-    <circle cx="260" cy="890" r="4" fill="${style.accent}"/><circle cx="862" cy="890" r="4" fill="${style.accent}"/>
+  <rect x="170" y="560" width="660" height="250" rx="28" fill="#fffdf8" fill-opacity="0.68" stroke="${style.accent}" stroke-width="2"/>
+  <g font-family="IBM Plex Mono, Courier New, monospace" font-size="23" fill="#17130d">
+    <text x="220" y="625" letter-spacing="6">ORIGIN</text>
+    <text x="780" y="625" text-anchor="end">${origin}</text>
+    <line x1="210" y1="656" x2="790" y2="656" stroke="${style.accent}" stroke-width="2" opacity="0.8"/>
 
-    <text x="272" y="940" letter-spacing="8">KEYBOND</text>
-    <text x="848" y="940" text-anchor="end">${bond}</text>
-    <line x1="260" y1="984" x2="862" y2="984" stroke="${style.accent}" stroke-width="2"/>
-    <circle cx="260" cy="984" r="4" fill="${style.accent}"/><circle cx="862" cy="984" r="4" fill="${style.accent}"/>
+    <text x="220" y="704" letter-spacing="6">KEYBOND</text>
+    <text x="780" y="704" text-anchor="end">${bond}</text>
+    <line x1="210" y1="735" x2="790" y2="735" stroke="${style.accent}" stroke-width="2" opacity="0.8"/>
 
-    <text x="272" y="1034" letter-spacing="8">MINT PROOF</text>
-    <text x="848" y="1034" text-anchor="end">${proof}</text>
-    <line x1="260" y1="1078" x2="862" y2="1078" stroke="${style.accent}" stroke-width="2"/>
-    <circle cx="260" cy="1078" r="4" fill="${style.accent}"/><circle cx="862" cy="1078" r="4" fill="${style.accent}"/>
-
-    <text x="272" y="1128" letter-spacing="8">TOKEN ID</text>
-    <text x="848" y="1128" text-anchor="end">${id}</text>
+    <text x="220" y="783" letter-spacing="6">TOKEN</text>
+    <text x="780" y="783" text-anchor="end">${id}</text>
   </g>
 
-  <rect x="354" y="1182" width="414" height="58" rx="29" fill="#fffdf8" fill-opacity="0.7" stroke="${style.accent}" stroke-width="2"/>
-  <text x="561" y="1221" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="22" font-weight="700" letter-spacing="7" fill="${style.accent}">KEY-BACKED IDENTITY</text>
+  <rect x="286" y="842" width="428" height="58" rx="29" fill="#fffdf8" fill-opacity="0.74" stroke="${style.accent}" stroke-width="2"/>
+  <text x="500" y="880" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="20" font-weight="700" letter-spacing="6" fill="${style.accent}">KEY-BACKED IDENTITY</text>
+  <text x="500" y="925" text-anchor="middle" font-family="IBM Plex Mono, Courier New, monospace" font-size="16" font-weight="700" letter-spacing="5" fill="${style.deep}" opacity="0.58">${proof}</text>
 </svg>`;
 }
 
@@ -602,7 +600,8 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     return {
       name: displayName,
       description: 'A SPHINCS Origin Identity backed by KEY.',
-      image: `${metadataBaseUrl()}/api/keyspace/image/${normalizedTokenId}.svg`,
+      image: `${metadataBaseUrl()}/api/keyspace/image/${normalizedTokenId}.png`,
+      image_svg: `${metadataBaseUrl()}/api/keyspace/image/${normalizedTokenId}.svg`,
       external_url: `${siteBaseUrl()}/#/keyspace/${normalizedTokenId}`,
       attributes: [
         { trait_type: 'Origin', value: originLabel },
@@ -632,6 +631,11 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     });
   }
 
+  async function imagePng(tokenId, options) {
+    const svg = await image(tokenId, options);
+    return sharp(Buffer.from(svg)).resize(1000, 1000).png().toBuffer();
+  }
+
   function quote(keyAmount = '500') {
     const amount = Number(String(keyAmount).replace(/,/g, ''));
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -650,5 +654,5 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
     };
   }
 
-  return { status, wallet, name, listings, sales, metadata, image, quote, snapshot };
+  return { status, wallet, name, listings, sales, metadata, image, imagePng, quote, snapshot };
 }
