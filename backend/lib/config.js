@@ -8,7 +8,7 @@ export const TOKENOMICS = Object.freeze({
   lpReserve: 10_000_000,
   treasuryReserve: 1_000_000,
   mintPriceEth: '0.001',
-  walletCap: 1,
+  walletCap: 10,
   estimatedMints: 15600,
   network: 'Ethereum'
 });

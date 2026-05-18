@@ -2,11 +2,11 @@
 
 ## MintGate
 
-- One mint per wallet.
-- One Key Rank per wallet.
-- One non-transferable Origin Claim Right per minting wallet.
+- Ten mints per wallet.
+- Ten valid mint proofs unlock one KEY Card NFT / `.key` identity claim.
+- The identity uses the best Key Rank from those ten mints.
 - Mint price remains 0.001 ETH.
-- The current deployed mainnet `KEYMintGate` address cannot be changed in place. Full on-chain one-mint enforcement for a new gate requires a `KEYMintGateV2` deployment or equivalent replacement flow.
+- The current deployed mainnet `KEYMintGate` address cannot be changed or deleted in place. The 10-mint rule requires a replacement mint gate such as `KEYMintGateV3`.
 
 ## Registrar
 
@@ -23,7 +23,9 @@
 - Names may use lowercase English letters only: `a-z`.
 - Numbers, spaces, symbols, hyphens, underscores, and uppercase letters are not valid.
 - Recommended maximum length: 16 letters.
-- One Origin Claim Right can only be used once.
+- Each wallet can use one ten-proof Origin Claim batch once.
+- Each mint proof inside that batch can only be used once.
+- The KeyBond is the combined KEY reward amount from all ten mint proofs.
 - A claimed identity becomes an ERC721-style asset and can be transferred or traded.
 
 ## Identity NFT

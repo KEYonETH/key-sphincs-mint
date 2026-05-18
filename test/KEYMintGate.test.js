@@ -166,3 +166,75 @@ describe("KEYMintGateV2", function () {
     expect(await gateV2.publicMintedTotal()).to.equal(first.value.rewardAmount + allowed.value.rewardAmount);
   });
 });
+
+describe("KEYMintGateV3", function () {
+  it("allows ten wallet mints across legacy plus V3 and blocks the eleventh", async function () {
+    const { token, vault, gate, backendSigner, user } = await deployFixture();
+    const legacy = await makeAttestation({ gate, signer: backendSigner, recipient: user, seed: "v3-legacy", epoch: 1n });
+    await gate.connect(user).mintWithAttestation(legacy.value, legacy.signature, { value: ethers.parseEther("0.001") });
+
+    const gateV3 = await ethers.deployContract("KEYMintGateV3", [
+      await token.getAddress(),
+      await vault.getAddress(),
+      backendSigner.address,
+      await gate.getAddress(),
+      [],
+    ]);
+    await token.setMintGate(await gateV3.getAddress());
+    await vault.setMintGate(await gateV3.getAddress());
+
+    for (let i = 0; i < 9; i += 1) {
+      const proof = await makeAttestation({
+        gate: gateV3,
+        signer: backendSigner,
+        recipient: user,
+        seed: `v3-${i}`,
+        epoch: BigInt(i + 2),
+      });
+      await expect(gateV3.connect(user).mintWithAttestation(proof.value, proof.signature, { value: ethers.parseEther("0.001") }))
+        .to.emit(gateV3, "Minted");
+    }
+
+    const blocked = await makeAttestation({
+      gate: gateV3,
+      signer: backendSigner,
+      recipient: user,
+      seed: "v3-blocked",
+      epoch: 20n,
+    });
+    await expect(
+      gateV3.connect(user).mintWithAttestation(blocked.value, blocked.signature, { value: ethers.parseEther("0.001") }),
+    ).to.be.revertedWith("wallet cap reached");
+
+    expect(await gateV3.legacyWalletMints(user.address)).to.equal(1n);
+    expect(await gateV3.legacyMintGateCount()).to.equal(1n);
+    expect(await gateV3.walletMints(user.address)).to.equal(9n);
+    expect(await gateV3.walletMintsTotal(user.address)).to.equal(10n);
+    expect(await gateV3.walletRemainingMints(user.address)).to.equal(0n);
+  });
+
+  it("can count a legacy-aware V2 gate plus the original gate without double-counting mints", async function () {
+    const { token, vault, gate, backendSigner, user } = await deployFixture();
+    const oldProof = await makeAttestation({ gate, signer: backendSigner, recipient: user, seed: "v3-old", epoch: 1n });
+    await gate.connect(user).mintWithAttestation(oldProof.value, oldProof.signature, { value: ethers.parseEther("0.001") });
+
+    const gateV2 = await ethers.deployContract("KEYMintGateV2", [
+      await token.getAddress(),
+      await vault.getAddress(),
+      backendSigner.address,
+      await gate.getAddress(),
+    ]);
+    const gateV3 = await ethers.deployContract("KEYMintGateV3", [
+      await token.getAddress(),
+      await vault.getAddress(),
+      backendSigner.address,
+      await gateV2.getAddress(),
+      [await gate.getAddress()],
+    ]);
+
+    expect(await gateV3.legacyMintGateCount()).to.equal(2n);
+    expect(await gateV3.legacyWalletMints(user.address)).to.equal(1n);
+    expect(await gateV3.legacyUsedProofId(await gate.proofId(oldProof.value))).to.equal(true);
+    expect(await gateV3.legacyUsedPublicKeyHash(oldProof.value.publicKeyHash)).to.equal(true);
+  });
+});

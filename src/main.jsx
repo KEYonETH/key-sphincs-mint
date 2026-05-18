@@ -18,11 +18,12 @@ const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48
 const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0x3cC9Ecc0c16842f7f6B4C721B7E1D6f706e149F6';
 const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c';
 const ZERO = ethers.ZeroAddress;
+const REQUIRED_MINTS_PER_IDENTITY = 10;
 
 const FALLBACK = {
   tokenomics: {
     token: 'KEY', maxSupply: 21_000_000, publicMintPool: 10_000_000, lpReserve: 10_000_000,
-    treasuryReserve: 1_000_000, mintPriceEth: '0.001', walletCap: 1, estimatedMints: 15600, network: 'Ethereum'
+    treasuryReserve: 1_000_000, mintPriceEth: '0.001', walletCap: 10, estimatedMints: 15600, network: 'Ethereum'
   },
   stats: { mintedTokens: 0, ethRaised: 0, totalProofs: 0, byTier: {} },
   tiers: [
@@ -48,7 +49,7 @@ const ERC20_ABI = [
   'function balanceOf(address owner) view returns (uint256)'
 ];
 const REGISTRAR_ABI = [
-  'function claimOrigin(address mintGate,(address recipient,bytes32 publicKeyHash,bytes32 signatureHash,bytes32 rewardHash,uint256 rewardAmount,uint256 epoch,uint256 deadline) attestation,bytes signature,string name) external returns (uint256)'
+  'function claimOrigin((address mintGate,(address recipient,bytes32 publicKeyHash,bytes32 signatureHash,bytes32 rewardHash,uint256 rewardAmount,uint256 epoch,uint256 deadline) attestation,bytes signature)[] proofs,string name) external returns (uint256)'
 ];
 const IDENTITY_ABI = [
   'function ownerOf(uint256 tokenId) view returns (address)',
@@ -84,6 +85,9 @@ function chainHex(chainId) { return `0x${Number(chainId).toString(16)}`; }
 function chainName(chainId) { return Number(chainId) === 1 ? 'Ethereum Mainnet' : `chain ${chainId}`; }
 function pct(n, d) { return Math.min(100, Math.max(0, (Number(n || 0) / Number(d || 1)) * 100)); }
 function rankKeyFromTier(tierName = '') { return String(tierName).replace(/\s*Key$/i, ''); }
+function rankWeight(rank = '') {
+  return ['Normal', 'Clean', 'Golden', 'Quantum', 'Genesis'].indexOf(rank);
+}
 function signingCommand(message) {
   return `$privateKey = "0xPRIVATEKEY"
 @'
@@ -327,7 +331,7 @@ function Home({ go, data }) {
       </div>
       <div className="keyspaceTeaser">
         <b>After Mint: KEYSPACE</b>
-        <p>Mint KEY once to reveal your Key Rank. After mint-out, claim one .key identity backed by your KEY reward and trade it with ETH.</p>
+        <p>Mint KEY ten times to unlock one .key identity backed by the combined KEY reward and trade it with ETH.</p>
         <button className="miniBtn" onClick={() => go('keyspace')}>Open KEYSPACE</button>
       </div>
       <div className="heroActions"><button className="primary" onClick={() => go('mint')}>open mint</button><button className="ghost" onClick={() => go('whitepaper')}>read whitepaper</button></div>
@@ -348,7 +352,7 @@ function Mint({ wallet, connect, data, refresh }) {
   const [busy, setBusy] = useState('');
   const [notice, setNotice] = useState('');
   const t = data.tokenomics;
-  const mintLimitText = Number(t.walletCap) === 1 ? '1 mint per wallet' : `${t.walletCap} mint limit`;
+  const mintLimitText = `${Number(t.walletCap || REQUIRED_MINTS_PER_IDENTITY)} mint limit`;
   const hasKey = Boolean(publicKeyHash);
   const hasSigned = Boolean(walletSignature && message);
   const hasProof = Boolean(proof);
@@ -520,7 +524,7 @@ function Mint({ wallet, connect, data, refresh }) {
         </div>
       </div>
     </div>
-    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /><Card title="KEYSPACE note" className="keyspaceNote"><p>Each wallet can mint KEY once. Your reward tier becomes your Key Rank for KEYSPACE. Higher ranks unlock shorter .key identities after mint-out.</p></Card></div>
+    <div className="mintSupport"><SignatureInfo /><RewardTiers tiers={data.tiers} /><Card title="KEYSPACE note" className="keyspaceNote"><p>Each wallet can mint KEY up to ten times. Ten valid mint proofs unlock one KEY Card NFT, using the best rank and combined KeyBond.</p></Card></div>
     </section>
   </main>;
 }
@@ -584,7 +588,7 @@ function Proof({ data }) {
     <section className="proofGrid">
       <Card title="latest proofs" className="proofListCard">
         {loading && <div className="emptyState">Loading proof records...</div>}
-        {!loading && !proofs.length && <div className="emptyState">No proof records yet. Mint once to create the first proof.</div>}
+        {!loading && !proofs.length && <div className="emptyState">No proof records yet. Mint KEY to create the first proof.</div>}
         <div className="proofList">
           {proofs.map((p) => <button key={p.proofId} className={`proofItem ${selected?.proofId === p.proofId ? 'on' : ''}`} onClick={() => setSelected(p)}>
             <span className="tierBadge">{p.tier?.name || 'Key'}</span>
@@ -677,8 +681,8 @@ function Keyspace({ tiers, wallet, connect, data }) {
   const staticStatus = KEYSPACE_STATIC_STATUS;
   const rankRules = keyspaceRankRules(tiers);
   const flow = [
-    ['Mint KEY', 'SPHINCS signature hash reveals your reward tier and Key Rank.'],
-    ['Claim identity', 'After mint-out, one Origin Claim unlocks one .key identity.'],
+    ['Mint KEY', 'Each wallet can mint up to ten times; every signature hash reveals a reward tier.'],
+    ['Claim identity', 'After mint-out, ten valid mint proofs unlock one KEY Card NFT and .key identity.'],
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
 
@@ -722,11 +726,11 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <span className="previewBadge">PREVIEW — OPENS AFTER MINT-OUT</span>
         <h1>KEYSPACE</h1>
         <h2>SPHINCS Origin Identities backed by KEY.</h2>
-        <p>Mint KEY once. Reveal your rank. Claim one .key identity after mint-out. Trade it with ETH.</p>
+        <p>Mint KEY ten times. Reveal your best rank. Claim one .key identity after mint-out. Trade it with ETH.</p>
         <div className="heroTagline">
-          <span>One wallet. One mint. One Origin Claim.</span>
+          <span>Ten mints. One Key Card NFT. One Origin Claim.</span>
           <span>Your signature decides your rank.</span>
-          <span>Your KEY backs the identity.</span>
+          <span>Your combined KEY backs the identity.</span>
         </div>
         <div className="heroStats keyspaceHeroStats">
           <span>{identitySupply} max identities</span>
@@ -756,7 +760,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <InfoCard title="KEYSPACE Supply" value={`${identitySupply} .key identities`} />
         <InfoCard title="Origin Names" value="Minters claim first" />
       </div>
-      <p className="keyspaceRatio">{keySupply} KEY. {identitySupply} .key identities. One identity for every 1,000 KEY supply.</p>
+      <p className="keyspaceRatio">{keySupply} KEY. {identitySupply} .key identities. One identity requires ten valid mint proofs.</p>
     </section>
 
     <section className="keyspaceBlock">
@@ -772,7 +776,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
       </div>)}</div>
       <div className="sectionHead compactHead">
         <h2>Origin Claim Opens After Mint-Out</h2>
-        <p>All eligible minters can claim when KEYSPACE opens. Your Key Rank controls the minimum name length.</p>
+        <p>All eligible minters can claim when KEYSPACE opens. Your best Key Rank from ten mints controls the minimum name length.</p>
       </div>
       <div className="windowGrid">
         {['Genesis: 3+ letters', 'Quantum: 4+ letters', 'Golden: 5+ letters', 'Clean: 6+ letters', 'Normal: 7+ letters'].map((item) => <div key={item}>{item}</div>)}
@@ -811,7 +815,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
             <span>Eligible</span><b>{preview.eligible ? 'yes' : 'no'}</b>
             <span>Required</span><b>{preview.rule.min}+ letters</b>
             <span>KeyBond</span><b>{preview.rule.bond}</b>
-            <span>Claim Right</span><b>1 per minting wallet</b>
+            <span>Claim Right</span><b>1 per 10 mints</b>
             <span>Status</span><b>Preview only</b>
           </div>
           {preview.valid && preview.eligible && <p>This name can be claimed by this rank after KEYSPACE opens.</p>}
@@ -836,12 +840,18 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
   const [notice, setNotice] = useState('');
   const originOpen = Boolean(status.originClaimsOpen);
   const marketOpen = Boolean(status.marketplaceLive);
-  const claimProof = claimProofs[0] || null;
-  const claimRank = claimProof ? rankKeyFromTier(claimProof.tier?.name) : 'Normal';
+  const eligibleClaimProofs = claimProofs.slice(0, REQUIRED_MINTS_PER_IDENTITY);
+  const claimProof = eligibleClaimProofs[0] || null;
+  const hasRequiredProofs = eligibleClaimProofs.length === REQUIRED_MINTS_PER_IDENTITY;
+  const claimRank = eligibleClaimProofs.reduce((best, proof) => {
+    const rank = rankKeyFromTier(proof.tier?.name);
+    return rankWeight(rank) > rankWeight(best) ? rank : best;
+  }, claimProof ? rankKeyFromTier(claimProof.tier?.name) : 'Normal');
   const claimRule = rankRules.find((rule) => rule.key === claimRank) || rankRules[0];
+  const claimKeyBond = eligibleClaimProofs.reduce((sum, proof) => sum + BigInt(proof.typedData?.rewardAmount || 0), 0n);
   const normalizedClaimName = claimName.trim().toLowerCase();
   const claimNameValid = /^[a-z]+$/.test(normalizedClaimName);
-  const claimEligible = Boolean(claimProof && claimNameValid && normalizedClaimName.length >= claimRule.min);
+  const claimEligible = Boolean(hasRequiredProofs && claimNameValid && normalizedClaimName.length >= claimRule.min);
 
   async function loadKeyspaceWallet(address = wallet) {
     if (!address) {
@@ -876,25 +886,31 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
       setBusy('claim');
       setNotice('');
       if (!originOpen) throw new Error('Origin claim is not open yet.');
-      if (!claimProof) throw new Error('No minted proof found for this wallet.');
+      if (!hasRequiredProofs) throw new Error(`Need ${REQUIRED_MINTS_PER_IDENTITY} minted proofs to claim one KEY Card NFT.`);
       if (!claimEligible) throw new Error(claimNameValid ? 'This name is too short for your Key Rank.' : 'Only lowercase letters a-z are allowed.');
       const { address, signer } = await getSigner();
-      if (address.toLowerCase() !== claimProof.recipient.toLowerCase()) throw new Error('Connected wallet does not match the Origin Claim proof.');
+      if (eligibleClaimProofs.some((proof) => address.toLowerCase() !== proof.recipient.toLowerCase())) {
+        throw new Error('Connected wallet does not match the Origin Claim proofs.');
+      }
       if (isZeroAddress(KEY_TOKEN) || isZeroAddress(KEY_REGISTRAR)) throw new Error('KEYSPACE contracts are not configured.');
 
-      const rewardAmount = BigInt(claimProof.typedData.rewardAmount);
       const token = new ethers.Contract(KEY_TOKEN, ERC20_ABI, signer);
       const balance = await token.balanceOf(address);
-      if (balance < rewardAmount) throw new Error('Wallet does not hold enough KEY for the KeyBond.');
+      if (balance < claimKeyBond) throw new Error('Wallet does not hold enough KEY for the combined KeyBond.');
       const allowance = await token.allowance(address, KEY_REGISTRAR);
-      if (allowance < rewardAmount) {
-        const approveTx = await token.approve(KEY_REGISTRAR, rewardAmount);
+      if (allowance < claimKeyBond) {
+        const approveTx = await token.approve(KEY_REGISTRAR, claimKeyBond);
         setNotice(`Approving KeyBond: ${approveTx.hash}`);
         await approveTx.wait();
       }
 
       const registrar = new ethers.Contract(KEY_REGISTRAR, REGISTRAR_ABI, signer);
-      const tx = await registrar.claimOrigin(claimProof.mintGate, claimProof.typedData, claimProof.attestation, normalizedClaimName);
+      const claimBatch = eligibleClaimProofs.map((proof) => ({
+        mintGate: proof.mintGate,
+        attestation: proof.typedData,
+        signature: proof.attestation
+      }));
+      const tx = await registrar.claimOrigin(claimBatch, normalizedClaimName);
       setNotice(`Claim sent: ${tx.hash}`);
       await tx.wait();
       setNotice(`Identity claimed: ${normalizedClaimName}.key`);
@@ -996,12 +1012,13 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
     <div className="actionColumns">
       <div className="actionBox">
         <b>Claim .key identity</b>
-        <p>Approve your reward KEY as KeyBond, then claim one identity with your Origin Rank.</p>
+        <p>Approve ten mint rewards as one combined KeyBond, then claim one KEY Card NFT with your best Origin Rank.</p>
         <label><span>Name</span><input value={claimName} onChange={(e) => setClaimName(e.target.value.toLowerCase())} placeholder="alpha" maxLength={16} /></label>
         <div className="actionHint">
-          <span>Rank: {claimProof ? claimRank : 'no minted proof'}</span>
+          <span>Proofs: {eligibleClaimProofs.length}/{REQUIRED_MINTS_PER_IDENTITY}</span>
+          <span>Rank: {hasRequiredProofs ? claimRank : 'need 10 mints'}</span>
           <span>Required: {claimRule.min}+ letters</span>
-          <span>KeyBond: {claimProof ? `${fmt.format(Number(ethers.formatEther(claimProof.typedData.rewardAmount)))} KEY` : 'pending'}</span>
+          <span>KeyBond: {hasRequiredProofs ? `${fmt.format(Number(ethers.formatEther(claimKeyBond)))} KEY` : 'pending'}</span>
         </div>
         <button className="primary" onClick={claimIdentity} disabled={!originOpen || !claimEligible || busy}>{busy === 'claim' ? 'Claiming' : 'Claim identity'}</button>
       </div>
@@ -1173,7 +1190,7 @@ function Tokenomics({ data }) {
     <p>Mint price is fixed at <b>{t.mintPriceEth} ETH</b>. The weighted average reward is approximately <b>{averageReward} KEY</b>, so a 10,000,000 KEY public mint pool gives roughly <b>±15,600 successful mints</b>.</p>
     <RewardTiers tiers={data.tiers} />
     <h2>Fairness controls</h2>
-    <ul><li>No hidden dynamic price in the frontend.</li><li>Each wallet can mint once.</li><li>Public mint pool is capped at 10,000,000 KEY.</li><li>Public key hash and proof ID cannot be reused.</li><li>Reward tier is deterministic from the signature hash.</li></ul>
+    <ul><li>No hidden dynamic price in the frontend.</li><li>Each wallet can mint up to ten times.</li><li>Public mint pool is capped at 10,000,000 KEY.</li><li>Public key hash and proof ID cannot be reused.</li><li>Reward tier is deterministic from the signature hash.</li></ul>
   </Card></main>;
 }
 

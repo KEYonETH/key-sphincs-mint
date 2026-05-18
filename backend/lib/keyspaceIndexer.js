@@ -12,8 +12,8 @@ const PREVIEW_STATUS = Object.freeze({
   claimed: 0,
   marketplaceLive: false,
   originClaimsOpen: false,
-  mintRule: 'one mint per wallet',
-  claimRule: 'one non-transferable Origin Claim Right per minting wallet',
+  mintRule: 'ten mints per wallet',
+  claimRule: 'one KEY Card NFT claim per ten valid mint proofs',
   rankRules: {
     Genesis: { minLength: 3, reward: '21000' },
     Quantum: { minLength: 4, reward: '5000' },

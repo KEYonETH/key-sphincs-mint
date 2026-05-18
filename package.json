@@ -30,6 +30,7 @@
     "contracts:deploy:keyspace-registrar": "node scripts/deploy-keyspace-registrar-mainnet.js",
     "contracts:deploy:keyspace-market": "node scripts/deploy-keyspace-market-mainnet.js",
     "contracts:deploy:mintgate-v2": "node scripts/deploy-mintgate-v2.js",
+    "contracts:deploy:keyspace-v2": "node scripts/deploy-keyspace-v2-mainnet.js",
     "contracts:verify:sepolia": "node scripts/verify-contracts.js sepolia",
     "contracts:verify:mainnet": "node scripts/verify-contracts.js mainnet",
     "pool:init:mainnet": "node scripts/init-uniswap-v4-pool.js",
