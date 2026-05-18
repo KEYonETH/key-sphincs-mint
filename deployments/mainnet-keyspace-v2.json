@@ -16,5 +16,13 @@
   "originClaimsOpen": false,
   "canOpenOriginClaims": false,
   "allowedMintGateV3": true,
-  "updatedAt": "2026-05-18T11:35:29.898Z"
+  "updatedAt": "2026-05-18T11:57:20.432Z",
+  "KEYSpaceRegistrarV3": "0xEEceD724B8fA375D0E8C0c4A7f327f7e11Ecd715",
+  "KEYSpaceRegistrarV3DeployTx": "0xb8ba7150f69f51a5c8226ab65d1724dca3356e8d29e365eac805823bd102a667",
+  "identityRegistrarSetToV3": true,
+  "identityRegistrarTx": "0x7e52ae91217bf900e5951888e6e9506c57bce18b55d6d3e0c024df6db836447e",
+  "KEYSpaceMarket": "0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c",
+  "marketOpen": true,
+  "marketOpenTx": "0xa6ab8b74087f0271343f198e08baed6c93a7dbc1291907a843724a864465b7b6",
+  "KEYSpaceRegistrarActive": "0xEEceD724B8fA375D0E8C0c4A7f327f7e11Ecd715"
 }

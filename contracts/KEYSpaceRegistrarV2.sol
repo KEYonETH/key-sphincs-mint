@@ -127,7 +127,7 @@ contract KEYSpaceRegistrarV2 is Ownable {
         _setMintGateAllowed(mintGate, allowed);
     }
 
-    function setOriginClaimsOpen(bool open) external onlyOwner {
+    function setOriginClaimsOpen(bool open) external virtual onlyOwner {
         if (open && !canOpenOriginClaims()) revert MintOutNotReached();
         originClaimsOpen = open;
         emit OriginClaimsOpenSet(open);
@@ -141,7 +141,7 @@ contract KEYSpaceRegistrarV2 is Ownable {
         emit ExitFeeSet(nextExitFeeBps, nextFeeRecipient);
     }
 
-    function canOpenOriginClaims() public view returns (bool) {
+    function canOpenOriginClaims() public view virtual returns (bool) {
         return keyToken.publicMintedByGate() >= PUBLIC_MINT_POOL;
     }
 

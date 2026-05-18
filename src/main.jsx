@@ -682,7 +682,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
   const rankRules = keyspaceRankRules(tiers);
   const flow = [
     ['Mint KEY', 'Each wallet can mint up to ten times; every signature hash reveals a reward tier.'],
-    ['Claim identity', 'After mint-out, ten valid mint proofs unlock one KEY Card NFT and .key identity.'],
+    ['Claim identity', 'Ten valid mint proofs unlock one KEY Card NFT and .key identity.'],
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
 
@@ -726,7 +726,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <span className="previewBadge">PREVIEW — OPENS AFTER MINT-OUT</span>
         <h1>KEYSPACE</h1>
         <h2>SPHINCS Origin Identities backed by KEY.</h2>
-        <p>Mint KEY ten times. Reveal your best rank. Claim one .key identity after mint-out. Trade it with ETH.</p>
+        <p>Mint KEY ten times. Reveal your best rank. Claim one .key identity. Trade it with ETH.</p>
         <div className="heroTagline">
           <span>Ten mints. One Key Card NFT. One Origin Claim.</span>
           <span>Your signature decides your rank.</span>
@@ -766,7 +766,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
     <section className="keyspaceBlock">
       <div className="sectionHead">
         <h2>Mint Rank unlocks name length</h2>
-        <p>Higher ranks unlock shorter .key identities after mint-out.</p>
+        <p>Higher ranks unlock shorter .key identities.</p>
       </div>
       <div className="rankGrid">{rankRules.map((r) => <div className="rankCard" key={r.key}>
         <b>{r.short}</b>
@@ -775,8 +775,8 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <span>KeyBond: {r.bond}</span>
       </div>)}</div>
       <div className="sectionHead compactHead">
-        <h2>Origin Claim Opens After Mint-Out</h2>
-        <p>All eligible minters can claim when KEYSPACE opens. Your best Key Rank from ten mints controls the minimum name length.</p>
+        <h2>Origin Claim Opens After 10 Mints</h2>
+        <p>All eligible minters can claim after ten valid mint proofs. Your best Key Rank from ten mints controls the minimum name length.</p>
       </div>
       <div className="windowGrid">
         {['Genesis: 3+ letters', 'Quantum: 4+ letters', 'Golden: 5+ letters', 'Clean: 6+ letters', 'Normal: 7+ letters'].map((item) => <div key={item}>{item}</div>)}
@@ -818,7 +818,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
             <span>Claim Right</span><b>1 per 10 mints</b>
             <span>Status</span><b>Preview only</b>
           </div>
-          {preview.valid && preview.eligible && <p>This name can be claimed by this rank after KEYSPACE opens.</p>}
+          {preview.valid && preview.eligible && <p>This name can be claimed by this rank after ten valid mints.</p>}
           {!preview.valid && <p>Only lowercase letters a-z are allowed. No numbers, spaces, or symbols.</p>}
           {preview.valid && !preview.eligible && <p>This name is too short for the selected rank.</p>}
         </div> : <p className="simPlaceholder">Enter a lowercase letters-only name, select a rank, and preview the Origin Claim.</p>}
@@ -1005,7 +1005,7 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
   return <Card title="KEYSPACE Actions" className="keyspaceActions">
     <div className="actionStatusGrid">
       <Metric label="contracts" value={status.contractsLive ? 'ready' : 'preview'} />
-      <Metric label="origin claim" value={originOpen ? 'open' : 'locked'} note="opens after mint-out" />
+      <Metric label="origin claim" value={originOpen ? 'open' : 'locked'} note="opens after 10 mints" />
       <Metric label="market" value={marketOpen ? 'open' : 'locked'} note="ETH-native primary market" />
       <Metric label="wallet" value={wallet ? short(wallet) : 'not connected'} />
     </div>

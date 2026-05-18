@@ -10,7 +10,7 @@
 
 ## Registrar
 
-- Origin claim opens after mint-out by admin or state flag.
+- Origin claim opens after a wallet has ten valid mint proofs.
 - There is no tier-by-day claiming schedule.
 - All eligible minters can claim when KEYSPACE opens.
 - Rank validates minimum name length:

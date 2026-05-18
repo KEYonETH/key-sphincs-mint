@@ -204,3 +204,25 @@ describe("KEYSpaceRegistrarV2", function () {
     await expect(identity.ownerOf(1)).to.be.revertedWithCustomError(identity, "ERC721NonexistentToken");
   });
 });
+
+describe("KEYSpaceRegistrarV3", function () {
+  it("opens ten-mint identity claims immediately", async function () {
+    const fixture = await deployRegistrarV2Fixture();
+    const { owner, token, gateV3, identity } = fixture;
+    const registrar = await ethers.deployContract("KEYSpaceRegistrarV3", [
+      owner.address,
+      await token.getAddress(),
+      await identity.getAddress(),
+      await gateV3.getAddress(),
+      [],
+    ]);
+
+    expect(await registrar.originClaimsOpen()).to.equal(true);
+    expect(await registrar.canOpenOriginClaims()).to.equal(true);
+
+    await registrar.setOriginClaimsOpen(false);
+    expect(await registrar.originClaimsOpen()).to.equal(false);
+    await registrar.setOriginClaimsOpen(true);
+    expect(await registrar.originClaimsOpen()).to.equal(true);
+  });
+});
