@@ -1,0 +1,20 @@
+{
+  "KEYMintGateV3": "0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927",
+  "KEYMintGateV3DeployTx": "0x98aab79a6c1a250c83a4bb3dc9811e65b041643d73782f223c251491286e9e82",
+  "KEYSpaceRegistrarV2": "0xBD83102A1242FDB8F3564B3978a2C96BD2E8b046",
+  "KEYSpaceRegistrarV2DeployTx": "0x4993592c129fb6159d2703aa1ac4291f586753032dde94ddd261d285ef049536",
+  "KEYMintGateV3OwnershipTransferred": true,
+  "tokenMintGateSetToV3": true,
+  "vaultMintGateSetToV3": true,
+  "identityRegistrarSetToV2": true,
+  "walletCap": "10",
+  "legacyMintGateCount": "2",
+  "requiredMintsPerIdentity": "10",
+  "tokenMintGate": "0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927",
+  "vaultMintGate": "0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927",
+  "identityRegistrar": "0xBD83102A1242FDB8F3564B3978a2C96BD2E8b046",
+  "originClaimsOpen": false,
+  "canOpenOriginClaims": false,
+  "allowedMintGateV3": true,
+  "updatedAt": "2026-05-18T11:35:29.898Z"
+}
