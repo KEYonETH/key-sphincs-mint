@@ -1117,7 +1117,7 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
         <span>#{identity.tokenId} {identity.name}</span><span>{identity.keyBond} KEY</span><button className="miniBtn" onClick={() => setListTokenId(identity.tokenId)}>list</button>
       </div>)}
     </div>}
-    <p className="marketNote">Action panel is wired to mainnet contracts. Buying transfers the NFT; KeyBond remains locked inside the identity and follows the NFT owner.</p>
+    <p className="marketNote">Action panel is wired on-chain. Buying transfers the NFT; KeyBond remains locked inside the identity and follows the NFT owner.</p>
     {notice && <p className="notice">{notice}</p>}
   </Card>;
 }
@@ -1347,9 +1347,10 @@ function Whitepaper({ data }) {
     </div>
     <div className="whitepaperFlow" aria-label="KEY mint fee and liquidity flow">
       <div><span>1</span><b>Mint KEY</b><p>User pays 0.001 ETH and receives deterministic KEY reward.</p></div>
-      <div><span>2</span><b>Auto LP Vault</b><p>Every new mint fee ETH and the 10M KEY LP reserve are held in the vault contract.</p></div>
-      <div><span>3</span><b>Mint-Out</b><p>When the public mint pool is completed, vault balances are prepared for KEY/WETH liquidity.</p></div>
-      <div><span>4</span><b>KEY/WETH LP</b><p>The vault flow adds official Uniswap v4 liquidity using the locked fee ETH and LP KEY reserve.</p></div>
+      <div><span>2</span><b>Auto Lock Fee ETH</b><p>Every new mint fee is locked into the vault contract automatically.</p></div>
+      <div><span>3</span><b>Auto LP Vault</b><p>The locked ETH and 10M KEY LP reserve sit together for the liquidity phase.</p></div>
+      <div><span>4</span><b>Mint-Out Unlock</b><p>When the public mint pool is completed, the vault liquidity path opens.</p></div>
+      <div><span>5</span><b>KEY/WETH LP</b><p>Official Uniswap v4 liquidity uses the locked fee ETH and LP KEY reserve.</p></div>
     </div>
     <h2>KEY in one sentence</h2>
     <p>KEY is mined by signatures, and ten KEY mints unlock one on-chain KEY Card NFT.</p>
@@ -1369,9 +1370,6 @@ rewardHash = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId)
 proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PROOF_V1)`}</pre>
     <h2>Trust model</h2>
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
-    <h2>Mainnet contracts</h2>
-    <ul><li>KEY token contract: `{KEY_TOKEN}`.</li><li>KEY minting is live through `KEYMintGateV5` with a ten-mint wallet cap.</li><li>All new mint fee ETH is sent into `KEYAutoLiquidityVault` automatically.</li><li>The 10M KEY LP reserve is minted directly into the same vault, so the fee side and token side of the planned liquidity are visible on-chain.</li><li>After public mint-out, the vault flow prepares the collected ETH and LP reserve KEY for official Uniswap v4 KEY/WETH liquidity.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>New mints use the active V5 gate and no legacy gates are counted for the clean deployment.</li></ul>
-    <ContractLinks data={data} />
     <h2>Remaining public hardening</h2>
     <ul><li>Verify all deployed contract source on Etherscan.</li><li>Publish proof snapshots for independent checking.</li><li>Use multisig custody for owner-controlled settings.</li><li>Run an external audit before scaling traffic.</li></ul>
   </Card></main>;

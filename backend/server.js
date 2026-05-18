@@ -347,7 +347,7 @@ async function liveLiquidityStateUncached() {
     fee: CONFIG.uniswapV4Fee || '0',
     tickSpacing: CONFIG.uniswapV4TickSpacing || '200',
     hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
-    custody: 'LP reserve KEY and every new mint fee ETH are held by KEYAutoLiquidityVault. After public mint-out, the vault flow prepares the collected ETH and LP reserve KEY for official Uniswap v4 KEY/WETH liquidity. User-minted KEY stays in user wallets, and vault balances are visible on-chain.',
+    custody: 'LP reserve KEY and every new mint fee ETH are held by KEYAutoLiquidityVault. Every new mint fee is locked into the vault automatically. After public mint-out, the vault liquidity path opens for official Uniswap v4 KEY/WETH liquidity. User-minted KEY stays in user wallets, and vault balances are visible on-chain.',
     addresses: {
       token: CONFIG.keyTokenAddress,
       mintGate: CONFIG.mintGateAddress,

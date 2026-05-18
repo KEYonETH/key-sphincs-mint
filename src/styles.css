@@ -8360,7 +8360,7 @@ body .whitepaperCa .copyBtn {
 
 body .whitepaperFlow {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 12px;
   margin: 0 0 30px;
 }
@@ -8389,7 +8389,7 @@ body .whitepaperFlow b {
   display: block;
   margin-bottom: 8px;
   color: #060912;
-  font-size: 18px;
+  font-size: 17px;
 }
 
 body .whitepaperFlow p {
