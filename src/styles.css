@@ -8564,3 +8564,174 @@ body .progressCard .progressHead .pill {
     transform: none !important;
   }
 }
+
+/* Real marketplace collection grid: compact cards, white KEY mark, no card shadows. */
+body .marketCollectionHead p {
+  max-width: 820px !important;
+}
+
+body .marketplaceGrid {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+  gap: 14px !important;
+  align-items: start !important;
+  justify-items: stretch !important;
+}
+
+body .marketNftCard {
+  width: 100% !important;
+  overflow: hidden !important;
+  border: 2px solid #060912 !important;
+  border-radius: 0 !important;
+  background: #eef4ff !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body .marketNftCard:hover,
+body .marketNftCard:focus-visible {
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+body .marketNftArt {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 1 / 1 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(6, 9, 18, 0.16) !important;
+  background:
+    radial-gradient(circle at 25% 15%, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.32) 31%, rgba(255,255,255,0) 68%),
+    radial-gradient(circle at 70% 18%, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0) 62%),
+    linear-gradient(135deg,
+      color-mix(in srgb, var(--rank-hi) 92%, #ffffff 8%) 0%,
+      var(--rank) 58%,
+      color-mix(in srgb, var(--rank-lo) 92%, #05070d 8%) 100%) !important;
+  box-shadow: none !important;
+}
+
+body .marketArtLogo {
+  position: absolute !important;
+  top: 21% !important;
+  left: 50% !important;
+  z-index: 2 !important;
+  width: min(36%, 66px) !important;
+  height: auto !important;
+  transform: translateX(-50%) !important;
+  color: #ffffff !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 18 !important;
+  filter: none !important;
+  opacity: 0.98 !important;
+  pointer-events: none !important;
+}
+
+body .keyMark path {
+  fill: none !important;
+  vector-effect: none !important;
+}
+
+body .marketArtName {
+  position: absolute !important;
+  left: 10px !important;
+  right: 10px !important;
+  bottom: 22% !important;
+  z-index: 2 !important;
+  color: #ffffff !important;
+  font-family: var(--font-sans) !important;
+  font-size: clamp(16px, calc(25px - (var(--name-chars, 8) * 0.48px)), 24px) !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  text-align: center !important;
+  text-shadow: none !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+body .marketNftInfo {
+  min-height: 82px !important;
+  padding: 9px 10px 11px !important;
+  background: #eef4ff !important;
+  box-shadow: none !important;
+}
+
+body .marketNftInfo b {
+  color: #060912 !important;
+  font-size: 14px !important;
+}
+
+body .marketNftInfo strong {
+  color: #060912 !important;
+  font-size: 12px !important;
+}
+
+body .marketEmptyState {
+  margin-top: 10px !important;
+  border: 2px solid #060912 !important;
+  background: #eef4ff !important;
+}
+
+body .cardIdentity {
+  display: grid !important;
+  place-items: center !important;
+  align-content: center !important;
+  gap: 18px !important;
+  padding: 30px 20px !important;
+  text-align: center !important;
+}
+
+body .cardIdentityLogo {
+  display: block !important;
+  width: min(34%, 112px) !important;
+  max-height: 42% !important;
+  object-fit: contain !important;
+  color: #ffffff !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-linecap: round !important;
+  stroke-linejoin: round !important;
+  stroke-width: 18 !important;
+  filter: none !important;
+  opacity: 0.98 !important;
+}
+
+body .cardIdentity b {
+  color: #ffffff !important;
+  text-align: center !important;
+  text-shadow: none !important;
+}
+
+body .nftModalArt .cardIdentity {
+  gap: 28px !important;
+}
+
+body .nftModalArt .cardIdentityLogo {
+  width: min(28%, 170px) !important;
+}
+
+@media (max-width: 1180px) {
+  body .marketplaceGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  body .marketplaceGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  body .marketArtLogo {
+    width: min(34%, 54px) !important;
+  }
+
+  body .marketArtName {
+    font-size: clamp(14px, calc(22px - (var(--name-chars, 8) * 0.42px)), 20px) !important;
+  }
+}

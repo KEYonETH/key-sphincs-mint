@@ -672,11 +672,20 @@ function DetailRow({ label, value, onCopy }) {
   </div>;
 }
 
+function KeyMark({ className = '' }) {
+  return <svg className={`keyMark ${className}`} viewBox="0 0 512 512" aria-hidden="true" focusable="false">
+    <path d="M256 18c-8 0-14 4-19 13L157 170c-5 9-5 18 0 27l78 137v133c0 15 10 26 24 26h22c14 0 24-11 24-26v-66h43c11 0 19-8 19-19v-38c0-11-8-19-19-19h-43v-32h52c11 0 19-8 19-19v-38c0-11-8-19-19-19h-52l50-88c5-9 5-18 0-27L275 31c-5-9-11-13-19-13Z" />
+    <path d="M256 80 328 205 256 252 184 205 256 80Z" />
+    <path d="M194 238 256 292 318 238 285 344 256 392 227 344 194 238Z" />
+  </svg>;
+}
+
 function KeyIdentityCard({ name, rank, origin, keyBond, mintProof, tokenId, price, className = '' }) {
   const nameChars = Math.max(6, String(name).length);
   return <div className={`webKeyCard ${rank.toLowerCase()} ${className}`} style={{ '--name-chars': nameChars }}>
     <div className="webKeyCardInner">
       <div className="cardIdentity">
+        <KeyMark className="cardIdentityLogo" />
         <b title={name}>{name}</b>
       </div>
     </div>
@@ -703,12 +712,18 @@ const KEYSPACE_BASE_RANK_RULES = [
 ];
 
 const KEYSPACE_LISTINGS = [
-  { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1', price: 'Auction', owner: 'Origin preview' },
-  { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404', price: '0.11 ETH', owner: 'Preview seller' },
-  { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421', price: '0.04 ETH', owner: 'Preview seller' },
-  { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206', price: '0.012 ETH', owner: 'Preview seller' },
-  { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107', price: '0.006 ETH', owner: 'Preview seller' }
+  { name: 'ai.key', rank: 'Genesis', origin: 'Genesis Origin', keyBond: '21,000 KEY', mintProof: '#0001', tokenId: '#1', price: 'Auction', owner: 'Collection seed' },
+  { name: 'hash.key', rank: 'Quantum', origin: 'Quantum Origin', keyBond: '5,000 KEY', mintProof: '#4004', tokenId: '#404', price: '0.11 ETH', owner: 'Collection seed' },
+  { name: 'alpha.key', rank: 'Golden', origin: 'Golden Origin', keyBond: '1,500 KEY', mintProof: '#8842', tokenId: '#421', price: '0.04 ETH', owner: 'Collection seed' },
+  { name: 'cipher.key', rank: 'Clean', origin: 'Clean Origin', keyBond: '750 KEY', mintProof: '#0206', tokenId: '#206', price: '0.012 ETH', owner: 'Collection seed' },
+  { name: 'terminal.key', rank: 'Normal', origin: 'Normal Origin', keyBond: '500 KEY', mintProof: '#0107', tokenId: '#107', price: '0.006 ETH', owner: 'Collection seed' }
 ];
+
+const KEYSPACE_RANK_NAMES = ['Normal', 'Clean', 'Golden', 'Quantum', 'Genesis'];
+
+function rankFromOriginRank(originRank) {
+  return KEYSPACE_RANK_NAMES[Number(originRank)] || 'Normal';
+}
 
 function keyspaceRankRules(tiers = []) {
   return KEYSPACE_BASE_RANK_RULES.map((rule) => {
@@ -1133,10 +1148,10 @@ function Marketplace({ wallet, connect, data }) {
   const marketOpen = Boolean(status.marketplaceLive);
   const normalizedSearch = search.trim().toLowerCase();
   const liveListingCards = liveListings.map((listing) => ({
-    name: `#${listing.tokenId}`,
-    rank: 'Normal',
-    origin: 'Live KEYSPACE Listing',
-    keyBond: 'Indexed on-chain',
+    name: listing.name || `#${listing.tokenId}`,
+    rank: listing.rank || rankFromOriginRank(listing.originRank),
+    origin: listing.origin || `${listing.rank || rankFromOriginRank(listing.originRank)} Origin`,
+    keyBond: listing.keyBond ? `${fmt.format(Number(listing.keyBond))} KEY` : 'Indexed on-chain',
     mintProof: listing.txHash ? short(listing.txHash) : 'listed',
     tokenId: `#${listing.tokenId}`,
     rawTokenId: listing.tokenId,
@@ -1144,7 +1159,9 @@ function Marketplace({ wallet, connect, data }) {
     seller: listing.seller,
     live: true
   }));
-  const sourceListings = liveListingCards.length ? liveListingCards : KEYSPACE_LISTINGS;
+  const hasClaimedIdentities = Number(status.claimed || 0) > 0;
+  const showSeedCards = !liveListingCards.length && !hasClaimedIdentities;
+  const sourceListings = liveListingCards.length ? liveListingCards : (showSeedCards ? KEYSPACE_LISTINGS : []);
   const visibleMarketListings = sourceListings.filter((card) => {
     const matchesRank = card.live || rankFilter === 'All' || card.rank === rankFilter;
     const matchesSearch = !normalizedSearch || card.name.toLowerCase().includes(normalizedSearch) || card.origin.toLowerCase().includes(normalizedSearch) || card.tokenId?.toLowerCase().includes(normalizedSearch);
@@ -1201,7 +1218,7 @@ function Marketplace({ wallet, connect, data }) {
       <div className="marketHeroCopy">
         <span className="previewBadge">KEYSPACE MARKET</span>
         <h1>MARKETPLACE</h1>
-        <p>Live on-chain KEYSPACE marketplace for claimed KEY Card NFTs. Preview cards appear only while no live listings are indexed.</p>
+        <p>Live on-chain KEYSPACE marketplace for claimed KEY Card NFTs. Real owner listings are indexed from the KEYSpaceMarket contract.</p>
       </div>
       <div className="marketHeroStats">
         <span>{marketOpen ? 'Market open' : 'Market locked'}</span>
@@ -1212,8 +1229,8 @@ function Marketplace({ wallet, connect, data }) {
 
     <section className="keyspaceBlock marketCollection">
       <div className="marketCollectionHead">
-        <h2>{liveListingCards.length ? 'Live Listings' : 'Preview Listings'}</h2>
-        <p>{liveListingCards.length ? 'These listings are indexed from the KEYSpaceMarket contract and can be bought with ETH.' : 'Example OpenSea-style KEY Card collection cards. Real listings appear here after owners list claimed NFTs.'}</p>
+        <h2>Real Marketplace</h2>
+        <p>Claimed KEY Card NFTs listed by owners appear here with ETH prices.</p>
       </div>
 
       <div className="marketToolbar">
@@ -1239,6 +1256,7 @@ function Marketplace({ wallet, connect, data }) {
           }}
         >
           <div className="marketNftArt">
+            <KeyMark className="marketArtLogo" />
             <b className="marketArtName" title={card.name}>{card.name}</b>
           </div>
           <div className="marketNftInfo">
@@ -1248,6 +1266,7 @@ function Marketplace({ wallet, connect, data }) {
           </div>
         </article>)}
       </div>
+      {!visibleMarketListings.length && <div className="emptyState marketEmptyState">No listed KEY Card NFTs yet. Claimed identities will appear here after owners list them from KEYSPACE Actions.</div>}
       <p className="marketNote">{liveListingCards.length ? 'Marketplace is live on mainnet. Buying transfers the ERC721 identity; the locked KeyBond remains inside the identity and follows the buyer.' : 'No live listings are indexed yet. Owners can claim after ten mints, then list the NFT from KEYSPACE Actions.'}</p>
       {notice && <p className="notice">{notice}</p>}
     </section>
@@ -1265,10 +1284,10 @@ function Marketplace({ wallet, connect, data }) {
             <span>Ethereum</span>
           </div>
           <h2>{selectedListing.name}</h2>
-          <p>{selectedListing.origin} backed by KEY. {selectedListing.live ? 'This is an indexed on-chain listing.' : 'Preview examples become replaceable when live listings are indexed.'}</p>
+          <p>{selectedListing.origin} backed by KEY. {selectedListing.live ? 'This is an indexed on-chain listing.' : 'Real claimed listings replace these collection cards after owners list NFTs.'}</p>
           <div className="nftBuyBox">
             <div><small>Buy for</small><strong>{selectedListing.price}</strong></div>
-            <button disabled={!marketOpen || !selectedListing.live || busy === selectedListing.rawTokenId} onClick={() => buyLiveListing(selectedListing)}>{selectedListing.live ? (busy === selectedListing.rawTokenId ? 'Buying' : 'Buy now') : 'Preview only'}</button>
+            <button disabled={!marketOpen || !selectedListing.live || busy === selectedListing.rawTokenId} onClick={() => buyLiveListing(selectedListing)}>{selectedListing.live ? (busy === selectedListing.rawTokenId ? 'Buying' : 'Buy now') : 'Not listed'}</button>
             <button className="ghost" disabled>Make offer</button>
           </div>
           <div className="nftDetailTabs"><b>Details</b><span>Activity</span><span>Orders</span></div>

@@ -473,7 +473,29 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
         activeListings.delete(tokenId);
       }
     }
-    const listings = [...activeListings.values()];
+    const claims = claimed.map((event) => ({
+      owner: event.args.owner,
+      tokenId: event.args.tokenId?.toString(),
+      name: `${normalizeName(event.args.name)}.key`,
+      originRank: Number(event.args.originRank || 0),
+      keyBond: ethers.formatEther(event.args.keyBond || 0n),
+      txHash: event.transactionHash,
+      blockNumber: event.blockNumber
+    }));
+    const claimsByTokenId = new Map(claims.map((claim) => [claim.tokenId, claim]));
+    const listings = [...activeListings.values()].map((listing) => {
+      const claim = claimsByTokenId.get(listing.tokenId);
+      const rank = claim ? rankName(claim.originRank) : 'Normal';
+      return {
+        ...listing,
+        name: claim?.name || `#${listing.tokenId}`,
+        originRank: claim?.originRank ?? 0,
+        rank,
+        origin: claim ? `${rank} Origin` : 'Live KEYSPACE Listing',
+        keyBond: claim?.keyBond || null,
+        owner: claim?.owner || null
+      };
+    });
 
     cache = {
       updatedAt: new Date().toISOString(),
@@ -485,15 +507,7 @@ export function createKeyspaceIndexer({ provider, dataDir = CONFIG.proofDataDir 
       originClaimsOpen,
       addresses,
       mints,
-      claims: claimed.map((event) => ({
-        owner: event.args.owner,
-        tokenId: event.args.tokenId?.toString(),
-        name: `${normalizeName(event.args.name)}.key`,
-        originRank: Number(event.args.originRank || 0),
-        keyBond: ethers.formatEther(event.args.keyBond || 0n),
-        txHash: event.transactionHash,
-        blockNumber: event.blockNumber
-      })),
+      claims,
       listings,
       sales
     };
