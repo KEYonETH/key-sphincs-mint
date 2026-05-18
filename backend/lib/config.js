@@ -70,6 +70,7 @@ export const CONFIG = Object.freeze({
   keyRegistrarAddress: optionalEnvAddress('KEY_REGISTRAR_ADDRESS', 'VITE_KEY_REGISTRAR_ADDRESS'),
   keyMarketAddress: optionalEnvAddress('KEY_MARKET_ADDRESS', 'VITE_KEY_MARKET_ADDRESS'),
   treasuryVaultAddress: optionalEnvAddress('TREASURY_VAULT_ADDRESS', 'VITE_TREASURY_VAULT_ADDRESS'),
+  legacyTreasuryVaultAddresses: optionalEnvAddresses('LEGACY_TREASURY_VAULT_ADDRESSES'),
   lpReserveAddress: optionalEnvAddress('LP_RESERVE_RECIPIENT', 'VITE_LP_RESERVE_ADDRESS'),
   treasuryReserveAddress: optionalEnvAddress('TREASURY_RESERVE_RECIPIENT', 'VITE_TREASURY_RESERVE_ADDRESS'),
   contractOwnerAddress: optionalEnvAddress('CONTRACT_OWNER_ADDRESS', 'VITE_CONTRACT_OWNER_ADDRESS'),

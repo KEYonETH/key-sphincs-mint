@@ -102,10 +102,13 @@ const tokenStatsAbi = [
 ];
 const treasuryVaultStatsAbi = [
   'function totalMintFeesReceived() view returns (uint256)',
+  'function totalDirectEthReceived() view returns (uint256)',
   'function totalEthRouted() view returns (uint256)',
+  'function totalEthWithdrawn() view returns (uint256)',
   'function owner() view returns (address)',
   'function mintGate() view returns (address)',
-  'function liquidityManager() view returns (address)'
+  'function liquidityManager() view returns (address)',
+  'function unlocked() view returns (bool)'
 ];
 
 const hex32 = z.string().regex(/^0x[0-9a-fA-F]{64}$/);
@@ -209,6 +212,13 @@ function clearLiveCaches() {
   statusCache.clear();
 }
 
+function treasuryVaultAddresses() {
+  return [CONFIG.treasuryVaultAddress, ...CONFIG.legacyTreasuryVaultAddresses]
+    .filter((address) => !isZeroAddressLike(address))
+    .map((address) => ethers.getAddress(address))
+    .filter((address, index, addresses) => addresses.indexOf(address) === index);
+}
+
 function saveCanonicalMessage(message) {
   fs.mkdirSync(CONFIG.proofDataDir, { recursive: true });
   fs.writeFileSync(path.join(CONFIG.proofDataDir, 'message.txt'), message, 'utf8');
@@ -274,9 +284,13 @@ async function liveStatsUncached() {
       publicMinted = await mintGate.publicMinted();
     }
 
-    if (CONFIG.treasuryVaultAddress !== ethers.ZeroAddress) {
-      const vault = new ethers.Contract(CONFIG.treasuryVaultAddress, treasuryVaultStatsAbi, chainProvider);
-      totalMintFeesReceived = await vault.totalMintFeesReceived();
+    const vaultAddresses = treasuryVaultAddresses();
+    if (vaultAddresses.length) {
+      const vaultFees = await Promise.all(vaultAddresses.map(async (vaultAddress) => {
+        const vault = new ethers.Contract(vaultAddress, treasuryVaultStatsAbi, chainProvider);
+        return optionalCall(vault, 'totalMintFeesReceived', 0n);
+      }));
+      totalMintFeesReceived = vaultFees.reduce((sum, amount) => sum + amount, 0n);
     }
     const mintPriceWei = ethers.parseEther(TOKENOMICS.mintPriceEth);
     const successfulMints = mintPriceWei > 0n ? Number(totalMintFeesReceived / mintPriceWei) : 0;
@@ -328,11 +342,12 @@ async function liveLiquidityStateUncached() {
     fee: CONFIG.uniswapV4Fee || '0',
     tickSpacing: CONFIG.uniswapV4TickSpacing || '200',
     hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
-    custody: 'LP reserve and treasury reserve are held by configured reserve wallets. User-minted KEY stays in user wallets.',
+    custody: 'LP reserve and treasury reserve are held by configured reserve wallets. Mint fee ETH is held in the treasury lock vault until the owner unlocks it for manual LP routing or withdrawal. User-minted KEY stays in user wallets.',
     addresses: {
       token: CONFIG.keyTokenAddress,
       mintGate: CONFIG.mintGateAddress,
       treasuryVault: CONFIG.treasuryVaultAddress,
+      legacyTreasuryVaults: CONFIG.legacyTreasuryVaultAddresses,
       lpReserve: CONFIG.lpReserveAddress,
       treasuryReserve: CONFIG.treasuryReserveAddress,
       contractOwner: CONFIG.contractOwnerAddress
@@ -362,9 +377,20 @@ async function liveLiquidityStateUncached() {
       state.controls.vaultOwner = await optionalCall(vault, 'owner', ethers.ZeroAddress);
       state.controls.vaultMintGate = await optionalCall(vault, 'mintGate', ethers.ZeroAddress);
       state.controls.liquidityManager = await optionalCall(vault, 'liquidityManager', ethers.ZeroAddress);
+      state.controls.vaultUnlocked = await optionalCall(vault, 'unlocked', false);
       state.balances.vaultETH = Number(ethers.formatEther(await chainProvider.getBalance(CONFIG.treasuryVaultAddress)));
       state.balances.totalMintFeesReceivedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalMintFeesReceived', 0n)));
+      state.balances.totalDirectEthReceivedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalDirectEthReceived', 0n)));
       state.balances.totalEthRoutedETH = Number(ethers.formatEther(await optionalCall(vault, 'totalEthRouted', 0n)));
+      state.balances.totalEthWithdrawnETH = Number(ethers.formatEther(await optionalCall(vault, 'totalEthWithdrawn', 0n)));
+      const legacyVaultFees = await Promise.all(CONFIG.legacyTreasuryVaultAddresses.map(async (vaultAddress) => {
+        const legacyVault = new ethers.Contract(vaultAddress, treasuryVaultStatsAbi, chainProvider);
+        return optionalCall(legacyVault, 'totalMintFeesReceived', 0n);
+      }));
+      const legacyVaultBalances = await Promise.all(CONFIG.legacyTreasuryVaultAddresses.map((vaultAddress) => chainProvider.getBalance(vaultAddress)));
+      state.balances.legacyVaultETH = Number(ethers.formatEther(legacyVaultBalances.reduce((sum, amount) => sum + amount, 0n)));
+      state.balances.legacyMintFeesReceivedETH = Number(ethers.formatEther(legacyVaultFees.reduce((sum, amount) => sum + amount, 0n)));
+      state.balances.totalMintFeesReceivedIncludingLegacyETH = state.balances.totalMintFeesReceivedETH + state.balances.legacyMintFeesReceivedETH;
     }
   } catch {
     state.error = 'live liquidity state unavailable';

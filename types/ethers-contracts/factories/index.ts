@@ -3,10 +3,15 @@
 /* eslint-disable */
 export * as keyMintGateSol from './KEYMintGate.sol/index.js';
 export * as keyMintGateV2Sol from './KEYMintGateV2.sol/index.js';
+export * as keyMintGateV3Sol from './KEYMintGateV3.sol/index.js';
 export * as keyReserveTimelockSol from './KEYReserveTimelock.sol/index.js';
 export * as keySpaceRegistrarSol from './KEYSpaceRegistrar.sol/index.js';
+export * as keySpaceRegistrarV2Sol from './KEYSpaceRegistrarV2.sol/index.js';
 export * as keyTreasuryVaultSol from './KEYTreasuryVault.sol/index.js';
 export { KEYIdentity__factory } from './KEYIdentity__factory.js';
+export { KEYMintGateV4__factory } from './KEYMintGateV4__factory.js';
 export { KEYSpaceMarket__factory } from './KEYSpaceMarket__factory.js';
+export { KEYSpaceRegistrarV3__factory } from './KEYSpaceRegistrarV3__factory.js';
 export { KEYToken__factory } from './KEYToken__factory.js';
+export { KEYTreasuryLockVault__factory } from './KEYTreasuryLockVault__factory.js';
 export { KEYUniswapV4HookConcept__factory } from './KEYUniswapV4HookConcept__factory.js';

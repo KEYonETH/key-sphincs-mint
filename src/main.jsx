@@ -12,8 +12,9 @@ function backendUrl() {
 }
 
 const BACKEND = backendUrl();
-const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || '0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927';
+const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || '0x856e53bcB3D4e085a266132144Fc2ca93f32B28d';
 const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2';
+const TREASURY_VAULT = import.meta.env.VITE_TREASURY_VAULT_ADDRESS || '0x218ab46071297110e4e0e95F30B54516ca8D6dad';
 const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741';
 const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0xEEceD724B8fA375D0E8C0c4A7f327f7e11Ecd715';
 const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c';
@@ -1293,7 +1294,8 @@ function InfoCard({ title, value }) {
 function ContractLinks({ data, compact = false }) {
   const rows = [
     ['KEY Token', KEY_TOKEN],
-    ['Mint Gate V3', configuredMintGate(data)],
+    ['Mint Gate V4', configuredMintGate(data)],
+    ['Treasury Lock', TREASURY_VAULT],
     ['Registrar V3', KEY_REGISTRAR],
     ['Identity NFT', KEY_IDENTITY],
     ['Marketplace', KEY_MARKET]
@@ -1351,7 +1353,7 @@ proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PR
     <h2>Trust model</h2>
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
     <h2>Mainnet contracts</h2>
-    <ul><li>KEY minting is live through `KEYMintGateV3` with a ten-mint wallet cap.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>Old mint gates remain readable as legacy gates so earlier proofs stay counted, but new mints use the active V3 gate.</li></ul>
+    <ul><li>KEY minting is live through `KEYMintGateV4` with a ten-mint wallet cap.</li><li>Mint fee ETH is sent into `KEYTreasuryLockVault`; it stays locked until the owner unlocks it, then it can be routed manually for Uniswap v4 LP or withdrawn by the owner.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>Old mint gates remain readable as legacy gates so earlier proofs stay counted, but new mints use the active V4 gate.</li></ul>
     <ContractLinks data={data} />
     <h2>Remaining public hardening</h2>
     <ul><li>Verify all deployed contract source on Etherscan.</li><li>Publish proof snapshots for independent checking.</li><li>Use multisig custody for owner-controlled settings.</li><li>Run an external audit before scaling traffic.</li></ul>

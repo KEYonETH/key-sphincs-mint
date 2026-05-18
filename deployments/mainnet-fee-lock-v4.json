@@ -1,0 +1,25 @@
+{
+  "KEYTreasuryLockVault": "0x218ab46071297110e4e0e95F30B54516ca8D6dad",
+  "KEYTreasuryLockVaultDeployTx": "0x64fa382e2581a3ff50c040affe6a2a6bfbcd3104ed9c06f10b1b0ba9f9b26a37",
+  "KEYMintGateV4": "0x856e53bcB3D4e085a266132144Fc2ca93f32B28d",
+  "KEYMintGateV4DeployTx": "0xd80a1507a4c5c2f88481b6c60042511c230cf448de790e40ebfe4e6092155d43",
+  "KEYMintGateV4OwnershipTransferred": true,
+  "lockVaultMintGateSet": true,
+  "lockVaultLiquidityManagerSet": true,
+  "tokenMintGateSetToV4": true,
+  "registrarAllowsMintGateV4": true,
+  "oldMintGate": "0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927",
+  "oldTreasuryVault": "0xf8ef6D861996b75D6F286f5Fb1E1a81335F9038D",
+  "tokenMintGate": "0x856e53bcB3D4e085a266132144Fc2ca93f32B28d",
+  "lockVaultMintGate": "0x856e53bcB3D4e085a266132144Fc2ca93f32B28d",
+  "lockVaultLiquidityManager": "0xc488803B1dbc13754e1cA7241e9335E3777c1fec",
+  "lockVaultUnlocked": false,
+  "registrarAllowedMintGateV4": true,
+  "legacyMintGateCount": "3",
+  "legacyMintGatesForEnv": [
+    "0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927",
+    "0x41Ed7E9E9F2dfd5a4ff9711EAc9182746564CAFD",
+    "0x0Aea11184B840554F648c7061a7E1D7594E17767"
+  ],
+  "updatedAt": "2026-05-18T18:27:17.589Z"
+}
