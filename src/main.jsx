@@ -12,10 +12,10 @@ function backendUrl() {
 }
 
 const BACKEND = backendUrl();
-const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || ethers.ZeroAddress;
+const MINT_GATE = import.meta.env.VITE_MINT_GATE_ADDRESS || '0x04F09143bFEd2f9A760Abbf4aEACe9f5Df1e4927';
 const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0x75e463F6aDfB96Fbf2588e05aD73F87bC9126EB2';
 const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741';
-const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0x3cC9Ecc0c16842f7f6B4C721B7E1D6f706e149F6';
+const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0xEEceD724B8fA375D0E8C0c4A7f327f7e11Ecd715';
 const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c';
 const ZERO = ethers.ZeroAddress;
 const REQUIRED_MINTS_PER_IDENTITY = 10;
@@ -81,6 +81,7 @@ function bytesToHex(bytes) { return '0x' + Array.from(bytes).map((b) => b.toStri
 function isZeroAddress(addr) { return !addr || addr === ZERO || /^0x0{40}$/i.test(addr); }
 function configuredMintGate(data) { return !isZeroAddress(data?.mintGate) ? data.mintGate : MINT_GATE; }
 function configuredChainId(data) { return Number(data?.chainId || import.meta.env.VITE_CHAIN_ID || 1); }
+function etherscanAddress(address) { return `https://etherscan.io/address/${address}`; }
 function chainHex(chainId) { return `0x${Number(chainId).toString(16)}`; }
 function chainName(chainId) { return Number(chainId) === 1 ? 'Ethereum Mainnet' : `chain ${chainId}`; }
 function pct(n, d) { return Math.min(100, Math.max(0, (Number(n || 0) / Number(d || 1)) * 100)); }
@@ -356,10 +357,36 @@ function Mint({ wallet, connect, data, refresh }) {
   const hasKey = Boolean(publicKeyHash);
   const hasSigned = Boolean(walletSignature && message);
   const hasProof = Boolean(proof);
+  const [mintProgress, setMintProgress] = useState(null);
+  const walletMintCount = Math.min(REQUIRED_MINTS_PER_IDENTITY, Number(mintProgress?.minted || 0));
+  const walletMintPct = pct(walletMintCount, REQUIRED_MINTS_PER_IDENTITY);
+  const walletMintsLeft = Math.max(0, REQUIRED_MINTS_PER_IDENTITY - walletMintCount);
 
   function actionClass(done, active = false) {
     return `${done ? 'done ' : ''}${active ? 'active ' : ''}`.trim();
   }
+
+  async function loadMintProgress(address = wallet) {
+    if (!address) {
+      setMintProgress(null);
+      return null;
+    }
+    const res = await fetch(`${BACKEND}/api/keyspace/claim-proof/${address}?refresh=1`).then((r) => r.json());
+    if (!res.ok) throw new Error(res.error || 'Mint progress unavailable');
+    const proofs = res.proofs || [];
+    const totalReward = proofs.slice(0, REQUIRED_MINTS_PER_IDENTITY).reduce((sum, item) => sum + BigInt(item.typedData?.rewardAmount || 0), 0n);
+    const bestRank = proofs.slice(0, REQUIRED_MINTS_PER_IDENTITY).reduce((best, item) => {
+      const rank = rankKeyFromTier(item.tier?.name);
+      return rankWeight(rank) > rankWeight(best) ? rank : best;
+    }, proofs[0] ? rankKeyFromTier(proofs[0].tier?.name) : 'Normal');
+    const next = { minted: proofs.length, bestRank, totalReward };
+    setMintProgress(next);
+    return next;
+  }
+
+  useEffect(() => {
+    loadMintProgress().catch(() => {});
+  }, [wallet]);
 
   async function copyText(text, success) {
     try {
@@ -479,6 +506,8 @@ function Mint({ wallet, connect, data, refresh }) {
       const tx = await gate.mintWithAttestation(mintProof.typedData, mintProof.attestation, { value: ethers.parseEther(t.mintPriceEth) });
       setNotice(`Transaction sent: ${tx.hash}`);
       await tx.wait();
+      const signerAddress = await signer.getAddress();
+      await loadMintProgress(signerAddress).catch(() => {});
       setNotice(`Mint confirmed: ${tx.hash}`); await refresh();
     } catch (e) { setNotice(e.shortMessage || e.message); } finally { setBusy(''); }
   }
@@ -496,6 +525,14 @@ function Mint({ wallet, connect, data, refresh }) {
       <div className="resultStrip">
         <div><span>tier</span><b>{proof?.tier?.name || 'pending'}</b></div>
         <div><span>reward</span><b>{proof ? `${fmt.format(proof.tier.reward)} KEY` : 'pending'}</b></div>
+      </div>
+      <div className="mintProgressBox">
+        <div className="mintProgressHead">
+          <b>KEY Card progress</b>
+          <span>{wallet ? `${walletMintCount}/${REQUIRED_MINTS_PER_IDENTITY} mints` : 'connect wallet'}</span>
+        </div>
+        <div className="mintProgressTrack"><i style={{ width: `${walletMintPct}%` }} /></div>
+        <p>{wallet ? (walletMintsLeft ? `${walletMintsLeft} more KEY mint${walletMintsLeft === 1 ? '' : 's'} to unlock one KEY Card NFT.` : `Ready to claim. Best rank: ${mintProgress?.bestRank || 'ready'}, KeyBond: ${fmt.format(Number(ethers.formatEther(mintProgress?.totalReward || 0n)))} KEY.`) : 'Connect wallet to load your 10-mint claim progress.'}</p>
       </div>
       <div className="buttonStack">
         <button className={`outline ${actionClass(hasKey, busy === 'key')}`} onClick={generateKey} disabled={busy}>{busy === 'key' ? 'Generating' : hasKey ? 'Key ready' : 'Generate key'}</button>
@@ -723,7 +760,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
   return <main className="page keyspacePage">
     <section className="keyspaceHero">
       <div className="keyspaceHeroCopy">
-        <span className="previewBadge">PREVIEW — OPENS AFTER MINT-OUT</span>
+        <span className="previewBadge">{keyspaceStatus.live ? 'LIVE ON MAINNET' : 'KEYSPACE MAINNET'}</span>
         <h1>KEYSPACE</h1>
         <h2>SPHINCS Origin Identities backed by KEY.</h2>
         <p>Mint KEY ten times. Reveal your best rank. Claim one .key identity. Trade it with ETH.</p>
@@ -739,7 +776,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         </div>
       </div>
     </section>
-    <p className="keyspaceWarning">KEYSPACE contracts are deployed, but origin claim, marketplace trading, melt/redeem, and auctions are not open yet.</p>
+    <p className="keyspaceWarning">KEYSPACE is live on mainnet: ten KEY mints unlock one claim, and the marketplace can trade claimed KEY Card NFTs with ETH.</p>
 
     <section className="keyspaceBlock">
       <div className="sectionHead">
@@ -761,6 +798,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <InfoCard title="Origin Names" value="Minters claim first" />
       </div>
       <p className="keyspaceRatio">{keySupply} KEY. {identitySupply} .key identities. One identity requires ten valid mint proofs.</p>
+      <ContractLinks data={data} compact />
     </section>
 
     <section className="keyspaceBlock">
@@ -1009,6 +1047,13 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
       <Metric label="market" value={marketOpen ? 'open' : 'locked'} note="ETH-native primary market" />
       <Metric label="wallet" value={wallet ? short(wallet) : 'not connected'} />
     </div>
+    <div className="claimGuide">
+      <b>Claim guide</b>
+      <span>1. Mint KEY ten times from the same wallet.</span>
+      <span>2. Open KEYSPACE and enter a lowercase name.</span>
+      <span>3. Approve the combined KEY reward as KeyBond.</span>
+      <span>4. Claim one KEY Card NFT; it appears in wallet as an ERC721.</span>
+    </div>
     <div className="actionColumns">
       <div className="actionBox">
         <b>Claim .key identity</b>
@@ -1042,7 +1087,7 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
       <b>Live listings</b>
       {liveListings.length ? liveListings.slice(0, 6).map((listing) => <div key={listing.tokenId}>
         <span>#{listing.tokenId}</span><span>{listing.price} ETH</span><button className="miniBtn" onClick={() => { setBuyTokenId(listing.tokenId); setBuyPrice(listing.price); }}>use</button>
-      </div>) : <p>No live listings yet. Preview examples remain visible above until market opens.</p>}
+      </div>) : <p>No live listings yet. Claimed identities can be listed from this action panel.</p>}
     </div>
     {walletInfo?.identities?.length > 0 && <div className="liveListings">
       <b>Your indexed identities</b>
@@ -1050,30 +1095,50 @@ function KeyspaceActions({ status, wallet, connect, data, rankRules }) {
         <span>#{identity.tokenId} {identity.name}</span><span>{identity.keyBond} KEY</span><button className="miniBtn" onClick={() => setListTokenId(identity.tokenId)}>list</button>
       </div>)}
     </div>}
-    <p className="marketNote">Action panel is wired to mainnet contracts but remains locked until KEYSPACE opens. Buying transfers the NFT; KeyBond remains locked inside the identity and follows the NFT owner.</p>
+    <p className="marketNote">Action panel is wired to mainnet contracts. Buying transfers the NFT; KeyBond remains locked inside the identity and follows the NFT owner.</p>
     {notice && <p className="notice">{notice}</p>}
   </Card>;
 }
 
 function Marketplace({ wallet, connect, data }) {
   const [status, setStatus] = useState(KEYSPACE_STATIC_STATUS);
+  const [liveListings, setLiveListings] = useState([]);
   const [search, setSearch] = useState('');
   const [rankFilter, setRankFilter] = useState('All');
   const [selectedListing, setSelectedListing] = useState(null);
+  const [busy, setBusy] = useState('');
+  const [notice, setNotice] = useState('');
   const marketOpen = Boolean(status.marketplaceLive);
   const normalizedSearch = search.trim().toLowerCase();
-  const visibleListings = KEYSPACE_LISTINGS.filter((card) => {
-    const matchesRank = rankFilter === 'All' || card.rank === rankFilter;
-    const matchesSearch = !normalizedSearch || card.name.toLowerCase().includes(normalizedSearch) || card.origin.toLowerCase().includes(normalizedSearch);
+  const liveListingCards = liveListings.map((listing) => ({
+    name: `#${listing.tokenId}`,
+    rank: 'Normal',
+    origin: 'Live KEYSPACE Listing',
+    keyBond: 'Indexed on-chain',
+    mintProof: listing.txHash ? short(listing.txHash) : 'listed',
+    tokenId: `#${listing.tokenId}`,
+    rawTokenId: listing.tokenId,
+    price: `${listing.price} ETH`,
+    seller: listing.seller,
+    live: true
+  }));
+  const sourceListings = liveListingCards.length ? liveListingCards : KEYSPACE_LISTINGS;
+  const visibleMarketListings = sourceListings.filter((card) => {
+    const matchesRank = card.live || rankFilter === 'All' || card.rank === rankFilter;
+    const matchesSearch = !normalizedSearch || card.name.toLowerCase().includes(normalizedSearch) || card.origin.toLowerCase().includes(normalizedSearch) || card.tokenId?.toLowerCase().includes(normalizedSearch);
     return matchesRank && matchesSearch;
   });
 
   useEffect(() => {
     let alive = true;
-    fetch(`${BACKEND}/api/keyspace/status`)
-      .then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE status unavailable')))
-      .then((json) => {
-        if (alive) setStatus({ ...KEYSPACE_STATIC_STATUS, ...json });
+    Promise.all([
+      fetch(`${BACKEND}/api/keyspace/status`).then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE status unavailable'))),
+      fetch(`${BACKEND}/api/keyspace/listings?refresh=1`).then((res) => res.ok ? res.json() : Promise.reject(new Error('KEYSPACE listings unavailable')))
+    ])
+      .then(([statusJson, listingsJson]) => {
+        if (!alive) return;
+        setStatus({ ...KEYSPACE_STATIC_STATUS, ...statusJson });
+        setLiveListings(listingsJson.listings || []);
       })
       .catch(() => {
         if (alive) setStatus(KEYSPACE_STATIC_STATUS);
@@ -1081,12 +1146,40 @@ function Marketplace({ wallet, connect, data }) {
     return () => { alive = false; };
   }, []);
 
+  async function buyLiveListing(listing) {
+    try {
+      setBusy(listing.rawTokenId);
+      setNotice('');
+      if (!marketOpen) throw new Error('KEYSPACE Market is not open yet.');
+      if (!listing.live) {
+        setSelectedListing(listing);
+        return;
+      }
+      const address = wallet || await connect();
+      if (!address) throw new Error('connect wallet first');
+      await ensureWalletChain(configuredChainId(data), currentEthereum());
+      const provider = new ethers.BrowserProvider(currentEthereum());
+      const signer = await provider.getSigner();
+      const market = new ethers.Contract(KEY_MARKET, MARKET_ABI, signer);
+      const tx = await market.buyIdentity(BigInt(listing.rawTokenId), { value: ethers.parseEther(listing.price.replace(/\s*ETH$/i, '')) });
+      setNotice(`Purchase sent: ${tx.hash}`);
+      await tx.wait();
+      setNotice(`Identity #${listing.rawTokenId} purchased. KeyBond follows the NFT.`);
+      const res = await fetch(`${BACKEND}/api/keyspace/listings?refresh=1`).then((r) => r.json());
+      if (res.ok) setLiveListings(res.listings || []);
+    } catch (error) {
+      setNotice(error.shortMessage || error.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
   return <main className="page marketplacePage">
     <section className="marketHero keyspaceBlock">
       <div className="marketHeroCopy">
         <span className="previewBadge">KEYSPACE MARKET</span>
         <h1>MARKETPLACE</h1>
-        <p>Preview the .key identity market. When KEYSPACE opens, listings can scale across the full 21,000 identity supply.</p>
+        <p>Live on-chain KEYSPACE marketplace for claimed KEY Card NFTs. Preview cards appear only while no live listings are indexed.</p>
       </div>
       <div className="marketHeroStats">
         <span>{marketOpen ? 'Market open' : 'Market locked'}</span>
@@ -1097,8 +1190,8 @@ function Marketplace({ wallet, connect, data }) {
 
     <section className="keyspaceBlock marketCollection">
       <div className="marketCollectionHead">
-        <h2>Preview Listings</h2>
-        <p>Origin Rank .key identities backed by KEY. Live trading stays locked until KEYSPACE opens.</p>
+        <h2>{liveListingCards.length ? 'Live Listings' : 'Preview Listings'}</h2>
+        <p>{liveListingCards.length ? 'These listings are indexed from the KEYSpaceMarket contract and can be bought with ETH.' : 'Example OpenSea-style KEY Card collection cards. Real listings appear here after owners list claimed NFTs.'}</p>
       </div>
 
       <div className="marketToolbar">
@@ -1109,9 +1202,9 @@ function Marketplace({ wallet, connect, data }) {
       </div>
 
       <div className="marketplaceGrid">
-        {visibleListings.map((card) => <article
+        {visibleMarketListings.map((card) => <article
           className={`marketNftCard ${card.rank.toLowerCase()}`}
-          key={card.name}
+          key={`${card.name}-${card.tokenId}`}
           style={{ '--name-chars': Math.max(6, card.name.length) }}
           role="button"
           tabIndex={0}
@@ -1129,10 +1222,12 @@ function Marketplace({ wallet, connect, data }) {
           <div className="marketNftInfo">
             <div><b>{card.name}</b></div>
             <div><small>Price</small><strong>{card.price}</strong></div>
+            {card.live && <button onClick={(e) => { e.stopPropagation(); buyLiveListing(card); }} disabled={busy === card.rawTokenId}>{busy === card.rawTokenId ? 'Buying' : 'Buy'}</button>}
           </div>
         </article>)}
       </div>
-      <p className="marketNote">Marketplace preview only. Buying will transfer the ERC721 identity after KEYSPACE opens; the locked KeyBond remains inside the identity and follows the buyer.</p>
+      <p className="marketNote">{liveListingCards.length ? 'Marketplace is live on mainnet. Buying transfers the ERC721 identity; the locked KeyBond remains inside the identity and follows the buyer.' : 'No live listings are indexed yet. Owners can claim after ten mints, then list the NFT from KEYSPACE Actions.'}</p>
+      {notice && <p className="notice">{notice}</p>}
     </section>
 
     {selectedListing && <div className="nftModal" role="dialog" aria-modal="true" aria-label={`${selectedListing.name} details`} onClick={() => setSelectedListing(null)}>
@@ -1148,10 +1243,10 @@ function Marketplace({ wallet, connect, data }) {
             <span>Ethereum</span>
           </div>
           <h2>{selectedListing.name}</h2>
-          <p>{selectedListing.origin} backed by KEY. Trading stays locked until KEYSPACE opens.</p>
+          <p>{selectedListing.origin} backed by KEY. {selectedListing.live ? 'This is an indexed on-chain listing.' : 'Preview examples become replaceable when live listings are indexed.'}</p>
           <div className="nftBuyBox">
             <div><small>Buy for</small><strong>{selectedListing.price}</strong></div>
-            <button disabled={!marketOpen}>{marketOpen ? 'Buy now' : 'Preview only'}</button>
+            <button disabled={!marketOpen || !selectedListing.live || busy === selectedListing.rawTokenId} onClick={() => buyLiveListing(selectedListing)}>{selectedListing.live ? (busy === selectedListing.rawTokenId ? 'Buying' : 'Buy now') : 'Preview only'}</button>
             <button className="ghost" disabled>Make offer</button>
           </div>
           <div className="nftDetailTabs"><b>Details</b><span>Activity</span><span>Orders</span></div>
@@ -1172,6 +1267,25 @@ function Marketplace({ wallet, connect, data }) {
 
 function InfoCard({ title, value }) {
   return <div className="infoCard"><b>{title}</b><span>{value}</span></div>;
+}
+
+function ContractLinks({ data, compact = false }) {
+  const rows = [
+    ['KEY Token', KEY_TOKEN],
+    ['Mint Gate V3', configuredMintGate(data)],
+    ['Registrar V3', KEY_REGISTRAR],
+    ['Identity NFT', KEY_IDENTITY],
+    ['Marketplace', KEY_MARKET]
+  ].filter(([, address]) => !isZeroAddress(address));
+  return <div className={`contractLinks ${compact ? 'compact' : ''}`}>
+    <b>Mainnet contract links</b>
+    <div>
+      {rows.map(([label, address]) => <a key={label} href={etherscanAddress(address)} target="_blank" rel="noreferrer">
+        <span>{label}</span>
+        <code>{short(address)}</code>
+      </a>)}
+    </div>
+  </div>;
 }
 
 function Tokenomics({ data }) {
@@ -1217,6 +1331,7 @@ proofId = keccak256(wallet, publicKeyHash, signatureHash, epoch, chainId, KEY_PR
     <p>The backend is not allowed to invent arbitrary rewards because the contract recomputes the reward tier from the submitted reward hash. The backend is still trusted to verify the signature correctly, so production launch should publish proof records and allow independent re-verification.</p>
     <h2>Mainnet contracts</h2>
     <ul><li>KEY minting is live through `KEYMintGateV3` with a ten-mint wallet cap.</li><li>KEYSPACE identity claiming is live through `KEYSpaceRegistrarV3` after ten valid mint proofs.</li><li>KEY Card NFTs are ERC721 assets stored in `KEYIdentity`.</li><li>KEYSPACE marketplace trading is on-chain and ETH-native through `KEYSpaceMarket`.</li><li>Old mint gates remain readable as legacy gates so earlier proofs stay counted, but new mints use the active V3 gate.</li></ul>
+    <ContractLinks data={data} />
     <h2>Remaining public hardening</h2>
     <ul><li>Verify all deployed contract source on Etherscan.</li><li>Publish proof snapshots for independent checking.</li><li>Use multisig custody for owner-controlled settings.</li><li>Run an external audit before scaling traffic.</li></ul>
   </Card></main>;
