@@ -738,6 +738,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
   const selected = rankRules.find((r) => r.key === rank) || rankRules[0];
   const keySupply = fmt.format(Number(keyspaceStatus.keySupply || staticStatus.keySupply));
   const identitySupply = fmt.format(Number(keyspaceStatus.identitySupply || staticStatus.identitySupply));
+  const keyCardTarget = '2,100';
 
   useEffect(() => {
     let alive = true;
@@ -778,7 +779,7 @@ function Keyspace({ tiers, wallet, connect, data }) {
           <span>Your combined KEY backs the identity.</span>
         </div>
         <div className="heroStats keyspaceHeroStats">
-          <span>{identitySupply} max identities</span>
+          <span>{keyCardTarget} target KEY Cards</span>
           <span>10,000,000 KEY public mint</span>
           <span>KEY-backed identity assets</span>
         </div>
@@ -814,10 +815,10 @@ function Keyspace({ tiers, wallet, connect, data }) {
       <div className="supplyGrid">
         <InfoCard title="KEY Supply" value={keySupply} />
         <InfoCard title="Public Mint" value="10,000,000 KEY" />
-        <InfoCard title="KEYSPACE Supply" value={`${identitySupply} .key identities`} />
-        <InfoCard title="Origin Names" value="Minters claim first" />
+        <InfoCard title="KEY Card Target" value={`${keyCardTarget} NFTs`} />
+        <InfoCard title="Contract Cap" value={`${identitySupply} identities`} />
       </div>
-      <p className="keyspaceRatio">{keySupply} KEY. {identitySupply} .key identities. One identity requires ten valid mint proofs.</p>
+      <p className="keyspaceRatio">{keySupply} KEY. {keyCardTarget} KEY Card public target. One identity requires ten valid mint proofs. Contract safety cap: {identitySupply} identities.</p>
       <ContractLinks data={data} compact />
     </section>
 
