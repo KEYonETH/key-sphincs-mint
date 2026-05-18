@@ -17,6 +17,7 @@ const KEY_TOKEN = import.meta.env.VITE_KEY_TOKEN_ADDRESS || '0x75e463F6aDfB96Fbf
 const KEY_IDENTITY = import.meta.env.VITE_KEY_IDENTITY_ADDRESS || '0xb7f018eFe48a51a5F8f03A1483B9C1ad08bCC741';
 const KEY_REGISTRAR = import.meta.env.VITE_KEY_REGISTRAR_ADDRESS || '0xEEceD724B8fA375D0E8C0c4A7f327f7e11Ecd715';
 const KEY_MARKET = import.meta.env.VITE_KEY_MARKET_ADDRESS || '0xa1CA92697940230f6Ea0eE8700c3dBF3ec2DBc8c';
+const X_URL = 'https://x.com/Key_sphincs';
 const ZERO = ethers.ZeroAddress;
 const REQUIRED_MINTS_PER_IDENTITY = 10;
 
@@ -239,6 +240,7 @@ function Header({ route, go, wallet, connect, walletProviders, walletMenu, setWa
     </div>
     <nav>{nav.map(n => <button key={n} className={route === n ? 'on' : ''} onClick={() => go(n)}>{NAV_LABELS[n] || n}</button>)}</nav>
     <div className="walletSlot">
+      <a className="xLink" href={X_URL} target="_blank" rel="noreferrer" aria-label="KEY on X">X</a>
       <button className="connect" onClick={() => {
         if (!wallet && walletProviders.length > 1) setWalletMenu((open) => !open);
         else connect(walletProviders[0]);
@@ -722,6 +724,12 @@ function Keyspace({ tiers, wallet, connect, data }) {
     ['Claim identity', 'Ten valid mint proofs unlock one KEY Card NFT and .key identity.'],
     ['Trade with ETH', 'The identity can be listed, bought, and sold with ETH while its KeyBond stays locked inside.']
   ];
+  const minterInfo = [
+    ['Minter allocation', '10,000,000 KEY', 'All public mint rewards go to minters through signature minting.'],
+    ['Claim rule', '10 mints = 1 NFT', 'A wallet needs ten valid mint proofs before claiming one KEY Card NFT.'],
+    ['KEY Card target', '2,100 cards', 'Public campaign target; the on-chain identity contract has a wider safety cap.'],
+    ['KEY token CA', KEY_TOKEN.toLowerCase(), 'Use this contract address when adding KEY manually.']
+  ];
 
   const [rank, setRank] = useState('Normal');
   const [name, setName] = useState('');
@@ -788,6 +796,18 @@ function Keyspace({ tiers, wallet, connect, data }) {
         <p>{text}</p>
       </div>)}</div>
       <p className="originLine">SPHINCS creates the origin. KEY backs the identity. The market trades the identity.</p>
+    </section>
+
+    <section className="keyspaceBlock keyspaceMinterBlock">
+      <div className="sectionHead">
+        <h2>Minter allocation</h2>
+        <p>Public KEY minting is for minters. Ten KEY mints from the same wallet become one KEY Card NFT claim.</p>
+      </div>
+      <div className="minterInfoGrid">{minterInfo.map(([label, value, text]) => <div key={label}>
+        <small>{label}</small>
+        <b>{value}</b>
+        <span>{text}</span>
+      </div>)}</div>
     </section>
 
     <section className="keyspaceBlock">

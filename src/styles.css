@@ -8340,8 +8340,107 @@ body .marketNftInfo button:disabled {
   opacity: 0.7;
 }
 
+/* Requested header/social and KEYSPACE claim allocation pass. */
+body .walletSlot {
+  display: grid !important;
+  grid-template-columns: 48px minmax(180px, 1fr) !important;
+  gap: 14px !important;
+  align-items: stretch !important;
+}
+
+body .xLink {
+  display: grid !important;
+  place-items: center !important;
+  min-height: 52px !important;
+  border: 3px solid #060912 !important;
+  background: #fff !important;
+  color: #060912 !important;
+  font-family: var(--font-sans) !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  box-shadow: 6px 6px 0 #060912 !important;
+}
+
+body .keyspaceMinterBlock {
+  margin-top: 22px !important;
+}
+
+body .minterInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+body .minterInfoGrid > div {
+  min-width: 0;
+  padding: 16px;
+  border: 3px solid #060912;
+  background: #eef4ff;
+}
+
+body .minterInfoGrid small {
+  display: block;
+  color: #2248ef;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+body .minterInfoGrid b {
+  display: block;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+  color: #060912;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 1.16;
+}
+
+body .minterInfoGrid span {
+  display: block;
+  margin-top: 8px;
+  color: #5d6678;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+body .progressCard .progressHead {
+  position: relative !important;
+  display: block !important;
+  min-height: 58px !important;
+  padding-right: 140px !important;
+}
+
+body .progressCard .progressHead h2 {
+  max-width: calc(100% - 10px) !important;
+  padding-top: 8px !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+body .progressCard .progressHead .pill {
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  width: 116px !important;
+  min-width: 116px !important;
+  max-width: 116px !important;
+  height: 46px !important;
+  min-height: 46px !important;
+  transform: translateY(-50%) !important;
+}
+
 @media (max-width: 1180px) {
   body .contractLinks > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body .minterInfoGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -8352,8 +8451,33 @@ body .marketNftInfo button:disabled {
     grid-template-columns: 1fr;
   }
 
+  body .walletSlot {
+    grid-template-columns: 48px 1fr !important;
+  }
+
   body .mintProgressHead {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  body .minterInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  body .progressCard .progressHead {
+    min-height: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  body .progressCard .progressHead h2 {
+    white-space: normal !important;
+  }
+
+  body .progressCard .progressHead .pill {
+    position: static !important;
+    width: 96px !important;
+    min-width: 96px !important;
+    margin-top: 12px !important;
+    transform: none !important;
   }
 }

@@ -325,7 +325,7 @@ async function liveLiquidityStateUncached() {
     initializeTx: CONFIG.uniswapV4InitializeTx,
     pair: 'KEY/WETH',
     initialPrice: CONFIG.uniswapV4InitialPrice || '1 ETH = 500,000 KEY',
-    fee: CONFIG.uniswapV4Fee || '10000',
+    fee: CONFIG.uniswapV4Fee || '0',
     tickSpacing: CONFIG.uniswapV4TickSpacing || '200',
     hookStatus: isZeroAddressLike(hookAddress) ? 'none' : 'configured',
     custody: 'LP reserve and treasury reserve are held by configured reserve wallets. User-minted KEY stays in user wallets.',

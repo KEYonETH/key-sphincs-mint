@@ -11,7 +11,7 @@ const rpcUrl = process.env.MAINNET_RPC_URL || process.env.ETHEREUM_RPC_URL || pr
 const privateKey = process.env.MAINNET_PRIVATE_KEY || process.env.PRIVATE_KEY || process.env.DEPLOYER_PRIVATE_KEY;
 const keyToken = process.env.KEY_TOKEN_ADDRESS || process.env.VITE_KEY_TOKEN_ADDRESS;
 
-const fee = Number(process.env.UNISWAP_V4_FEE || '10000'); // 1%
+const fee = Number(process.env.UNISWAP_V4_FEE || '0');
 const tickSpacing = Number(process.env.UNISWAP_V4_TICK_SPACING || '200');
 const keyPerEth = BigInt(process.env.UNISWAP_V4_KEY_PER_ETH || '500000');
 
